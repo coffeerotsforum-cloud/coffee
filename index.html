@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FileDrop - Простая передача файлов</title>
+    <title>FileDrop - Передача файлов</title>
     <style>
         * {
             margin: 0;
@@ -202,7 +202,7 @@
         </div>
         
         <div class="info">
-            💡 Файлы хранятся 7 дней. Максимум 2 ГБ. Без регистрации.
+            💡 Файлы хранятся 30 дней. Максимум 5 ГБ. Без регистрации.
         </div>
     </div>
 
@@ -220,10 +220,8 @@
         
         let selectedFile = null;
         
-        // Клик по зоне
         dropzone.addEventListener('click', () => fileInput.click());
         
-        // Drag & drop
         dropzone.addEventListener('dragover', (e) => {
             e.preventDefault();
             dropzone.classList.add('drag');
@@ -280,10 +278,14 @@
                 if (xhr.status === 200) {
                     try {
                         const data = JSON.parse(xhr.responseText);
-                        if (data.success && data.link) {
+                        if (data.data && data.data.url) {
+                            showResult(data.data.url);
+                        } else if (data.url) {
+                            showResult(data.url);
+                        } else if (data.link) {
                             showResult(data.link);
                         } else {
-                            showError('Ошибка загрузки');
+                            showError('Не удалось получить ссылку');
                         }
                     } catch(e) {
                         showError('Ошибка сервера');
@@ -297,13 +299,14 @@
                 showError('Нет интернета');
             });
             
-            xhr.open('POST', 'https://tmpfiles.org/api/v1/upload');
+            xhr.open('POST', 'https://pixeldrain.com/api/file');
             xhr.send(formData);
         });
         
         function showResult(link) {
+            const fullLink = link.startsWith('http') ? link : `https://pixeldrain.com/u/${link}`;
             resultDiv.style.display = 'block';
-            linkInput.value = link;
+            linkInput.value = fullLink;
             uploadBtn.disabled = false;
             uploadBtn.innerHTML = '📤 Загрузить другой файл';
             progressWrap.style.display = 'none';
