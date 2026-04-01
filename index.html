@@ -5,26 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Передача файлов | GitHub Pages</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
             padding: 20px;
         }
+        
         .container {
+            max-width: 600px;
+            margin: 0 auto;
             background: white;
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 30px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
-        h1 { color: #333; margin-bottom: 10px; }
-        .subtitle { color: #666; margin-bottom: 30px; }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
         .upload-area {
             border: 3px dashed #ccc;
             border-radius: 12px;
@@ -33,76 +48,151 @@
             cursor: pointer;
             transition: all 0.3s;
             margin-bottom: 20px;
+            background: #fafafa;
         }
+        
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f5f5ff;
+        }
+        
         .upload-area.dragover {
             border-color: #667eea;
-            background: #f0f0ff;
+            background: #e8eaff;
+            transform: scale(1.02);
         }
+        
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
         button {
             background: #667eea;
             color: white;
             border: none;
             padding: 12px 24px;
             border-radius: 8px;
-            cursor: pointer;
             font-size: 16px;
+            cursor: pointer;
             width: 100%;
+            transition: all 0.2s;
         }
+        
+        button:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        
         button:disabled {
             background: #ccc;
             cursor: not-allowed;
+            transform: none;
         }
-        #fileInfo {
+        
+        .file-info {
             margin-top: 20px;
             padding: 15px;
             background: #f8f9fa;
             border-radius: 8px;
             display: none;
         }
-        .link {
-            background: white;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            word-break: break-all;
-            margin: 10px 0;
-        }
-        .success { color: #48bb78; }
-        .error { color: #e53e3e; }
-        .progress {
+        
+        .progress-bar-container {
             width: 100%;
             height: 8px;
             background: #e2e8f0;
             border-radius: 4px;
             overflow: hidden;
-            margin: 10px 0;
+            margin: 15px 0;
             display: none;
         }
+        
         .progress-bar {
             width: 0%;
             height: 100%;
-            background: #48bb78;
+            background: linear-gradient(90deg, #48bb78, #38a169);
             transition: width 0.3s;
+        }
+        
+        .link-box {
+            background: white;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+        
+        .success {
+            color: #48bb78;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .error {
+            color: #e53e3e;
+            font-weight: bold;
+        }
+        
+        .copy-btn {
+            background: #48bb78;
+            margin-top: 10px;
+        }
+        
+        .copy-btn:hover {
+            background: #38a169;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #856404;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .file-info {
+            animation: slideIn 0.3s ease;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📤 Передача файлов</h1>
-        <div class="subtitle">Загрузите файл и получите ссылку для скачивания</div>
+        <h1>📤 FileTransfer</h1>
+        <div class="subtitle">Безопасная передача файлов до 100 МБ</div>
         
         <div class="upload-area" id="dropZone">
-            📂 Перетащите файл сюда или нажмите для выбора
+            <div class="upload-icon">📂</div>
+            <div>Перетащите файл сюда или нажмите для выбора</div>
             <input type="file" id="fileInput" style="display: none;">
         </div>
         
         <button id="uploadBtn" disabled>Выберите файл</button>
         
-        <div class="progress" id="progress">
+        <div class="progress-bar-container" id="progressContainer">
             <div class="progress-bar" id="progressBar"></div>
         </div>
         
         <div id="fileInfo"></div>
+        
+        <div class="warning">
+            ⚠️ Важно: файлы хранятся 14 дней на сервисе file.io<br>
+            🔒 Максимальный размер: 100 МБ (бесплатно)
+        </div>
     </div>
 
     <script>
@@ -110,12 +200,12 @@
         const fileInput = document.getElementById('fileInput');
         const uploadBtn = document.getElementById('uploadBtn');
         const fileInfo = document.getElementById('fileInfo');
-        const progress = document.getElementById('progress');
+        const progressContainer = document.getElementById('progressContainer');
         const progressBar = document.getElementById('progressBar');
         
         let selectedFile = null;
         
-        // Открыть выбор файла при клике на зону
+        // Клик по зоне загрузки
         dropZone.addEventListener('click', () => fileInput.click());
         
         // Drag & drop
@@ -133,86 +223,116 @@
             dropZone.classList.remove('dragover');
             const files = e.dataTransfer.files;
             if (files.length > 0) {
-                handleFile(files[0]);
+                selectFile(files[0]);
             }
         });
         
+        // Выбор файла через input
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
-                handleFile(e.target.files[0]);
+                selectFile(e.target.files[0]);
             }
         });
         
-        function handleFile(file) {
+        function selectFile(file) {
+            // Проверка размера (100 МБ = 100 * 1024 * 1024)
+            if (file.size > 100 * 1024 * 1024) {
+                showError('Файл слишком большой! Максимум 100 МБ');
+                return;
+            }
+            
             selectedFile = file;
             uploadBtn.textContent = `📤 Загрузить ${file.name} (${formatBytes(file.size)})`;
             uploadBtn.disabled = false;
             fileInfo.style.display = 'none';
+            progressContainer.style.display = 'none';
         }
         
         uploadBtn.addEventListener('click', async () => {
             if (!selectedFile) return;
             
             uploadBtn.disabled = true;
-            progress.style.display = 'block';
+            uploadBtn.textContent = '⏳ Загрузка...';
+            progressContainer.style.display = 'block';
             progressBar.style.width = '0%';
+            fileInfo.style.display = 'none';
             
-            try {
-                // Используем бесплатный сервис file.io (файлы хранятся 14 дней)
-                const formData = new FormData();
-                formData.append('file', selectedFile);
-                
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', 'https://file.io/?expires=14d');
-                
-                xhr.upload.onprogress = (e) => {
-                    if (e.lengthComputable) {
-                        const percent = (e.loaded / e.total) * 100;
-                        progressBar.style.width = percent + '%';
-                    }
-                };
-                
-                xhr.onload = () => {
-                    if (xhr.status === 200) {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            
+            const xhr = new XMLHttpRequest();
+            
+            // Отслеживаем прогресс загрузки
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) {
+                    const percent = (e.loaded / e.total) * 100;
+                    progressBar.style.width = percent + '%';
+                }
+            });
+            
+            xhr.addEventListener('load', () => {
+                if (xhr.status === 200) {
+                    try {
                         const response = JSON.parse(xhr.responseText);
                         if (response.success) {
-                            const link = response.link;
-                            fileInfo.style.display = 'block';
-                            fileInfo.innerHTML = `
-                                <div class="success">✅ Файл успешно загружен!</div>
-                                <div class="link">
-                                    <strong>🔗 Ссылка для скачивания:</strong><br>
-                                    <a href="${link}" target="_blank">${link}</a>
-                                </div>
-                                <div style="font-size: 12px; color: #666; margin-top: 10px;">
-                                    ⏰ Файл будет доступен 14 дней<br>
-                                    📥 Нажмите на ссылку для скачивания
-                                </div>
-                                <button onclick="copyToClipboard('${link}')" style="margin-top: 10px; background: #48bb78;">
-                                    📋 Скопировать ссылку
-                                </button>
-                            `;
+                            showSuccess(response.link);
                         } else {
-                            throw new Error('Upload failed');
+                            showError('Ошибка загрузки на сервер');
                         }
-                    } else {
-                        throw new Error('Server error: ' + xhr.status);
+                    } catch (e) {
+                        showError('Ошибка обработки ответа сервера');
                     }
-                    uploadBtn.disabled = false;
-                };
-                
-                xhr.onerror = () => {
-                    throw new Error('Network error');
-                };
-                
-                xhr.send(formData);
-                
-            } catch (error) {
-                fileInfo.style.display = 'block';
-                fileInfo.innerHTML = `<div class="error">❌ Ошибка: ${error.message}</div>`;
+                } else {
+                    showError(`Ошибка сервера: ${xhr.status}`);
+                }
                 uploadBtn.disabled = false;
-            }
+                uploadBtn.textContent = '📤 Загрузить другой файл';
+            });
+            
+            xhr.addEventListener('error', () => {
+                showError('Ошибка сети. Проверьте интернет-соединение');
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = '📤 Попробовать снова';
+            });
+            
+            xhr.open('POST', 'https://file.io/?expires=14d');
+            xhr.send(formData);
         });
+        
+        function showSuccess(link) {
+            fileInfo.style.display = 'block';
+            fileInfo.innerHTML = `
+                <div class="success">✅ Файл успешно загружен!</div>
+                <div class="link-box">
+                    <strong>🔗 Ссылка для скачивания:</strong><br>
+                    <a href="${link}" target="_blank" style="color: #667eea; word-break: break-all;">${link}</a>
+                </div>
+                <button class="copy-btn" onclick="copyToClipboard('${link}')">
+                    📋 Скопировать ссылку
+                </button>
+                <div style="margin-top: 15px; font-size: 12px; color: #666;">
+                    ⏰ Файл будет доступен: 14 дней<br>
+                    📥 Нажмите на ссылку для скачивания<br>
+                    🔒 Безопасное хранение
+                </div>
+            `;
+            progressContainer.style.display = 'none';
+        }
+        
+        function showError(message) {
+            fileInfo.style.display = 'block';
+            fileInfo.innerHTML = `
+                <div class="error">❌ ${message}</div>
+                <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                    💡 Советы:<br>
+                    - Проверьте размер файла (максимум 100 МБ)<br>
+                    - Проверьте интернет-соединение<br>
+                    - Попробуйте другой файл<br>
+                    - Обновите страницу и попробуйте снова
+                </div>
+            `;
+            progressContainer.style.display = 'none';
+        }
         
         function formatBytes(bytes) {
             if (bytes === 0) return '0 Bytes';
@@ -223,8 +343,11 @@
         }
         
         window.copyToClipboard = (text) => {
-            navigator.clipboard.writeText(text);
-            alert('Ссылка скопирована в буфер обмена!');
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Ссылка скопирована в буфер обмена!');
+            }).catch(() => {
+                alert('❌ Не удалось скопировать. Скопируйте вручную');
+            });
         };
     </script>
 </body>
