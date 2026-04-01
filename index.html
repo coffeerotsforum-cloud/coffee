@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FileTransfer - Передача файлов</title>
+    <title>FileShare - Облачная передача файлов</title>
     <style>
         * {
             margin: 0;
@@ -67,10 +67,6 @@
             margin-bottom: 10px;
         }
         
-        .file-input {
-            display: none;
-        }
-        
         button {
             background: #667eea;
             color: white;
@@ -102,19 +98,6 @@
             border-radius: 12px;
             display: none;
             animation: slideIn 0.3s ease;
-        }
-        
-        .file-name {
-            font-weight: bold;
-            color: #333;
-            word-break: break-all;
-            margin-bottom: 10px;
-        }
-        
-        .file-size {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 15px;
         }
         
         .progress-container {
@@ -201,52 +184,65 @@
             to { transform: rotate(360deg); }
         }
         
-        .btn-secondary {
-            background: #6c757d;
-            margin-top: 10px;
+        .file-info {
+            margin: 10px 0;
+            color: #666;
+            font-size: 14px;
         }
         
-        .btn-secondary:hover {
-            background: #5a6268;
+        .badge {
+            display: inline-block;
+            background: #e2e8f0;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-right: 8px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📤 FileTransfer</h1>
-        <div class="subtitle">Простая передача файлов через браузер</div>
+        <h1>📤 FileShare</h1>
+        <div class="subtitle">Загрузите файл и получите ссылку для других</div>
         
         <div class="upload-area" id="dropZone">
             <div class="upload-icon">📂</div>
             <div>Перетащите файл сюда или нажмите для выбора</div>
-            <input type="file" id="fileInput" class="file-input">
+            <input type="file" id="fileInput" style="display: none;">
         </div>
         
-        <button id="processBtn" disabled>Выберите файл</button>
+        <div class="file-info" id="fileInfo" style="display: none;"></div>
+        <div class="progress-container" id="progressContainer" style="display: none;">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
         
-        <div id="fileCard" class="file-card"></div>
+        <button id="uploadBtn" disabled>Выберите файл</button>
+        
+        <div id="resultCard" class="file-card"></div>
         
         <div class="info-box">
             💡 <strong>Как это работает:</strong><br>
-            • Файл конвертируется в ссылку прямо в вашем браузере<br>
-            • Ссылка работает только на этом устройстве<br>
-            • Идеально для быстрой передачи между устройствами в одной сети<br>
-            • Файлы НЕ загружаются на сервер - всё локально
+            • Файл загружается на бесплатный облачный сервер<br>
+            • Вы получаете ссылку, которой можно поделиться<br>
+            • Файл хранится 14 дней<br>
+            • Максимальный размер: 100 МБ (бесплатно)
         </div>
     </div>
 
     <script>
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
-        const processBtn = document.getElementById('processBtn');
-        const fileCard = document.getElementById('fileCard');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileInfo = document.getElementById('fileInfo');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const resultCard = document.getElementById('resultCard');
         
         let selectedFile = null;
         
-        // Открыть выбор файла
+        // Drag & drop
         dropZone.addEventListener('click', () => fileInput.click());
         
-        // Drag & drop
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
             dropZone.classList.add('dragover');
@@ -261,105 +257,172 @@
             dropZone.classList.remove('dragover');
             const files = e.dataTransfer.files;
             if (files.length > 0) {
-                handleFile(files[0]);
+                selectFile(files[0]);
             }
         });
         
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
-                handleFile(e.target.files[0]);
+                selectFile(e.target.files[0]);
             }
         });
         
-        function handleFile(file) {
-            selectedFile = file;
-            processBtn.textContent = `🔄 Создать ссылку для ${file.name}`;
-            processBtn.disabled = false;
+        function selectFile(file) {
+            if (file.size > 100 * 1024 * 1024) {
+                alert('Файл слишком большой! Максимум 100 МБ');
+                return;
+            }
             
-            // Показываем информацию о файле
-            fileCard.style.display = 'block';
-            fileCard.innerHTML = `
-                <div class="file-name">📄 ${file.name}</div>
-                <div class="file-size">Размер: ${formatBytes(file.size)}</div>
-                <div class="progress-container">
-                    <div class="progress-bar" id="previewProgress" style="width: 0%"></div>
-                </div>
-                <div style="text-align: center; color: #666; font-size: 14px;">
-                    ⚡ Нажмите кнопку для создания ссылки
-                </div>
+            selectedFile = file;
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = `📤 Загрузить ${file.name} (${formatBytes(file.size)})`;
+            
+            fileInfo.style.display = 'block';
+            fileInfo.innerHTML = `
+                <span class="badge">📄 ${file.name}</span>
+                <span class="badge">💾 ${formatBytes(file.size)}</span>
+                <span class="badge">⏰ До 14 дней</span>
             `;
+            
+            resultCard.style.display = 'none';
         }
         
-        processBtn.addEventListener('click', () => {
+        uploadBtn.addEventListener('click', async () => {
             if (!selectedFile) return;
             
-            processBtn.disabled = true;
-            processBtn.innerHTML = '<span class="spinner"></span> Создание ссылки...';
+            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = '<span class="spinner"></span> Загрузка...';
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            resultCard.style.display = 'none';
             
-            // Имитация прогресса (для красоты)
-            const progressBar = document.getElementById('previewProgress');
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                if (progress <= 100) {
-                    progressBar.style.width = progress + '%';
-                }
-                if (progress >= 100) {
-                    clearInterval(interval);
-                }
-            }, 50);
+            const formData = new FormData();
+            formData.append('file', selectedFile);
             
-            // Создаем ссылку на файл
-            setTimeout(() => {
-                try {
-                    // Создаем blob URL
-                    const blob = new Blob([selectedFile], {type: selectedFile.type});
-                    const url = URL.createObjectURL(blob);
-                    
-                    fileCard.innerHTML = `
-                        <div class="success">✅ Ссылка создана!</div>
-                        <div class="file-name">📄 ${selectedFile.name}</div>
-                        <div class="file-size">Размер: ${formatBytes(selectedFile.size)}</div>
-                        <div class="link-box">
-                            <strong>🔗 Ваша ссылка:</strong><br>
-                            <input type="text" id="fileUrl" value="${url}" readonly 
-                                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin: 10px 0; font-size: 12px;">
-                        </div>
-                        <button class="copy-btn" onclick="copyToClipboard()">📋 Скопировать ссылку</button>
-                        <button class="btn-secondary" onclick="downloadFile()">💾 Скачать файл</button>
-                        <div style="margin-top: 15px; font-size: 12px; color: #666; background: #fff3cd; padding: 10px; border-radius: 6px;">
-                            ⚠️ <strong>Важно:</strong><br>
-                            • Ссылка работает только пока открыта эта страница<br>
-                            • Для передачи на другое устройство - откройте эту же страницу там<br>
-                            • Или используйте QR-код ниже для быстрого доступа
-                        </div>
-                        <div id="qrcode" style="text-align: center; margin-top: 20px;"></div>
-                    `;
-                    
-                    processBtn.style.display = 'none';
-                    
-                    // Добавляем QR код (если нужно)
-                    if (typeof QRCode !== 'undefined') {
-                        new QRCode(document.getElementById("qrcode"), {
-                            text: url,
-                            width: 150,
-                            height: 150
-                        });
-                    } else {
-                        // Если QR библиотека не загружена, показываем обычную ссылку
-                        document.getElementById('qrcode').innerHTML = '<div style="font-size: 12px;">📱 Для передачи на телефон: скопируйте ссылку выше</div>';
+            const xhr = new XMLHttpRequest();
+            
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) {
+                    const percent = (e.loaded / e.total) * 100;
+                    progressBar.style.width = percent + '%';
+                }
+            });
+            
+            xhr.addEventListener('load', () => {
+                if (xhr.status === 200) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            showSuccess(response.link, selectedFile.name);
+                        } else {
+                            showError('Ошибка загрузки. Попробуйте другой сервис.');
+                        }
+                    } catch (e) {
+                        // Если file.io не работает, пробуем другой сервис
+                        uploadToAlternative(selectedFile);
                     }
-                    
-                } catch (error) {
-                    fileCard.innerHTML = `
-                        <div class="error">❌ Ошибка: ${error.message}</div>
-                        <button onclick="location.reload()">🔄 Попробовать снова</button>
-                    `;
-                    processBtn.disabled = false;
-                    processBtn.innerHTML = '🔄 Попробовать снова';
+                } else {
+                    // Если file.io не работает, пробуем другой сервис
+                    uploadToAlternative(selectedFile);
                 }
-            }, 500);
+            });
+            
+            xhr.addEventListener('error', () => {
+                uploadToAlternative(selectedFile);
+            });
+            
+            xhr.open('POST', 'https://file.io/?expires=14d');
+            xhr.send(formData);
         });
+        
+        function uploadToAlternative(file) {
+            // Альтернативный сервис (GoFile.io)
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const xhr = new XMLHttpRequest();
+            
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) {
+                    const percent = (e.loaded / e.total) * 100;
+                    progressBar.style.width = percent + '%';
+                }
+            });
+            
+            xhr.addEventListener('load', () => {
+                if (xhr.status === 200) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.data && response.data.downloadPage) {
+                            showSuccess(response.data.downloadPage, file.name);
+                        } else {
+                            showError('Сервисы временно недоступны. Попробуйте позже.');
+                        }
+                    } catch (e) {
+                        showError('Ошибка загрузки. Попробуйте позже.');
+                    }
+                } else {
+                    showError('Не удалось загрузить файл. Попробуйте позже.');
+                }
+                uploadBtn.disabled = false;
+                uploadBtn.innerHTML = '📤 Загрузить другой файл';
+            });
+            
+            xhr.addEventListener('error', () => {
+                showError('Ошибка сети. Проверьте интернет-соединение.');
+                uploadBtn.disabled = false;
+                uploadBtn.innerHTML = '📤 Попробовать снова';
+            });
+            
+            xhr.open('POST', 'https://api.gofile.io/uploadFile');
+            xhr.send(formData);
+        }
+        
+        function showSuccess(link, fileName) {
+            progressContainer.style.display = 'none';
+            resultCard.style.display = 'block';
+            resultCard.innerHTML = `
+                <div class="success">✅ Файл успешно загружен!</div>
+                <div class="link-box">
+                    <strong>🔗 Ссылка для других:</strong><br>
+                    <input type="text" id="shareLink" value="${link}" readonly 
+                           style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 12px;">
+                    <button class="copy-btn" onclick="copyShareLink()">📋 Скопировать ссылку</button>
+                </div>
+                <div style="margin-top: 15px; padding: 12px; background: #fff3cd; border-radius: 8px;">
+                    <strong>📱 Как поделиться:</strong><br>
+                    1. Скопируйте ссылку выше<br>
+                    2. Отправьте её кому угодно (Telegram, WhatsApp, email)<br>
+                    3. Получатель откроет ссылку и скачает файл<br>
+                    <br>
+                    ⏰ Файл будет доступен 14 дней<br>
+                    📥 Максимальное количество скачиваний: неограниченно
+                </div>
+                <button onclick="resetUpload()" style="background: #6c757d; margin-top: 15px;">
+                    📤 Загрузить другой файл
+                </button>
+            `;
+            uploadBtn.style.display = 'none';
+        }
+        
+        function showError(message) {
+            progressContainer.style.display = 'none';
+            resultCard.style.display = 'block';
+            resultCard.innerHTML = `
+                <div class="error">❌ ${message}</div>
+                <div style="margin-top: 15px;">
+                    <button onclick="location.reload()">🔄 Попробовать снова</button>
+                </div>
+                <div style="margin-top: 15px; padding: 12px; background: #e3f2fd; border-radius: 8px;">
+                    <strong>💡 Альтернативные способы:</strong><br>
+                    • <a href="https://wetransfer.com" target="_blank">WeTransfer</a> - до 2 ГБ<br>
+                    • <a href="https://fromsmash.com" target="_blank">FromSmash</a> - до 2 ГБ<br>
+                    • <a href="https://gofile.io" target="_blank">GoFile</a> - без ограничений
+                </div>
+            `;
+            uploadBtn.disabled = false;
+            uploadBtn.innerHTML = '📤 Попробовать снова';
+        }
         
         function formatBytes(bytes) {
             if (bytes === 0) return '0 Bytes';
@@ -369,29 +432,18 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
         
-        window.copyToClipboard = () => {
-            const urlInput = document.getElementById('fileUrl');
-            if (urlInput) {
-                urlInput.select();
+        window.copyShareLink = () => {
+            const linkInput = document.getElementById('shareLink');
+            if (linkInput) {
+                linkInput.select();
                 document.execCommand('copy');
-                alert('✅ Ссылка скопирована в буфер обмена!');
+                alert('✅ Ссылка скопирована! Теперь отправьте её кому угодно.');
             }
         };
         
-        window.downloadFile = () => {
-            const url = document.getElementById('fileUrl').value;
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = selectedFile.name;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        };
-        
-        // Добавляем библиотеку QR кода (опционально)
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
-        document.head.appendChild(script);
+        function resetUpload() {
+            location.reload();
+        }
     </script>
 </body>
 </html>
