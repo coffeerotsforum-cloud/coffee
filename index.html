@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JDM Garage — всё о японских тачках</title>
+    <title>JDM KIT GENERATOR</title>
     <style>
         * {
             margin: 0;
@@ -12,336 +12,405 @@
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #0a0f1a 0%, #0c1220 100%);
+            background: linear-gradient(135deg, #0a0c1a 0%, #10141f 100%);
+            font-family: 'Segoe UI', 'Courier New', monospace;
             min-height: 100vh;
             padding: 20px;
-            color: #eef2ff;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
-        /* шапка */
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
+
         h1 {
-            font-size: 3rem;
-            background: linear-gradient(135deg, #ff4d4d, #ff9f4d);
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ff5e3a, #ffb84d);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: 2px;
         }
+
         .sub {
-            color: #8a9bb5;
+            color: #9aacd6;
             margin-top: 8px;
         }
 
-        /* поиск */
-        .search-box {
+        .upload-area {
             background: #11161f;
-            border-radius: 60px;
-            padding: 8px 20px;
+            border: 2px dashed #ff6a4a;
+            border-radius: 32px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 30px;
+        }
+
+        .upload-area:hover {
+            border-color: #ff8a6a;
+            background: #1a1f2c;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .preview {
             display: flex;
-            gap: 12px;
-            margin-bottom: 40px;
-            border: 1px solid #2a3448;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
         }
-        .search-box input {
+
+        .preview-box {
             flex: 1;
-            background: transparent;
-            border: none;
-            padding: 16px 8px;
-            font-size: 1.1rem;
-            color: #ffd966;
-            outline: none;
-            font-weight: 500;
-            text-transform: uppercase;
+            min-width: 250px;
+            background: #0f1222;
+            border-radius: 24px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #2a2f42;
         }
-        .search-box input::placeholder {
-            color: #4a5b7c;
-            text-transform: none;
+
+        .preview-box h3 {
+            color: #ffaa7a;
+            margin-bottom: 15px;
         }
-        .search-box button {
-            background: #e63946;
+
+        canvas {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 16px;
+            background: #1a1f2a;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .kit-info {
+            background: #0f1222;
+            border-radius: 24px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #ff6a4a40;
+        }
+
+        .kit-specs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .kit-badge {
+            background: #1e2438;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            color: #ffbc8c;
+        }
+
+        button {
+            background: #ff5e3a;
             color: white;
             border: none;
-            padding: 0 28px;
-            border-radius: 50px;
-            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 40px;
             font-size: 1rem;
+            font-weight: bold;
             cursor: pointer;
+            margin: 8px;
             transition: 0.2s;
         }
-        .search-box button:hover {
-            background: #ff4d5e;
+
+        button:hover {
+            background: #ff7a5a;
             transform: scale(1.02);
         }
 
-        /* карточка машины */
-        .car-card {
-            background: #0f1622;
-            border-radius: 32px;
-            overflow: hidden;
-            border: 1px solid #2a3448;
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px);}
-            to { opacity: 1; transform: translateY(0);}
-        }
-
-        .car-image {
-            width: 100%;
-            height: 320px;
-            object-fit: cover;
-            background: #1a1f2c;
-            display: block;
-        }
-
-        .car-info {
-            padding: 28px;
-        }
-
-        .car-name {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #ffd966;
-            margin-bottom: 8px;
-        }
-
-        .specs {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin: 24px 0;
-            background: #0b1018;
-            padding: 20px;
-            border-radius: 24px;
-        }
-
-        .spec-item {
+        .btn-group {
             text-align: center;
-        }
-        .spec-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            color: #8a9bb5;
-            letter-spacing: 1px;
-        }
-        .spec-value {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #ffaa66;
-            margin-top: 6px;
-        }
-
-        .description {
-            line-height: 1.6;
-            color: #bcc6dc;
-            margin-top: 16px;
-        }
-
-        .not-found {
-            text-align: center;
-            padding: 40px;
-            background: #0f1622;
-            border-radius: 32px;
-            display: none;
-            color: #ff8a6f;
+            margin-top: 20px;
         }
 
         footer {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 30px;
             font-size: 0.7rem;
-            color: #4a5b7c;
+            color: #4a5a7c;
+        }
+
+        input[type="file"] {
+            display: none;
         }
 
         @media (max-width: 700px) {
-            h1 { font-size: 2rem; }
-            .car-name { font-size: 1.5rem; }
-            .specs { grid-template-columns: 1fr; }
+            .preview {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1>🔰 JDM GARAGE</h1>
-        <div class="sub">введи модель — получи данные по культовым японским машинам</div>
+        <h1>🔰 JDM KIT GENERATOR</h1>
+        <div class="sub">загрузи фото — получи уникальный обвес</div>
     </div>
 
-    <div class="search-box">
-        <input type="text" id="carInput" placeholder="Например: Supra, RX-7, Skyline, NSX, Impreza, Evo, 240SX, Silvia, Celica...">
-        <button id="searchBtn">🔍 НАЙТИ</button>
+    <div class="upload-area" id="uploadArea">
+        <div class="upload-icon">📸</div>
+        <div>нажми или перетащи фото</div>
+        <input type="file" id="fileInput" accept="image/*">
     </div>
 
-    <div id="carCard" class="car-card"></div>
-    <div id="notFound" class="not-found"></div>
+    <div class="preview" id="previewSection" style="display: none;">
+        <div class="preview-box">
+            <h3>📷 ОРИГИНАЛ</h3>
+            <canvas id="originalCanvas"></canvas>
+        </div>
+        <div class="preview-box">
+            <h3>✨ С ОБВЕСОМ</h3>
+            <canvas id="kitCanvas"></canvas>
+        </div>
+    </div>
 
-    <footer>
-        ⚡ База JDM-моделей | обновляется вручную | GitHub Pages
-    </footer>
+    <div id="kitInfo" class="kit-info" style="display: none;">
+        <div style="text-align: center; font-weight: bold; color: #ffaa7a;">🎨 КОМПЛЕКТАЦИЯ</div>
+        <div id="kitSpecs" class="kit-specs"></div>
+        <div style="text-align: center; font-size: 0.8rem; color: #9aacd6;" id="kitName"></div>
+    </div>
+
+    <div class="btn-group" id="actionBtns" style="display: none;">
+        <button id="randomKitBtn">🎲 СЛУЧАЙНЫЙ ОБВЕС</button>
+        <button id="saveBtn">💾 СОХРАНИТЬ РЕЗУЛЬТАТ</button>
+    </div>
+
+    <footer>⚡ каждый обвес генерируется случайно · Rocket Bunny, Liberty Walk, BN Sports и другие легенды</footer>
 </div>
 
 <script>
-    // ========= БАЗА JDM МАШИН =========
-    const jdmCars = {
-        "supra": {
-            name: "Toyota Supra A80",
-            image: "https://ibb.co/hJbhyjqq"><img src="https://i.ibb.co/hJbhyjqq/13f5cde8e37f04c500163de717ce51e9.jpg" alt="13f5cde8e37f04c500163de717ce51e9" border="0"></a>"
-            engine: "2JZ-GTE 3.0L Twin Turbo",
-            power: "320 л.с. (стек) / 1000+ л.с. (тюнинг)",
-            years: "1993–2002",
-            drive: "Задний",
-            description: "Легендарное купе, символ японского тюнинга. Двигатель 2JZ выдерживает огромные мощности. Известна по фильму Форсаж."
-        },
-        "rx-7": {
-            name: "Mazda RX-7 FD3S",
-            image: "https://ibb.co/23VJySKM"><img src="https://i.ibb.co/23VJySKM/mazda-rx-7-tuning-car-noch.webp" alt="mazda-rx-7-tuning-car-noch" border="0"></a>",
-            engine: "13B-REW 1.3L Rotary Twin Turbo",
-            power: "255–280 л.с.",
-            years: "1992–2002",
-            drive: "Задний",
-            description: "Роторный двигатель, лёгкий кузов, идеальный баланс. Икона JDM и Initial D."
-        },
-        "skyline": {
-            name: "Nissan Skyline GT-R R34",
-            image: "<a href="https://ibb.co/TqYbFw8g"><img src="https://i.ibb.co/TqYbFw8g/5996769411-ba9534081b-o-e1467835483964.jpg" alt="5996769411-ba9534081b-o-e1467835483964" border="0"></a>
-            engine: "RB26DETT 2.6L Twin Turbo",
-            power: "280 л.с. (заявлена), реально ~330 л.с.",
-            years: "1999–2002",
-            drive: "Полный (ATTESA E-TS)",
-            description: "Главная звезда Форсажа и Gran Turismo. Система полного привода, 2.6 twin-turbo, культовый статус."
-        },
-        "nsx": {
-            name: "Honda NSX (NA1)",
-            image: "https://cdn.pixabay.com/photo/2018/04/28/09/55/acura-3357355_1280.jpg",
-            engine: "C30A 3.0L V6 VTEC",
-            power: "274 л.с.",
-            years: "1990–2005",
-            drive: "Задний",
-            description: "Суперкар от Honda, разработанный при участии Айртона Сенны. Алюминиевый кузов, надежность как у Honda Civic."
-        },
-        "impreza": {
-            name: "Subaru Impreza WRX STI (GC8)",
-            image: "https://cdn.pixabay.com/photo/2022/08/25/22/18/subaru-impreza-7410990_1280.jpg",
-            engine: "EJ20 2.0L Turbo Boxer",
-            power: "280 л.с.",
-            years: "1994–2000",
-            drive: "Полный",
-            description: "Раллийная легенда. Оппозитный двигатель, полный привод, характерный вой турбины."
-        },
-        "evo": {
-            name: "Mitsubishi Lancer Evolution VI",
-            image: "https://cdn.pixabay.com/photo/2019/08/21/21/17/mitsubishi-4421953_1280.jpg",
-            engine: "4G63T 2.0L Turbo",
-            power: "280 л.с.",
-            years: "1999–2001",
-            drive: "Полный",
-            description: "Главный соперник Impreza. Двигатель 4G63 — легенда тюнинга, активный дифференциал AYC."
-        },
-        "240sx": {
-            name: "Nissan 240SX (S13)",
-            image: "https://cdn.pixabay.com/photo/2017/05/28/18/22/nissan-2352157_1280.jpg",
-            engine: "KA24DE 2.4L / SR20DET",
-            power: "155–205 л.с.",
-            years: "1989–1998",
-            drive: "Задний",
-            description: "Дрифт-классика. Лёгкий, задний привод, огромный выбор свопов. Популярна в Formula Drift."
-        },
-        "silvia": {
-            name: "Nissan Silvia S15",
-            image: "https://cdn.pixabay.com/photo/2021/04/19/20/51/silvia-6191879_1280.jpg",
-            engine: "SR20DET 2.0L Turbo",
-            power: "250 л.с.",
-            years: "1999–2002",
-            drive: "Задний",
-            description: "Икона дрифта. Идеальный баланс, надежный SR20, стильный дизайн."
-        },
-        "celica": {
-            name: "Toyota Celica GT-Four (ST205)",
-            image: "https://cdn.pixabay.com/photo/2020/04/02/21/45/toyota-celica-4994853_1280.jpg",
-            engine: "3S-GTE 2.0L Turbo",
-            power: "255 л.с.",
-            years: "1994–1999",
-            drive: "Полный",
-            description: "Раллийная версия Celica. Полный привод, мощный турбомотор. Известна по игре Gran Turismo."
+    // ========= БАЗА JDM-ОБВЕСОВ =========
+    const kits = [
+        { name: "ROCKET BUNNY", style: "широкие крылья, агрессивный диффузор", colorEffect: "darken" },
+        { name: "LIBERTY WALK", style: "клепаные арки, низкая посадка", colorEffect: "contrast" },
+        { name: "BN SPORTS", style: "гранж-стиль, массивный бампер", colorEffect: "warm" },
+        { name: "VEILSIDE", style: "элегантный агрессив, плавные линии", colorEffect: "cool" },
+        { name: "VARIS", style: "карбон, аэродинамика", colorEffect: "bright" },
+        { name: "TOP SECRET", style: "гоночный, минимализм", colorEffect: "grayscale" },
+        { name: "ABFLUG", style: "спортивный, огромное антикрыло", colorEffect: "sepia" }
+    ];
+
+    const wheels = ["WORK", "SSR", "ENKEI", "RAYS", "BBS", "VOLK RACING", "ADVAN"];
+    const wings = ["GT-WING 1600mm", "DUCKTAIL", "CARBON SPOILER", "SWAN NECK"];
+    const liveries = ["полоски", "камикадзе-наклейки", "градиент", "металлик", "матовый"];
+
+    let currentImage = null;
+    let originalCanvas = document.getElementById('originalCanvas');
+    let kitCanvas = document.getElementById('kitCanvas');
+    let ctxOriginal = originalCanvas.getContext('2d');
+    let ctxKit = kitCanvas.getContext('2d');
+
+    // загрузка фото
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const previewSection = document.getElementById('previewSection');
+    const kitInfoDiv = document.getElementById('kitInfo');
+    const actionBtns = document.getElementById('actionBtns');
+    const kitSpecsDiv = document.getElementById('kitSpecs');
+    const kitNameSpan = document.getElementById('kitName');
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#ffaa7a';
+    });
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = '#ff6a4a';
+    });
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            loadImage(file);
         }
-    };
-
-    const searchBtn = document.getElementById('searchBtn');
-    const carInput = document.getElementById('carInput');
-    const carCardDiv = document.getElementById('carCard');
-    const notFoundDiv = document.getElementById('notFound');
-
-    function showCar(modelKey) {
-        const car = jdmCars[modelKey];
-        if (!car) {
-            carCardDiv.style.display = 'none';
-            notFoundDiv.style.display = 'block';
-            notFoundDiv.innerHTML = `
-                <div style="font-size: 1.5rem; margin-bottom: 10px;">😭 МАШИНА НЕ НАЙДЕНА</div>
-                <div style="color:#b0bedb;">Попробуй: Supra, RX-7, Skyline, NSX, Impreza, Evo, 240SX, Silvia, Celica</div>
-            `;
-            return;
-        }
-
-        notFoundDiv.style.display = 'none';
-        carCardDiv.style.display = 'block';
-        carCardDiv.innerHTML = `
-            <img class="car-image" src="${car.image}" alt="${car.name}" onerror="this.src='https://placehold.co/800x400/1a1f2c/ffaa66?text=JDM'">
-            <div class="car-info">
-                <div class="car-name">${car.name}</div>
-                <div class="specs">
-                    <div class="spec-item"><div class="spec-label">ДВИГАТЕЛЬ</div><div class="spec-value">${car.engine}</div></div>
-                    <div class="spec-item"><div class="spec-label">МОЩНОСТЬ</div><div class="spec-value">${car.power}</div></div>
-                    <div class="spec-item"><div class="spec-label">ГОДЫ</div><div class="spec-value">${car.years}</div></div>
-                    <div class="spec-item"><div class="spec-label">ПРИВОД</div><div class="spec-value">${car.drive}</div></div>
-                </div>
-                <div class="description">${car.description}</div>
-            </div>
-        `;
-    }
-
-    function searchCar() {
-        let query = carInput.value.trim().toLowerCase();
-        if (!query) return;
-        // нормализация: убираем пробелы, дефисы, приводим к ключу
-        const normalized = query.replace(/[-\s]/g, '');
-        // ищем точное совпадение
-        if (jdmCars[normalized]) {
-            showCar(normalized);
-        } else if (jdmCars[query]) {
-            showCar(query);
-        } else {
-            // пробуем частичное совпадение
-            const keys = Object.keys(jdmCars);
-            const match = keys.find(key => key.includes(normalized) || normalized.includes(key));
-            if (match) {
-                showCar(match);
-            } else {
-                showCar(null);
-            }
-        }
-    }
-
-    searchBtn.addEventListener('click', searchCar);
-    carInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') searchCar();
     });
 
-    // демо при загрузке
-    setTimeout(() => {
-        carInput.value = "Supra";
-        searchCar();
-    }, 100);
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            loadImage(e.target.files[0]);
+        }
+    });
+
+    function loadImage(file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                currentImage = img;
+                // устанавливаем размеры canvas
+                const maxWidth = 500;
+                const scale = maxWidth / img.width;
+                const width = maxWidth;
+                const height = img.height * scale;
+                originalCanvas.width = width;
+                originalCanvas.height = height;
+                kitCanvas.width = width;
+                kitCanvas.height = height;
+                ctxOriginal.drawImage(img, 0, 0, width, height);
+                // копируем на второй канвас
+                ctxKit.drawImage(img, 0, 0, width, height);
+                previewSection.style.display = 'flex';
+                generateRandomKit(); // сразу первый обвес
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function generateRandomKit() {
+        if (!currentImage) return;
+
+        // выбираем случайные компоненты
+        const kit = kits[Math.floor(Math.random() * kits.length)];
+        const wheel = wheels[Math.floor(Math.random() * wheels.length)];
+        const wing = wings[Math.floor(Math.random() * wings.length)];
+        const livery = liveries[Math.floor(Math.random() * liveries.length)];
+        
+        // отображаем информацию
+        kitSpecsDiv.innerHTML = `
+            <span class="kit-badge">${kit.name}</span>
+            <span class="kit-badge">${wheel}</span>
+            <span class="kit-badge">${wing}</span>
+            <span class="kit-badge">${livery}</span>
+        `;
+        kitNameSpan.innerHTML = `${kit.style} · агрессивный стайлинг`;
+        kitInfoDiv.style.display = 'block';
+        actionBtns.style.display = 'block';
+
+        // рисуем "обвес" — накладываем эффект на канвас
+        applyKitEffect(kit);
+        
+        // добавляем визуальные элементы (имитация наклеек, полосок)
+        drawStickers(kit, wheel, wing);
+    }
+
+    function applyKitEffect(kit) {
+        if (!currentImage) return;
+        const width = kitCanvas.width;
+        const height = kitCanvas.height;
+        
+        // перерисовываем оригинал
+        ctxKit.drawImage(currentImage, 0, 0, width, height);
+        
+        // эффект по типу обвеса
+        let imageData = ctxKit.getImageData(0, 0, width, height);
+        let data = imageData.data;
+        
+        switch(kit.colorEffect) {
+            case 'darken':
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i] = data[i] * 0.8;
+                    data[i+1] = data[i+1] * 0.8;
+                    data[i+2] = data[i+2] * 0.8;
+                }
+                break;
+            case 'contrast':
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i] = Math.min(255, data[i] * 1.2);
+                    data[i+1] = Math.min(255, data[i+1] * 1.2);
+                    data[i+2] = Math.min(255, data[i+2] * 1.2);
+                }
+                break;
+            case 'warm':
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i] = Math.min(255, data[i] * 1.15);
+                    data[i+1] = data[i+1] * 0.9;
+                    data[i+2] = data[i+2] * 0.85;
+                }
+                break;
+            case 'cool':
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i] = data[i] * 0.85;
+                    data[i+1] = data[i+1] * 0.95;
+                    data[i+2] = Math.min(255, data[i+2] * 1.2);
+                }
+                break;
+            case 'bright':
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i] = Math.min(255, data[i] * 1.1);
+                    data[i+1] = Math.min(255, data[i+1] * 1.1);
+                    data[i+2] = Math.min(255, data[i+2] * 1.1);
+                }
+                break;
+            case 'grayscale':
+                for (let i = 0; i < data.length; i += 4) {
+                    let avg = (data[i] + data[i+1] + data[i+2]) / 3;
+                    data[i] = avg;
+                    data[i+1] = avg;
+                    data[i+2] = avg;
+                }
+                break;
+            case 'sepia':
+                for (let i = 0; i < data.length; i += 4) {
+                    let r = data[i];
+                    let g = data[i+1];
+                    let b = data[i+2];
+                    data[i] = Math.min(255, (r * 0.393) + (g * 0.769) + (b * 0.189));
+                    data[i+1] = Math.min(255, (r * 0.349) + (g * 0.686) + (b * 0.168));
+                    data[i+2] = Math.min(255, (r * 0.272) + (g * 0.534) + (b * 0.131));
+                }
+                break;
+        }
+        ctxKit.putImageData(imageData, 0, 0);
+    }
+
+    function drawStickers(kit, wheel, wing) {
+        // имитация наклеек, полосок и надписей (чисто визуально)
+        const width = kitCanvas.width;
+        const height = kitCanvas.height;
+        
+        ctxKit.font = `bold ${Math.floor(width * 0.05)}px "Courier New"`;
+        ctxKit.fillStyle = "#ffcc44";
+        ctxKit.shadowBlur = 0;
+        ctxKit.fillText(`${kit.name}`, width * 0.05, height * 0.1);
+        
+        ctxKit.font = `${Math.floor(width * 0.04)}px monospace`;
+        ctxKit.fillStyle = "#ffaa66";
+        ctxKit.fillText(`${wing}`, width * 0.05, height * 0.2);
+        
+        // полоска на боку
+        ctxKit.beginPath();
+        ctxKit.strokeStyle = "#ff8844";
+        ctxKit.lineWidth = width * 0.02;
+        ctxKit.moveTo(width * 0.1, height * 0.7);
+        ctxKit.lineTo(width * 0.9, height * 0.7);
+        ctxKit.stroke();
+        
+        ctxKit.fillStyle = "#ffffffcc";
+        ctxKit.font = `${Math.floor(width * 0.045)}px monospace`;
+        ctxKit.fillText(wheel, width * 0.6, height * 0.85);
+    }
+
+    document.getElementById('randomKitBtn').addEventListener('click', () => {
+        if (currentImage) generateRandomKit();
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', () => {
+        const link = document.createElement('a');
+        link.download = 'jdm_kit.png';
+        link.href = kitCanvas.toDataURL();
+        link.click();
+    });
+
+    // скрываем preview если нет фото
 </script>
 </body>
 </html>
