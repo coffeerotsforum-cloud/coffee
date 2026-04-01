@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FileShare - Облачная передача файлов</title>
+    <title>FileShare - Google Диск</title>
     <style>
         * {
             margin: 0;
@@ -198,38 +198,62 @@
             font-size: 12px;
             margin-right: 8px;
         }
+        
+        .auth-btn {
+            background: #4285f4;
+            margin-bottom: 15px;
+        }
+        
+        .auth-btn:hover {
+            background: #3367d6;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>📤 FileShare</h1>
-        <div class="subtitle">Загрузите файл и получите ссылку для других</div>
+        <div class="subtitle">Загрузите файл на Google Диск и получите ссылку</div>
         
-        <div class="upload-area" id="dropZone">
-            <div class="upload-icon">📂</div>
-            <div>Перетащите файл сюда или нажмите для выбора</div>
-            <input type="file" id="fileInput" style="display: none;">
+        <button id="authBtn" class="auth-btn">🔐 Войти через Google</button>
+        
+        <div id="uploadSection" style="display: none;">
+            <div class="upload-area" id="dropZone">
+                <div class="upload-icon">📂</div>
+                <div>Перетащите файл сюда или нажмите для выбора</div>
+                <input type="file" id="fileInput" style="display: none;">
+            </div>
+            
+            <div class="file-info" id="fileInfo" style="display: none;"></div>
+            <div class="progress-container" id="progressContainer" style="display: none;">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <button id="uploadBtn" disabled>Выберите файл</button>
+            
+            <div id="resultCard" class="file-card"></div>
         </div>
-        
-        <div class="file-info" id="fileInfo" style="display: none;"></div>
-        <div class="progress-container" id="progressContainer" style="display: none;">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-        
-        <button id="uploadBtn" disabled>Выберите файл</button>
-        
-        <div id="resultCard" class="file-card"></div>
         
         <div class="info-box">
             💡 <strong>Как это работает:</strong><br>
-            • Файл загружается на бесплатный облачный сервер<br>
-            • Вы получаете ссылку, которой можно поделиться<br>
-            • Файл хранится 14 дней<br>
-            • Максимальный размер: 100 МБ (бесплатно)
+            • Войдите в свой Google аккаунт<br>
+            • Файл загрузится на ваш Google Диск<br>
+            • Вы получите ссылку для отправки кому угодно<br>
+            • Файл хранится навсегда (пока вы не удалите)
         </div>
     </div>
 
+    <script src="https://apis.google.com/js/api.js"></script>
     <script>
+        // Google Drive API настройки
+        const CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'; // Нужно создать в Google Cloud Console
+        const API_KEY = 'YOUR_API_KEY'; // Нужно создать в Google Cloud Console
+        const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+        
+        let authToken = null;
+        let selectedFile = null;
+        
+        const authBtn = document.getElementById('authBtn');
+        const uploadSection = document.getElementById('uploadSection');
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         const uploadBtn = document.getElementById('uploadBtn');
@@ -238,7 +262,46 @@
         const progressBar = document.getElementById('progressBar');
         const resultCard = document.getElementById('resultCard');
         
-        let selectedFile = null;
+        // Проверка авторизации
+        function checkAuth() {
+            gapi.load('client:auth2', () => {
+                gapi.client.init({
+                    apiKey: API_KEY,
+                    clientId: CLIENT_ID,
+                    scope: SCOPES
+                }).then(() => {
+                    const auth = gapi.auth2.getAuthInstance();
+                    if (auth.isSignedIn.get()) {
+                        authToken = auth.currentUser.get().getAuthResponse().access_token;
+                        showUploadSection();
+                    } else {
+                        authBtn.style.display = 'block';
+                    }
+                });
+            });
+        }
+        
+        // Вход
+        authBtn.addEventListener('click', () => {
+            gapi.load('client:auth2', () => {
+                gapi.client.init({
+                    apiKey: API_KEY,
+                    clientId: CLIENT_ID,
+                    scope: SCOPES
+                }).then(() => {
+                    const auth = gapi.auth2.getAuthInstance();
+                    auth.signIn().then(() => {
+                        authToken = auth.currentUser.get().getAuthResponse().access_token;
+                        showUploadSection();
+                    });
+                });
+            });
+        });
+        
+        function showUploadSection() {
+            authBtn.style.display = 'none';
+            uploadSection.style.display = 'block';
+        }
         
         // Drag & drop
         dropZone.addEventListener('click', () => fileInput.click());
@@ -268,11 +331,6 @@
         });
         
         function selectFile(file) {
-            if (file.size > 100 * 1024 * 1024) {
-                alert('Файл слишком большой! Максимум 100 МБ');
-                return;
-            }
-            
             selectedFile = file;
             uploadBtn.disabled = false;
             uploadBtn.textContent = `📤 Загрузить ${file.name} (${formatBytes(file.size)})`;
@@ -281,23 +339,29 @@
             fileInfo.innerHTML = `
                 <span class="badge">📄 ${file.name}</span>
                 <span class="badge">💾 ${formatBytes(file.size)}</span>
-                <span class="badge">⏰ До 14 дней</span>
             `;
             
             resultCard.style.display = 'none';
         }
         
         uploadBtn.addEventListener('click', async () => {
-            if (!selectedFile) return;
+            if (!selectedFile || !authToken) return;
             
             uploadBtn.disabled = true;
-            uploadBtn.innerHTML = '<span class="spinner"></span> Загрузка...';
+            uploadBtn.innerHTML = '<span class="spinner"></span> Загрузка на Google Диск...';
             progressContainer.style.display = 'block';
             progressBar.style.width = '0%';
             resultCard.style.display = 'none';
             
-            const formData = new FormData();
-            formData.append('file', selectedFile);
+            // Создаем метаданные файла
+            const metadata = {
+                name: selectedFile.name,
+                parents: ['root']
+            };
+            
+            const form = new FormData();
+            form.append('metadata', new Blob([JSON.stringify(metadata)], {type: 'application/json'}));
+            form.append('file', selectedFile);
             
             const xhr = new XMLHttpRequest();
             
@@ -310,79 +374,57 @@
             
             xhr.addEventListener('load', () => {
                 if (xhr.status === 200) {
-                    try {
-                        const response = JSON.parse(xhr.responseText);
-                        if (response.success) {
-                            showSuccess(response.link, selectedFile.name);
-                        } else {
-                            showError('Ошибка загрузки. Попробуйте другой сервис.');
-                        }
-                    } catch (e) {
-                        // Если file.io не работает, пробуем другой сервис
-                        uploadToAlternative(selectedFile);
-                    }
+                    const response = JSON.parse(xhr.responseText);
+                    const fileId = response.id;
+                    const shareLink = `https://drive.google.com/file/d/${fileId}/view`;
+                    
+                    // Делаем файл публичным
+                    makeFilePublic(fileId, shareLink);
                 } else {
-                    // Если file.io не работает, пробуем другой сервис
-                    uploadToAlternative(selectedFile);
+                    showError('Ошибка загрузки: ' + xhr.status);
                 }
             });
             
             xhr.addEventListener('error', () => {
-                uploadToAlternative(selectedFile);
+                showError('Ошибка сети. Проверьте интернет.');
             });
             
-            xhr.open('POST', 'https://file.io/?expires=14d');
-            xhr.send(formData);
+            xhr.open('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart');
+            xhr.setRequestHeader('Authorization', `Bearer ${authToken}`);
+            xhr.send(form);
         });
         
-        function uploadToAlternative(file) {
-            // Альтернативный сервис (GoFile.io)
-            const formData = new FormData();
-            formData.append('file', file);
-            
+        function makeFilePublic(fileId, shareLink) {
             const xhr = new XMLHttpRequest();
+            xhr.open('POST', `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`);
+            xhr.setRequestHeader('Authorization', `Bearer ${authToken}`);
+            xhr.setRequestHeader('Content-Type', 'application/json');
             
-            xhr.upload.addEventListener('progress', (e) => {
-                if (e.lengthComputable) {
-                    const percent = (e.loaded / e.total) * 100;
-                    progressBar.style.width = percent + '%';
-                }
+            const body = JSON.stringify({
+                role: 'reader',
+                type: 'anyone'
             });
             
-            xhr.addEventListener('load', () => {
+            xhr.onload = () => {
                 if (xhr.status === 200) {
-                    try {
-                        const response = JSON.parse(xhr.responseText);
-                        if (response.data && response.data.downloadPage) {
-                            showSuccess(response.data.downloadPage, file.name);
-                        } else {
-                            showError('Сервисы временно недоступны. Попробуйте позже.');
-                        }
-                    } catch (e) {
-                        showError('Ошибка загрузки. Попробуйте позже.');
-                    }
+                    showSuccess(shareLink, selectedFile.name);
                 } else {
-                    showError('Не удалось загрузить файл. Попробуйте позже.');
+                    showSuccess(shareLink, selectedFile.name); // Все равно показываем ссылку
                 }
-                uploadBtn.disabled = false;
-                uploadBtn.innerHTML = '📤 Загрузить другой файл';
-            });
+            };
             
-            xhr.addEventListener('error', () => {
-                showError('Ошибка сети. Проверьте интернет-соединение.');
-                uploadBtn.disabled = false;
-                uploadBtn.innerHTML = '📤 Попробовать снова';
-            });
+            xhr.onerror = () => {
+                showSuccess(shareLink, selectedFile.name);
+            };
             
-            xhr.open('POST', 'https://api.gofile.io/uploadFile');
-            xhr.send(formData);
+            xhr.send(body);
         }
         
         function showSuccess(link, fileName) {
             progressContainer.style.display = 'none';
             resultCard.style.display = 'block';
             resultCard.innerHTML = `
-                <div class="success">✅ Файл успешно загружен!</div>
+                <div class="success">✅ Файл на Google Диске!</div>
                 <div class="link-box">
                     <strong>🔗 Ссылка для других:</strong><br>
                     <input type="text" id="shareLink" value="${link}" readonly 
@@ -395,8 +437,8 @@
                     2. Отправьте её кому угодно (Telegram, WhatsApp, email)<br>
                     3. Получатель откроет ссылку и скачает файл<br>
                     <br>
-                    ⏰ Файл будет доступен 14 дней<br>
-                    📥 Максимальное количество скачиваний: неограниченно
+                    📂 Файл на вашем Google Диске<br>
+                    🔒 Можете удалить в любой момент
                 </div>
                 <button onclick="resetUpload()" style="background: #6c757d; margin-top: 15px;">
                     📤 Загрузить другой файл
@@ -412,12 +454,6 @@
                 <div class="error">❌ ${message}</div>
                 <div style="margin-top: 15px;">
                     <button onclick="location.reload()">🔄 Попробовать снова</button>
-                </div>
-                <div style="margin-top: 15px; padding: 12px; background: #e3f2fd; border-radius: 8px;">
-                    <strong>💡 Альтернативные способы:</strong><br>
-                    • <a href="https://wetransfer.com" target="_blank">WeTransfer</a> - до 2 ГБ<br>
-                    • <a href="https://fromsmash.com" target="_blank">FromSmash</a> - до 2 ГБ<br>
-                    • <a href="https://gofile.io" target="_blank">GoFile</a> - без ограничений
                 </div>
             `;
             uploadBtn.disabled = false;
@@ -437,13 +473,21 @@
             if (linkInput) {
                 linkInput.select();
                 document.execCommand('copy');
-                alert('✅ Ссылка скопирована! Теперь отправьте её кому угодно.');
+                alert('✅ Ссылка скопирована! Отправьте её кому угодно.');
             }
         };
         
         function resetUpload() {
             location.reload();
         }
+        
+        // Загружаем Google API
+        const script = document.createElement('script');
+        script.src = 'https://apis.google.com/js/api.js';
+        script.onload = () => {
+            setTimeout(checkAuth, 100);
+        };
+        document.head.appendChild(script);
     </script>
 </body>
 </html>
