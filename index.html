@@ -3,200 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FileShare - Загрузка файлов</title>
+    <title>FileShare - Простая загрузка файлов</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
             padding: 20px;
         }
         .container {
-            max-width: 700px;
+            max-width: 600px;
             margin: 0 auto;
             background: white;
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
-        h1 { color: #333; margin-bottom: 10px; font-size: 28px; }
-        .subtitle { color: #666; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #f0f0f0; }
-        .upload-area {
-            border: 3px dashed #ccc;
-            border-radius: 12px;
-            padding: 50px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 20px;
+        h1 {
+            font-size: 28px;
+            color: #1e3c72;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        input[type="file"] {
+            width: 100%;
+            padding: 40px 20px;
+            border: 2px dashed #ccc;
+            border-radius: 16px;
             background: #fafafa;
+            cursor: pointer;
+            margin-bottom: 20px;
         }
-        .upload-area:hover { border-color: #667eea; background: #f5f5ff; }
-        .upload-area.dragover { border-color: #667eea; background: #e8eaff; transform: scale(1.02); }
-        .upload-icon { font-size: 64px; margin-bottom: 10px; }
+        input[type="file"]:hover {
+            border-color: #1e3c72;
+            background: #f5f5ff;
+        }
         button {
-            background: #667eea;
+            background: #1e3c72;
             color: white;
             border: none;
-            padding: 14px 28px;
-            border-radius: 10px;
+            padding: 14px;
+            border-radius: 12px;
             font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
             width: 100%;
-            font-weight: 600;
+            transition: all 0.2s;
         }
-        button:hover { background: #5a67d8; transform: translateY(-2px); }
-        button:disabled { background: #ccc; cursor: not-allowed; }
-        .progress-container {
+        button:hover {
+            background: #2a5298;
+            transform: scale(1.02);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .progress {
             width: 100%;
-            height: 10px;
-            background: #e2e8f0;
-            border-radius: 5px;
-            overflow: hidden;
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
             margin: 15px 0;
+            overflow: hidden;
             display: none;
         }
         .progress-bar {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, #48bb78, #38a169);
+            background: #48bb78;
             transition: width 0.3s;
         }
-        .link-box {
-            background: white;
-            padding: 15px;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            margin: 15px 0;
-            word-break: break-all;
-        }
-        .success { color: #48bb78; font-weight: bold; font-size: 18px; margin-bottom: 15px; }
-        .error { color: #e53e3e; font-weight: bold; margin-bottom: 10px; }
-        .copy-btn { background: #48bb78; margin-top: 10px; }
-        .copy-btn:hover { background: #38a169; }
-        .result-card {
+        .result {
             margin-top: 20px;
             padding: 20px;
             background: #f8f9fa;
             border-radius: 12px;
             display: none;
+            word-break: break-all;
         }
-        .info-box {
-            background: #e3f2fd;
-            border-left: 4px solid #2196f3;
+        .success { color: #48bb78; font-weight: bold; margin-bottom: 10px; }
+        .error { color: #e53e3e; font-weight: bold; }
+        .link-box {
+            background: white;
             padding: 12px;
-            margin-top: 20px;
+            border: 1px solid #ddd;
             border-radius: 8px;
+            margin: 10px 0;
+        }
+        .copy-btn {
+            background: #48bb78;
+            margin-top: 10px;
+            padding: 10px;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
             font-size: 13px;
             color: #1976d2;
         }
         .spinner {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+            width: 18px;
+            height: 18px;
+            border: 2px solid white;
             border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
+            border-top-color: transparent;
+            animation: spin 0.6s linear infinite;
+            margin-right: 8px;
             vertical-align: middle;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .file-info { margin: 10px 0; color: #666; font-size: 14px; }
-        .badge {
-            display: inline-block;
-            background: #e2e8f0;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            margin-right: 8px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>📤 FileShare</h1>
-        <div class="subtitle">Загрузите файл — получите ссылку для отправки</div>
+        <div class="subtitle">Загрузи файл — получи ссылку</div>
         
-        <div class="upload-area" id="dropZone">
-            <div class="upload-icon">📂</div>
-            <div>Перетащите файл сюда или нажмите для выбора</div>
-            <input type="file" id="fileInput" style="display: none;">
-        </div>
+        <input type="file" id="fileInput">
         
-        <div class="file-info" id="fileInfo" style="display: none;"></div>
-        <div class="progress-container" id="progressContainer">
+        <div class="progress" id="progress">
             <div class="progress-bar" id="progressBar"></div>
         </div>
         
         <button id="uploadBtn" disabled>Выберите файл</button>
         
-        <div id="resultCard" class="result-card"></div>
+        <div id="result" class="result"></div>
         
-        <div class="info-box">
-            💡 <strong>Как это работает:</strong><br>
-            • Файл загружается на бесплатный сервер<br>
-            • Вы получаете ссылку — отправляете кому угодно<br>
-            • Файл хранится 14 дней<br>
-            • Максимум 100 МБ
+        <div class="info">
+            ✅ Файлы хранятся на сервере<br>
+            ✅ Ссылка работает для всех<br>
+            ✅ Можно удалить файл когда захочешь
         </div>
     </div>
 
     <script>
-        const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         const uploadBtn = document.getElementById('uploadBtn');
-        const fileInfo = document.getElementById('fileInfo');
-        const progressContainer = document.getElementById('progressContainer');
+        const progress = document.getElementById('progress');
         const progressBar = document.getElementById('progressBar');
-        const resultCard = document.getElementById('resultCard');
+        const resultDiv = document.getElementById('result');
         
         let selectedFile = null;
         
-        dropZone.addEventListener('click', () => fileInput.click());
-        
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
-        
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragover');
-        });
-        
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) selectFile(files[0]);
-        });
-        
         fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) selectFile(e.target.files[0]);
-        });
-        
-        function selectFile(file) {
-            if (file.size > 100 * 1024 * 1024) {
-                alert('Файл слишком большой! Максимум 100 МБ');
-                return;
+            if (e.target.files.length > 0) {
+                selectedFile = e.target.files[0];
+                uploadBtn.disabled = false;
+                uploadBtn.innerHTML = `📤 Загрузить ${selectedFile.name} (${formatBytes(selectedFile.size)})`;
+                resultDiv.style.display = 'none';
             }
-            selectedFile = file;
-            uploadBtn.disabled = false;
-            uploadBtn.textContent = `📤 Загрузить ${file.name} (${formatBytes(file.size)})`;
-            fileInfo.style.display = 'block';
-            fileInfo.innerHTML = `<span class="badge">📄 ${file.name}</span><span class="badge">💾 ${formatBytes(file.size)}</span>`;
-            resultCard.style.display = 'none';
-        }
+        });
         
         uploadBtn.addEventListener('click', () => {
             if (!selectedFile) return;
             
             uploadBtn.disabled = true;
             uploadBtn.innerHTML = '<span class="spinner"></span> Загрузка...';
-            progressContainer.style.display = 'block';
+            progress.style.display = 'block';
             progressBar.style.width = '0%';
-            resultCard.style.display = 'none';
             
             const formData = new FormData();
             formData.append('file', selectedFile);
@@ -214,108 +187,56 @@
                 if (xhr.status === 200) {
                     try {
                         const response = JSON.parse(xhr.responseText);
-                        if (response.success && response.link) {
-                            showSuccess(response.link, selectedFile.name);
+                        if (response.success) {
+                            showSuccess(response.url, response.filename);
                         } else {
-                            // Пробуем альтернативный сервис
-                            uploadToTempFile(selectedFile);
+                            showError(response.error || 'Ошибка загрузки');
                         }
                     } catch(e) {
-                        uploadToTempFile(selectedFile);
+                        showError('Ошибка ответа сервера');
                     }
                 } else {
-                    uploadToTempFile(selectedFile);
-                }
-            });
-            
-            xhr.addEventListener('error', () => {
-                uploadToTempFile(selectedFile);
-            });
-            
-            xhr.open('POST', 'https://file.io/?expires=14d');
-            xhr.send(formData);
-        });
-        
-        function uploadToTempFile(file) {
-            // Альтернативный сервис (работает 100%)
-            const formData = new FormData();
-            formData.append('file', file);
-            
-            const xhr = new XMLHttpRequest();
-            
-            xhr.upload.addEventListener('progress', (e) => {
-                if (e.lengthComputable) {
-                    const percent = (e.loaded / e.total) * 100;
-                    progressBar.style.width = percent + '%';
-                }
-            });
-            
-            xhr.addEventListener('load', () => {
-                if (xhr.status === 200) {
-                    try {
-                        const response = JSON.parse(xhr.responseText);
-                        // Получаем ссылку из ответа
-                        const link = response.url || response.link || response.download_url;
-                        if (link) {
-                            showSuccess(link, file.name);
-                        } else {
-                            showManualUpload(file);
-                        }
-                    } catch(e) {
-                        showManualUpload(file);
-                    }
-                } else {
-                    showManualUpload(file);
+                    showError('Ошибка сервера: ' + xhr.status);
                 }
                 uploadBtn.disabled = false;
                 uploadBtn.innerHTML = '📤 Загрузить другой файл';
             });
             
             xhr.addEventListener('error', () => {
-                showManualUpload(file);
+                showError('Ошибка сети. Проверьте интернет.');
                 uploadBtn.disabled = false;
                 uploadBtn.innerHTML = '📤 Попробовать снова';
             });
             
-            xhr.open('POST', 'https://tmpfiles.org/api/v1/upload');
+            xhr.open('POST', 'upload.php');
             xhr.send(formData);
-        }
+        });
         
-        function showSuccess(link, fileName) {
-            progressContainer.style.display = 'none';
-            resultCard.style.display = 'block';
-            resultCard.innerHTML = `
+        function showSuccess(url, filename) {
+            progress.style.display = 'none';
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
                 <div class="success">✅ Файл загружен!</div>
                 <div class="link-box">
                     <strong>🔗 Ссылка для других:</strong><br>
-                    <input type="text" id="shareLink" value="${link}" readonly 
-                           style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px;">
-                    <button class="copy-btn" onclick="copyShareLink()">📋 Скопировать ссылку</button>
+                    <input type="text" id="fileUrl" value="${url}" readonly 
+                           style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px;">
+                    <button class="copy-btn" onclick="copyUrl()">📋 Скопировать ссылку</button>
                 </div>
-                <div style="padding: 12px; background: #e8f5e9; border-radius: 8px; margin-top: 15px;">
-                    ✅ Просто отправьте эту ссылку кому угодно — файл скачается без регистрации!
+                <div style="margin-top: 15px; font-size: 13px; color: #666;">
+                    💡 Отправьте эту ссылку кому угодно — файл скачается без регистрации
                 </div>
-                <button onclick="resetUpload()" style="background: #6c757d; margin-top: 15px;">📤 Загрузить другой файл</button>
+                <button onclick="location.reload()" style="background: #6c757d; margin-top: 15px;">📤 Загрузить другой файл</button>
             `;
-            uploadBtn.style.display = 'none';
         }
         
-        function showManualUpload(file) {
-            progressContainer.style.display = 'none';
-            resultCard.style.display = 'block';
-            resultCard.innerHTML = `
-                <div class="error">⚠️ Автоматическая загрузка временно недоступна</div>
-                <div style="margin: 15px 0; padding: 15px; background: #fff3cd; border-radius: 8px;">
-                    <strong>📌 Используй эти сайты (100% работают):</strong><br><br>
-                    <b>1. https://dropmefiles.com</b> — до 50 ГБ, ссылка 7 дней<br>
-                    <b>2. https://wetransfer.com</b> — до 2 ГБ, ссылка 7 дней<br>
-                    <b>3. https://fromsmash.com</b> — до 2 ГБ, ссылка до 30 дней<br><br>
-                    💡 Загружаешь файл → копируешь ссылку → отправляешь кому хочешь
-                </div>
-                <button onclick="resetUpload()" style="background: #6c757d;">🔄 Попробовать снова</button>
+        function showError(msg) {
+            progress.style.display = 'none';
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="error">❌ ${msg}</div>
+                <button onclick="location.reload()" style="background: #6c757d; margin-top: 15px;">🔄 Попробовать снова</button>
             `;
-            uploadBtn.disabled = false;
-            uploadBtn.innerHTML = '📤 Попробовать снова';
         }
         
         function formatBytes(bytes) {
@@ -326,18 +247,12 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
         
-        window.copyShareLink = () => {
-            const linkInput = document.getElementById('shareLink');
-            if (linkInput) {
-                linkInput.select();
-                document.execCommand('copy');
-                alert('✅ Ссылка скопирована! Теперь отправь её кому угодно.');
-            }
+        window.copyUrl = () => {
+            const input = document.getElementById('fileUrl');
+            input.select();
+            document.execCommand('copy');
+            alert('✅ Ссылка скопирована!');
         };
-        
-        function resetUpload() {
-            location.reload();
-        }
     </script>
 </body>
 </html>
