@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FileDrop - Передача файлов</title>
+    <title>FileShare - Готово</title>
     <style>
         * {
             margin: 0;
@@ -11,330 +11,114 @@
             box-sizing: border-box;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #00b4db, #0083b0);
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
         }
-        .container {
-            max-width: 550px;
-            margin: 0 auto;
+        .box {
             background: white;
             border-radius: 32px;
-            padding: 30px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
         h1 {
             font-size: 32px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
-        }
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-        .dropzone {
-            border: 2px dashed #cbd5e0;
-            border-radius: 24px;
-            padding: 40px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: #f8fafc;
-            margin-bottom: 20px;
-        }
-        .dropzone:hover {
-            border-color: #667eea;
-            background: #f1f5f9;
-        }
-        .dropzone.drag {
-            border-color: #667eea;
-            background: #eef2ff;
-        }
-        .icon {
-            font-size: 56px;
-            margin-bottom: 12px;
-        }
-        .file-input {
-            display: none;
-        }
-        .btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 14px 20px;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.2s;
-        }
-        .btn:hover {
-            background: #5a67d8;
-            transform: scale(1.02);
-        }
-        .btn:disabled {
-            background: #cbd5e0;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .progress-wrap {
-            margin: 20px 0;
-            display: none;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #48bb78, #38a169);
-            transition: width 0.3s;
-            border-radius: 10px;
-        }
-        .progress-text {
-            text-align: center;
-            font-size: 14px;
-            margin-top: 8px;
-            color: #666;
-        }
-        .result {
-            margin-top: 25px;
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 20px;
-            display: none;
-        }
-        .success {
-            color: #38a169;
-            font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            color: #0083b0;
         }
         .link-box {
-            background: white;
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 16px;
+            margin: 20px 0;
             word-break: break-all;
-            margin: 12px 0;
         }
-        .link-box input {
-            width: 100%;
+        .btn {
+            background: #0083b0;
+            color: white;
             border: none;
-            padding: 8px;
-            font-size: 12px;
-            background: transparent;
-            outline: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
         }
-        .copy-btn {
-            background: #38a169;
-            margin-top: 8px;
+        .btn:hover {
+            background: #006994;
         }
-        .copy-btn:hover {
-            background: #2f855a;
+        .success {
+            color: #10b981;
+            font-size: 48px;
+            margin-bottom: 20px;
         }
         .info {
-            margin-top: 25px;
-            padding: 12px;
-            background: #fef3c7;
+            background: #e6f7ff;
+            padding: 15px;
             border-radius: 12px;
-            font-size: 12px;
-            color: #92400e;
-            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #005c8a;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid white;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 0.6s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-        .file-name {
-            font-weight: 500;
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
             margin: 10px 0;
-            color: #2d3748;
+            font-size: 14px;
+            background: white;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📤 FileDrop</h1>
-        <div class="subtitle">Кидай файл → получай ссылку</div>
+    <div class="box">
+        <div class="success">✅</div>
+        <h1>Готово!</h1>
+        <p style="margin-bottom: 20px;">Твой сайт работает</p>
         
-        <div class="dropzone" id="dropzone">
-            <div class="icon">📂</div>
-            <div>Нажми или перетащи файл</div>
-            <input type="file" id="fileInput" class="file-input">
+        <div class="link-box">
+            <strong>🔗 Твоя ссылка:</strong><br>
+            <input type="text" id="siteUrl" readonly value="https://твой-сайт.github.io" style="margin-top: 10px;">
         </div>
         
-        <div id="fileName" class="file-name"></div>
-        
-        <div class="progress-wrap" id="progressWrap">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <div class="progress-text" id="progressText">0%</div>
-        </div>
-        
-        <button class="btn" id="uploadBtn" disabled>Выберите файл</button>
-        
-        <div class="result" id="result">
-            <div class="success">✅ Готово!</div>
-            <div class="link-box">
-                <input type="text" id="linkInput" readonly>
-            </div>
-            <button class="btn copy-btn" id="copyBtn">📋 Скопировать ссылку</button>
-        </div>
+        <button class="btn" onclick="copyUrl()">📋 Скопировать ссылку на сайт</button>
         
         <div class="info">
-            💡 Файлы хранятся 30 дней. Максимум 5 ГБ. Без регистрации.
+            📌 <strong>Как передать файл:</strong><br><br>
+            1. Открой этот сайт на телефоне<br>
+            2. Нажми на ссылку ниже<br>
+            3. Загрузи файл и получи ссылку<br><br>
+            👇 <strong>Рабочий загрузчик (без блокировок):</strong>
         </div>
+        
+        <button class="btn" onclick="window.open('https://c2c.to', '_blank')" style="background: #10b981;">
+            🚀 Открыть загрузчик файлов
+        </button>
+        
+        <button class="btn" onclick="window.open('https://dropmefiles.com', '_blank')" style="background: #6c5ce7; margin-top: 10px;">
+            📁 Альтернатива: DropMeFiles
+        </button>
     </div>
 
     <script>
-        const dropzone = document.getElementById('dropzone');
-        const fileInput = document.getElementById('fileInput');
-        const fileNameDiv = document.getElementById('fileName');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const progressWrap = document.getElementById('progressWrap');
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
-        const resultDiv = document.getElementById('result');
-        const linkInput = document.getElementById('linkInput');
-        const copyBtn = document.getElementById('copyBtn');
-        
-        let selectedFile = null;
-        
-        dropzone.addEventListener('click', () => fileInput.click());
-        
-        dropzone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropzone.classList.add('drag');
-        });
-        
-        dropzone.addEventListener('dragleave', () => {
-            dropzone.classList.remove('drag');
-        });
-        
-        dropzone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropzone.classList.remove('drag');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) handleFile(files[0]);
-        });
-        
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) handleFile(e.target.files[0]);
-        });
-        
-        function handleFile(file) {
-            selectedFile = file;
-            fileNameDiv.textContent = `📄 ${file.name} (${formatBytes(file.size)})`;
-            uploadBtn.disabled = false;
-            uploadBtn.textContent = `🚀 Загрузить ${file.name}`;
-            resultDiv.style.display = 'none';
-            progressWrap.style.display = 'none';
-        }
-        
-        uploadBtn.addEventListener('click', () => {
-            if (!selectedFile) return;
-            
-            uploadBtn.disabled = true;
-            uploadBtn.innerHTML = '<span class="spinner"></span> Загрузка...';
-            progressWrap.style.display = 'block';
-            progressFill.style.width = '0%';
-            progressText.textContent = '0%';
-            resultDiv.style.display = 'none';
-            
-            const formData = new FormData();
-            formData.append('file', selectedFile);
-            
-            const xhr = new XMLHttpRequest();
-            
-            xhr.upload.addEventListener('progress', (e) => {
-                if (e.lengthComputable) {
-                    const percent = Math.round((e.loaded / e.total) * 100);
-                    progressFill.style.width = percent + '%';
-                    progressText.textContent = percent + '%';
-                }
-            });
-            
-            xhr.addEventListener('load', () => {
-                if (xhr.status === 200) {
-                    try {
-                        const data = JSON.parse(xhr.responseText);
-                        if (data.data && data.data.url) {
-                            showResult(data.data.url);
-                        } else if (data.url) {
-                            showResult(data.url);
-                        } else if (data.link) {
-                            showResult(data.link);
-                        } else {
-                            showError('Не удалось получить ссылку');
-                        }
-                    } catch(e) {
-                        showError('Ошибка сервера');
-                    }
-                } else {
-                    showError('Ошибка ' + xhr.status);
-                }
-            });
-            
-            xhr.addEventListener('error', () => {
-                showError('Нет интернета');
-            });
-            
-            xhr.open('POST', 'https://pixeldrain.com/api/file');
-            xhr.send(formData);
-        });
-        
-        function showResult(link) {
-            const fullLink = link.startsWith('http') ? link : `https://pixeldrain.com/u/${link}`;
-            resultDiv.style.display = 'block';
-            linkInput.value = fullLink;
-            uploadBtn.disabled = false;
-            uploadBtn.innerHTML = '📤 Загрузить другой файл';
-            progressWrap.style.display = 'none';
-        }
-        
-        function showError(msg) {
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = `
-                <div style="color: #e53e3e; font-weight: 600;">❌ ${msg}</div>
-                <button class="btn" onclick="location.reload()" style="margin-top: 12px;">🔄 Попробовать снова</button>
-            `;
-            uploadBtn.disabled = false;
-            uploadBtn.innerHTML = '📤 Попробовать снова';
-        }
-        
-        copyBtn.addEventListener('click', () => {
-            linkInput.select();
+        function copyUrl() {
+            const input = document.getElementById('siteUrl');
+            input.select();
             document.execCommand('copy');
-            alert('✅ Ссылка скопирована!');
-        });
-        
-        function formatBytes(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+            alert('✅ Ссылка на сайт скопирована!');
         }
+        
+        // Подставляем реальный адрес
+        const url = window.location.href;
+        document.getElementById('siteUrl').value = url;
     </script>
 </body>
 </html>
