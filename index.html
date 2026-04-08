@@ -3,373 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>🛡️ Цифровой щит — Защита от доксинга</title>
-    <!-- Шрифт Inter -->
+    <title>🛡️ ЦИФРОВАЯ КРЕПОСТЬ | Полная защита от доксинга</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
-    <!-- Font Awesome для иконок -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(145deg, #0a0f1c 0%, #141b2b 100%);
-            min-height: 100vh;
-            color: #eef2fb;
-            padding: 20px;
-            line-height: 1.5;
+            background: #0b0f17;
+            color: #e3e9f5;
+            line-height: 1.6;
+            padding: 20px 16px;
         }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
+        .wrapper { max-width: 1300px; margin: 0 auto; }
+        
         /* Header */
-        header {
+        .header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 35px;
             padding-bottom: 20px;
-            border-bottom: 1px solid rgba(74, 144, 226, 0.2);
+            border-bottom: 2px solid #1e2a3d;
         }
-
         h1 {
-            font-weight: 600;
-            font-size: 1.9rem;
-            background: linear-gradient(135deg, #a0c8ff, #6ea8fe);
+            font-size: clamp(1.8rem, 5vw, 2.4rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #bdd3ff, #7aa9ff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             letter-spacing: -0.02em;
         }
-
-        .badge {
-            background: #1e2b41;
-            padding: 4px 12px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #8bb1e0;
+        .status-badge {
             margin-left: auto;
-            border: 1px solid #2a3c58;
+            background: #0f1a2b;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            border: 1px solid #2e456e;
+            color: #a0c0f0;
         }
+        .status-badge i { color: #3acf7a; margin-right: 6px; }
 
-        /* Карточки */
+        /* Сетка карточек */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
         .card {
-            background: rgba(18, 28, 45, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid #293a54;
+            background: #121a28;
+            border: 1px solid #263750;
             border-radius: 28px;
-            padding: 28px 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5);
-            transition: transform 0.2s ease;
+            padding: 26px 22px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 12px 30px -8px rgba(0,0,0,0.6);
+            transition: border 0.2s;
         }
-
-        .card:hover {
-            border-color: #3f5a82;
-        }
-
-        h2 {
-            font-weight: 500;
+        .card:hover { border-color: #406494; }
+        .card h2 {
             font-size: 1.5rem;
-            margin-bottom: 20px;
+            font-weight: 600;
+            margin-bottom: 22px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: #cddff7;
+            gap: 12px;
+            color: #cbd9f0;
         }
+        .card h2 i { color: #4a90e2; font-size: 1.6rem; width: 32px; }
 
-        h2 i {
-            color: #4a90e2;
-            font-size: 1.4rem;
-        }
-
-        /* Поля ввода */
-        .input-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-
-        input {
-            flex: 1 1 220px;
-            background: #0f1a28;
-            border: 1.5px solid #2c405b;
-            border-radius: 60px;
-            padding: 16px 22px;
+        /* Элементы форм */
+        input, textarea {
+            width: 100%;
+            background: #0c1422;
+            border: 1.5px solid #283b58;
+            border-radius: 20px;
+            padding: 16px 18px;
             font-size: 1rem;
             color: white;
             font-family: 'Inter', sans-serif;
+            resize: vertical;
+            margin-bottom: 16px;
+        }
+        input:focus, textarea:focus {
+            border-color: #4f8be0;
             outline: none;
-            transition: all 0.2s;
+            background: #0e192b;
         }
-
-        input:focus {
-            border-color: #4a90e2;
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
-            background: #0e1a2b;
-        }
-
-        input::placeholder {
-            color: #6b85a8;
-            font-weight: 400;
-        }
-
         button {
-            background: #1f3a60;
-            border: 1px solid #3b6190;
+            background: #1e3a62;
+            border: 1px solid #3865a0;
             color: white;
-            font-weight: 500;
-            padding: 0 28px;
-            border-radius: 60px;
+            font-weight: 600;
+            padding: 14px 24px;
+            border-radius: 50px;
             font-size: 1rem;
             cursor: pointer;
-            transition: 0.15s;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(4px);
+            justify-content: center;
+            gap: 10px;
             font-family: 'Inter', sans-serif;
-            height: 56px;
-            white-space: nowrap;
+            transition: all 0.15s;
+            width: 100%;
+            margin-top: 6px;
         }
-
         button:hover {
-            background: #2b4a76;
-            border-color: #5f8ac9;
-            transform: scale(1.02);
+            background: #26518a;
+            border-color: #5c8fd6;
+            transform: translateY(-1px);
         }
-
-        button.secondary {
+        .btn-outline {
             background: transparent;
-            border: 1.5px dashed #4f6f97;
-            color: #b3cef0;
+            border: 1.5px dashed #3f6190;
+            color: #b3cef5;
         }
-
-        button.secondary:hover {
-            background: #1e3148;
-        }
-
-        .result-box {
-            background: #0b1421;
+        .output-box {
+            background: #0a101c;
             border-radius: 20px;
-            padding: 18px 22px;
-            border-left: 5px solid #4a90e2;
-            font-size: 0.95rem;
-            word-break: break-word;
-        }
-
-        .alias-display {
+            padding: 18px;
+            border-left: 6px solid #4a90e2;
             font-family: 'SF Mono', 'Menlo', monospace;
-            font-size: 1.3rem;
-            font-weight: 600;
-            background: #0f1a28;
-            padding: 16px 20px;
-            border-radius: 18px;
-            border: 1px dashed #4f7eb0;
-            margin: 15px 0;
-            text-align: center;
-            letter-spacing: 0.5px;
+            word-break: break-all;
+            margin: 18px 0 8px;
+            font-size: 0.95rem;
         }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
+        .badge-sm {
+            display: inline-block;
+            background: #1d3450;
+            padding: 5px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
         }
-
-        .alert-list {
-            list-style: none;
-        }
-
-        .alert-list li {
-            margin-bottom: 14px;
+        hr { border: 0.5px solid #213250; margin: 24px 0; }
+        .flex-row {
             display: flex;
-            align-items: flex-start;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .checklist li {
+            list-style: none;
+            margin-bottom: 16px;
+            display: flex;
             gap: 12px;
         }
-
-        .alert-list i {
-            color: #e24a4a;
-            margin-top: 3px;
-        }
-
-        .alert-list .fa-circle-check {
-            color: #3acf7a;
-        }
-
-        .footer-note {
+        .checklist i.fa-check-circle { color: #2ecc71; }
+        .footer {
             text-align: center;
+            margin-top: 40px;
             opacity: 0.7;
-            font-size: 0.85rem;
-            margin-top: 20px;
+            font-size: 0.9rem;
         }
-
-        a {
-            color: #8bb5f0;
-            text-decoration: none;
-        }
-
-        hr {
-            border: 0.5px solid #263853;
-            margin: 20px 0;
-        }
-
-        @media (max-width: 600px) {
-            .grid-2 { grid-template-columns: 1fr; }
-            h1 { font-size: 1.6rem; }
-            .card { padding: 20px 16px; }
-            button { width: 100%; justify-content: center; }
-        }
+        a { color: #8db1f0; text-decoration: none; }
+        .password-strength { height: 6px; background: #1f3147; border-radius: 10px; margin: 8px 0 16px; }
+        .strength-bar { height: 6px; border-radius: 10px; width: 0%; background: #e24a4a; transition: 0.2s; }
     </style>
 </head>
 <body>
-<div class="container">
-    <header>
-        <h1><i class="fas fa-shield-hal" style="margin-right: 6px;"></i> AntiDox Hub</h1>
-        <div class="badge"><i class="far fa-eye-slash"></i> превентивная защита</div>
-    </header>
-
-    <!-- Карточка 1: Проверка утечек -->
-    <div class="card">
-        <h2><i class="fas fa-database"></i> Проверить email / пароль на утечки</h2>
-        <p style="margin-bottom: 18px; opacity:0.9;">Безопасная проверка через <strong>Have I Been Pwned</strong> (k‑анонимность).</p>
-        <div class="input-group">
-            <input type="email" id="emailInput" placeholder="ваш email@example.com" value="">
-            <button id="checkBreachBtn"><i class="fas fa-search"></i> Проверить</button>
-        </div>
-        <div class="input-group">
-            <input type="text" id="passHintInput" placeholder="часть пароля (первые 5 символов)" maxlength="10">
-            <button id="checkPassBtn" class="secondary"><i class="fas fa-key"></i> Проверить пароль</button>
-        </div>
-        <div id="breachResult" class="result-box">
-            <i class="fas fa-info-circle"></i> Введите email или часть пароля, чтобы увидеть результат.
-        </div>
-        <div style="font-size:0.8rem; margin-top:12px; opacity:0.6;"><i class="fas fa-lock"></i> Пароль не передаётся целиком — только 5 символов хеша.</div>
+<div class="wrapper">
+    <div class="header">
+        <h1><i class="fas fa-shield-virus" style="margin-right: 12px;"></i>ЦИФРОВАЯ КРЕПОСТЬ</h1>
+        <div class="status-badge"><i class="fas fa-circle"></i> автономный режим • всегда на GitHub</div>
     </div>
 
-    <!-- Карточка 2: Инструменты анонимизации -->
-    <div class="card">
-        <h2><i class="fas fa-user-secret"></i> Генератор безопасных псевдонимов</h2>
-        <p>Используйте для регистраций на сомнительных сайтах вместо настоящего имени.</p>
-        <div class="alias-display" id="aliasDisplay">Алиса_В_Сети_42</div>
-        <div style="display: flex; gap: 12px;">
-            <button id="generateAliasBtn"><i class="fas fa-dice"></i> Сгенерировать</button>
-            <button id="copyAliasBtn" class="secondary"><i class="far fa-copy"></i> Копировать</button>
-        </div>
-        <hr>
-        <p><i class="fas fa-envelope-open-text"></i> <strong>Одноразовая почта:</strong> <a href="#" id="tempMailLink" target="_blank">temp-mail.org</a> (откроется в новой вкладке)</p>
-    </div>
-
-    <!-- Карточка 3: Инструкции по удалению (докс-реагирование) -->
-    <div class="card">
-        <h2><i class="fas fa-broom"></i> Удаление цифровых следов</h2>
-        <div class="grid-2">
-            <div>
-                <ul class="alert-list">
-                    <li><i class="fas fa-circle-check"></i> <strong>Google</strong> — <a href="#">Запрос на удаление устаревшего контента</a></li>
-                    <li><i class="fas fa-circle-check"></i> <strong>Yandex</strong> — <a href="#">Удаление информации из поиска</a></li>
-                    <li><i class="fas fa-circle-check"></i> <strong>Брокеры данных:</strong> Whitepages, Spokeo (opt-out)</li>
-                </ul>
+    <!-- Первый ряд: генераторы и проверки -->
+    <div class="grid">
+        <!-- КАРТОЧКА: Парольный комбайн -->
+        <div class="card">
+            <h2><i class="fas fa-key"></i> Генератор паролей</h2>
+            <div style="display:flex; gap:8px; margin-bottom:12px;">
+                <input type="text" id="passwordOutput" readonly value="Кликните «Создать»" style="background:#0e1727;">
+                <button style="width:auto; margin:0;" id="copyPassBtn"><i class="far fa-copy"></i></button>
             </div>
-            <div>
-                <ul class="alert-list">
-                    <li><i class="fas fa-exclamation-triangle" style="color:#e2a84a;"></i> <strong>Никогда</strong> не платите «специалистам» за удаление.</li>
-                    <li><i class="fas fa-shield"></i> Включите двухфакторную аутентификацию везде.</li>
-                    <li><i class="fas fa-clock"></i> Настройте оповещения Google Alerts на своё имя.</li>
-                </ul>
+            <div class="flex-row">
+                <button id="generatePassBtn"><i class="fas fa-dice"></i> Создать (24 символа)</button>
+                <button id="generatePassLongBtn" class="btn-outline"><i class="fas fa-dice-d6"></i> 48 символов</button>
             </div>
+            <div class="password-strength"><div class="strength-bar" id="strengthBar"></div></div>
+            <p style="font-size:0.85rem;"><i class="fas fa-flask"></i> Включает буквы, цифры, спецсимволы.</p>
         </div>
-        <div style="margin-top: 20px; background: #102132; border-radius: 20px; padding: 16px;">
-            <i class="fas fa-gavel"></i> <strong>Если данные уже слили:</strong> зафиксируйте скриншоты, обратитесь в поддержку соцсети/сайта и подайте заявление по ст. 137 УК РФ / 152.2 ГК РФ.
+
+        <!-- КАРТОЧКА: Псевдоним / Анонимная личность -->
+        <div class="card">
+            <h2><i class="fas fa-user-ninja"></i> Генератор личности</h2>
+            <label style="display:block; margin-bottom:6px;">Псевдоним:</label>
+            <div style="display:flex; gap:8px;">
+                <input type="text" id="aliasOutput" readonly value="Shadow_Fox_777" style="background:#0e1727;">
+                <button style="width:auto; margin:0;" id="copyAliasBtn2"><i class="far fa-copy"></i></button>
+            </div>
+            <label style="display:block; margin:16px 0 6px;">Одноразовый email:</label>
+            <div style="display:flex; gap:8px;">
+                <input type="text" id="fakeEmailOutput" readonly value="user_8f3x@tempmail.net" style="background:#0e1727;">
+                <button style="width:auto; margin:0;" id="copyEmailBtn"><i class="far fa-copy"></i></button>
+            </div>
+            <button id="generateIdentityBtn" style="margin-top:18px;"><i class="fas fa-sync-alt"></i> Сгенерировать новую личность</button>
+        </div>
+
+        <!-- КАРТОЧКА: Очистка метаданных -->
+        <div class="card">
+            <h2><i class="fas fa-eraser"></i> Анализатор текста</h2>
+            <p style="margin-bottom:12px;">Вставьте текст — найдём возможные утечки (email, телефон, IP).</p>
+            <textarea id="textScanner" rows="3" placeholder="Пример: Мой email ivan@mail.ru, тел. +7 999 123-45-67"></textarea>
+            <button id="scanTextBtn"><i class="fas fa-search"></i> Сканировать на личные данные</button>
+            <div id="scanResult" class="output-box" style="margin-top:16px;">
+                <i class="fas fa-info-circle"></i> Ожидание текста...
+            </div>
+            <button id="clearTextBtn" class="btn-outline"><i class="fas fa-trash-alt"></i> Очистить поле</button>
         </div>
     </div>
 
-    <div class="footer-note">
-        <i class="far fa-shield"></i> Ваши запросы не сохраняются. Сервис работает локально в браузере, API-запросы анонимизированы.
+    <!-- Второй ряд: Инструкции и чеклист -->
+    <div class="grid">
+        <div class="card">
+            <h2><i class="fas fa-list-check"></i> Чеклист защиты (OSINT)</h2>
+            <ul class="checklist">
+                <li><i class="fas fa-check-circle"></i> <strong>Приватность соцсетей</strong> — всё закрыто, друзья проверены.</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Удалены старые аккаунты</strong> (MySpace, старые форумы).</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Whois Protection</strong> на доменах (если есть).</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Отвязаны номера</strong> от Telegram (настройки).</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Отключены геотеги</strong> в камере телефона.</li>
+            </ul>
+            <hr>
+            <p><i class="fas fa-gavel"></i> <strong>Юридическая справка РФ:</strong> ст. 137 УК РФ (нарушение неприкосновенности частной жизни), ст. 152.2 ГК РФ. Фиксируйте скриншоты.</p>
+        </div>
+        <div class="card">
+            <h2><i class="fas fa-link"></i> Прямые ссылки на удаление</h2>
+            <div style="display:flex; flex-direction: column; gap:14px;">
+                <a href="#" onclick="window.open('https://myaccount.google.com/delete-services-or-account');return false;"><i class="fab fa-google"></i> Удаление аккаунта Google / истории</a>
+                <a href="#" onclick="window.open('https://account.microsoft.com/privacy/export');return false;"><i class="fab fa-microsoft"></i> Microsoft: данные и приватность</a>
+                <a href="#" onclick="window.open('https://www.facebook.com/help/delete_account');return false;"><i class="fab fa-facebook"></i> Удаление Facebook</a>
+                <a href="#" onclick="window.open('https://justdeleteme.xyz/');return false;"><i class="fas fa-database"></i> JustDeleteMe — удаление с сотен сайтов</a>
+                <a href="#" onclick="window.open('https://haveibeenpwned.com/');return false;"><i class="fas fa-shield"></i> Have I Been Pwned (проверка email)</a>
+            </div>
+            <hr>
+            <p><i class="fas fa-clock"></i> <strong>Google Alerts:</strong> Настройте на своё имя: <span style="background:#0f1e33; padding:3px 10px; border-radius:20px;">"Иван Иванов"</span></p>
+        </div>
+        <div class="card">
+            <h2><i class="fas fa-triangle-exclamation"></i> Что делать, если уже слили?</h2>
+            <ol style="margin-left:20px;">
+                <li style="margin-bottom:12px;"><strong>Не паниковать</strong> и не вступать в переписку.</li>
+                <li style="margin-bottom:12px;">Сделать скриншоты (с датой/временем).</li>
+                <li style="margin-bottom:12px;">Отправить жалобу администрации сайта/соцсети (DMCA/жалоба на конфиденциальность).</li>
+                <li style="margin-bottom:12px;">Подать заявление в полицию (отдел «К»).</li>
+                <li style="margin-bottom:12px;">Сменить все пароли и включить 2FA.</li>
+            </ol>
+            <button id="emergencyBtn" style="background:#5e2e2e; border-color:#a14f4f;"><i class="fas fa-skull"></i> Экстренный чек-лист (скачать .txt)</button>
+        </div>
+    </div>
+    <div class="footer">
+        🛡️ Полностью автономный инструмент. Никакие данные не отправляются на сервер — всё в вашем браузере. Работает офлайн после загрузки.
     </div>
 </div>
 
 <script>
-    (function() {
-        "use strict";
-
-        // ---------- ЭЛЕМЕНТЫ ----------
-        const emailInput = document.getElementById('emailInput');
-        const checkBreachBtn = document.getElementById('checkBreachBtn');
-        const passHintInput = document.getElementById('passHintInput');
-        const checkPassBtn = document.getElementById('checkPassBtn');
-        const breachResult = document.getElementById('breachResult');
-
-        const aliasDisplay = document.getElementById('aliasDisplay');
-        const generateAliasBtn = document.getElementById('generateAliasBtn');
-        const copyAliasBtn = document.getElementById('copyAliasBtn');
-        const tempMailLink = document.getElementById('tempMailLink');
-        tempMailLink.href = 'https://temp-mail.org/';
-
-        // ---------- ПРОВЕРКА EMAIL (HIBP public API) ----------
-        async function checkEmailBreach(email) {
-            if (!email || !email.includes('@')) {
-                breachResult.innerHTML = `<i class="fas fa-times-circle" style="color:#e24a4a;"></i> Введите корректный email.`;
-                return;
-            }
-            breachResult.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Проверяем через Have I Been Pwned...`;
-            try {
-                // Используем CORS-прокси? Нет, HIBP API v3 разрешает запросы с браузера если указан режим.
-                // Но для защиты от блокировок иногда нужен прокси. Используем публичный cors-anywhere или hibp напрямую.
-                // Прямой запрос работает, но без ключа может быть ограничение. Добавим заголовок.
-                const response = await fetch(`https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email.trim())}`, {
-                    method: 'GET',
-                    headers: {
-                        'hibp-api-key': 'no-key-required-but-respect-limits', // на самом деле ключ не обязателен, но рейт-лимит строже
-                        'User-Agent': 'AntiDoxHub Educational'
-                    }
-                });
-                
-                if (response.status === 404) {
-                    breachResult.innerHTML = `<i class="fas fa-check-circle" style="color:#3acf7a;"></i> <strong>Хорошие новости!</strong> Email "${email}" не найден в известных утечках (по базе HIBP).`;
-                } else if (response.status === 200) {
-                    const breaches = await response.json();
-                    const breachNames = breaches.map(b => b.Name).join(', ');
-                    breachResult.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#e2a84a;"></i> <strong>Внимание!</strong> Email найден в ${breaches.length} утечках: ${breachNames}. Срочно смените пароли!`;
-                } else if (response.status === 429) {
-                    breachResult.innerHTML = `<i class="fas fa-hourglass-half"></i> Слишком много запросов. Подождите минуту.`;
-                } else {
-                    throw new Error(`Статус ${response.status}`);
-                }
-            } catch (error) {
-                breachResult.innerHTML = `<i class="fas fa-plug"></i> Ошибка соединения или ограничение API. Попробуйте позже. (${error.message})`;
-                console.warn(error);
-            }
+    (function(){
+        // ---------- ГЕНЕРАТОР ПАРОЛЕЙ ----------
+        function generatePassword(length = 24) {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+            let pwd = '';
+            const array = new Uint32Array(length);
+            crypto.getRandomValues(array);
+            for (let i = 0; i < length; i++) pwd += chars[array[i] % chars.length];
+            return pwd;
         }
+        function updateStrength(password) {
+            const bar = document.getElementById('strengthBar');
+            let score = 0;
+            if (password.length >= 12) score += 25; else score += 10;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score += 20;
+            if (/[0-9]/.test(password)) score += 20;
+            if (/[^a-zA-Z0-9]/.test(password)) score += 25;
+            bar.style.width = Math.min(score, 100) + '%';
+            if (score < 40) bar.style.background = '#e24a4a';
+            else if (score < 70) bar.style.background = '#e2a84a';
+            else bar.style.background = '#3acf7a';
+        }
+        const passOut = document.getElementById('passwordOutput');
+        document.getElementById('generatePassBtn').addEventListener('click', ()=>{
+            const pwd = generatePassword(24);
+            passOut.value = pwd;
+            updateStrength(pwd);
+        });
+        document.getElementById('generatePassLongBtn').addEventListener('click', ()=>{
+            const pwd = generatePassword(48);
+            passOut.value = pwd;
+            updateStrength(pwd);
+        });
+        document.getElementById('copyPassBtn').addEventListener('click', ()=>{
+            navigator.clipboard?.writeText(passOut.value);
+            alert('Пароль скопирован');
+        });
 
-        // ---------- ПРОВЕРКА ПАРОЛЯ (k-anonymity) ----------
-        async function checkPasswordLeak(passwordPrefix) {
-            if (!passwordPrefix || passwordPrefix.length < 3) {
-                breachResult.innerHTML = `<i class="fas fa-info-circle"></i> Введите хотя бы 3-5 символов пароля (первые символы).`;
-                return;
-            }
-            breachResult.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Хешируем и проверяем по базе Pwned Passwords...`;
-            
-            try {
-                // 1. SHA-1 хеш (устарел, но используется именно в этом API)
-                const encoder = new TextEncoder();
-                const data = encoder.encode(passwordPrefix.trim());
-                const hashBuffer = await crypto.subtle.digest('SHA-1', data);
-                const hashArray = Array.from(new Uint8Array(hashBuffer));
-                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
-                const prefix = hashHex.slice(0, 5);
-                const suffix = hashHex.slice(5);
-
-                // 2. Зап
+        // ---------- ГЕНЕРАТОР ЛИЧНОСТИ ----------
+        const aliasOutput = document.getElementById('aliasOutput');
+        const fakeEmailOutput = document.getElementById('fake
