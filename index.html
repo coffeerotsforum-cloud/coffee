@@ -2,343 +2,369 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Система защиты</title>
-    
-    <!-- МЕТА-ТЕГИ БЕЗОПАСНОСТИ -->
-    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, notranslate, noimageindex">
-    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
-    <meta name="yandex" content="noindex, nofollow">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; frame-ancestors 'none';">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains; preload">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="Referrer-Policy" content="no-referrer">
-    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=()">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🛡️ ЦИФРОВАЯ КРЕПОСТЬ | Полная защита от доксинга</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * {
-            user-select: none !important;
-            -webkit-user-select: none !important;
-            -moz-user-select: none !important;
-            -ms-user-select: none !important;
-            -webkit-tap-highlight-color: transparent !important;
-        }
-        
-        ::selection { background: transparent !important; }
-        ::-moz-selection { background: transparent !important; }
-        
-        img {
-            -webkit-user-drag: none;
-            user-drag: none;
-            pointer-events: none;
-        }
-        
-        @media print {
-            body { display: none !important; }
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: #0a0a0a;
-            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            background: #0b0f17;
+            color: #e3e9f5;
+            line-height: 1.6;
+            padding: 20px 16px;
         }
+        .wrapper { max-width: 1300px; margin: 0 auto; }
         
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #1e2a3d;
         }
-        
-        .warning {
-            border-left: 4px solid #ff4444;
-            background: #1a1a1a;
-            padding: 15px;
-            margin: 20px 0;
+        h1 {
+            font-size: clamp(1.8rem, 5vw, 2.4rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #bdd3ff, #7aa9ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
         }
-        
-        .step {
-            background: #1e1e1e;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
+        .status-badge {
+            margin-left: auto;
+            background: #0f1a2b;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            border: 1px solid #2e456e;
+            color: #a0c0f0;
         }
-        
-        .step-number {
-            color: #ff4444;
-            font-weight: bold;
-            font-size: 20px;
+        .status-badge i { color: #3acf7a; margin-right: 6px; }
+
+        /* Сетка карточек */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
         }
-        
-        button {
-            background: #ff4444;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            margin: 5px;
-            border-radius: 5px;
+        .card {
+            background: #121a28;
+            border: 1px solid #263750;
+            border-radius: 28px;
+            padding: 26px 22px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 12px 30px -8px rgba(0,0,0,0.6);
+            transition: border 0.2s;
         }
-        
-        button:hover {
-            background: #cc0000;
+        .card:hover { border-color: #406494; }
+        .card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #cbd9f0;
         }
-        
+        .card h2 i { color: #4a90e2; font-size: 1.6rem; width: 32px; }
+
+        /* Элементы форм */
         input, textarea {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            background: #2a2a2a;
-            border: 1px solid #444;
+            background: #0c1422;
+            border: 1.5px solid #283b58;
+            border-radius: 20px;
+            padding: 16px 18px;
+            font-size: 1rem;
             color: white;
-            border-radius: 5px;
+            font-family: 'Inter', sans-serif;
+            resize: vertical;
+            margin-bottom: 16px;
         }
-        
-        .hidden-content {
-            display: none;
+        input:focus, textarea:focus {
+            border-color: #4f8be0;
+            outline: none;
+            background: #0e192b;
         }
+        button {
+            background: #1e3a62;
+            border: 1px solid #3865a0;
+            color: white;
+            font-weight: 600;
+            padding: 14px 24px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s;
+            width: 100%;
+            margin-top: 6px;
+        }
+        button:hover {
+            background: #26518a;
+            border-color: #5c8fd6;
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px dashed #3f6190;
+            color: #b3cef5;
+        }
+        .output-box {
+            background: #0a101c;
+            border-radius: 20px;
+            padding: 18px;
+            border-left: 6px solid #4a90e2;
+            font-family: 'SF Mono', 'Menlo', monospace;
+            word-break: break-all;
+            margin: 18px 0 8px;
+            font-size: 0.95rem;
+        }
+        .badge-sm {
+            display: inline-block;
+            background: #1d3450;
+            padding: 5px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        hr { border: 0.5px solid #213250; margin: 24px 0; }
+        .flex-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .checklist li {
+            list-style: none;
+            margin-bottom: 16px;
+            display: flex;
+            gap: 12px;
+        }
+        .checklist i.fa-check-circle { color: #2ecc71; }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        a { color: #8db1f0; text-decoration: none; }
+        .password-strength { height: 6px; background: #1f3147; border-radius: 10px; margin: 8px 0 16px; }
+        .strength-bar { height: 6px; border-radius: 10px; width: 0%; background: #e24a4a; transition: 0.2s; }
     </style>
-    
-    <script>
-        (function() {
-            "use strict";
-            
-            // БЛОКИРОВКА КЛАВИШ
-            document.addEventListener('keydown', function(e) {
-                if (e.key.startsWith('F') && e.key.length <= 3) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                }
-                
-                if (e.ctrlKey) {
-                    const combo = String.fromCharCode(e.keyCode).toUpperCase();
-                    const forbiddenCombos = ['U', 'S', 'P', 'C', 'I', 'J', 'F', 'R', 'H'];
-                    if (forbiddenCombos.includes(combo)) {
-                        e.preventDefault();
-                        return false;
-                    }
-                }
-                
-                if (e.ctrlKey && e.shiftKey) {
-                    const combo = String.fromCharCode(e.keyCode).toUpperCase();
-                    const forbiddenShiftCombos = ['I', 'J', 'C', 'M'];
-                    if (forbiddenShiftCombos.includes(combo)) {
-                        e.preventDefault();
-                        return false;
-                    }
-                }
-                
-                if (e.key === 'PrintScreen') {
-                    e.preventDefault();
-                    alert('Создание скриншотов отключено');
-                    return false;
-                }
-            });
-            
-            // БЛОКИРОВКА ПКМ
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            });
-            
-            // БЛОКИРОВКА ВЫДЕЛЕНИЯ
-            document.addEventListener('selectstart', function(e) {
-                e.preventDefault();
-                return false;
-            });
-            
-            document.addEventListener('dragstart', function(e) {
-                e.preventDefault();
-                return false;
-            });
-            
-            // ОБНАРУЖЕНИЕ ИНСТРУМЕНТОВ РАЗРАБОТЧИКА
-            setInterval(function() {
-                const before = performance.now();
-                debugger;
-                const after = performance.now();
-                const diff = after - before;
-                
-                if (diff > 50) {
-                    document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:black;color:red;display:flex;align-items:center;justify-content:center;font-size:24px;z-index:99999;">Доступ запрещён</div>';
-                    setTimeout(function() {
-                        window.location.href = 'about:blank';
-                    }, 100);
-                }
-            }, 200);
-            
-            // ПРОВЕРКА РАЗМЕРА ОКНА
-            let checkDevTools = function() {
-                const threshold = 160;
-                const widthDiff = window.outerWidth - window.innerWidth;
-                const heightDiff = window.outerHeight - window.innerHeight;
-                
-                if (widthDiff > threshold || heightDiff > threshold) {
-                    document.body.innerHTML = '<h1 style="color:red">Доступ запрещён</h1>';
-                    window.location.href = 'about:blank';
-                }
-            };
-            
-            setInterval(checkDevTools, 1000);
-            
-            // ПРОВЕРКА USER-AGENT
-            const userAgent = navigator.userAgent;
-            const validBrowsers = /Chrome|Firefox|Safari|Edge|Opera|CriOS|FxiOS/i;
-            
-            if (!validBrowsers.test(userAgent)) {
-                document.write('<h1>403 Forbidden</h1>');
-                throw new Error('Invalid user agent');
-            }
-            
-            // ЗАЩИТА ОТ ФРЕЙМОВ
-            if (window.self !== window.top) {
-                window.top.location = window.self.location;
-            }
-            
-            // ЗАЩИТА ОТ КОПИРОВАНИЯ
-            document.addEventListener('copy', function(e) {
-                e.preventDefault();
-                e.clipboardData.setData('text/plain', 'Копирование запрещено');
-                return false;
-            });
-            
-            document.addEventListener('cut', function(e) {
-                e.preventDefault();
-                return false;
-            });
-            
-            document.addEventListener('paste', function(e) {
-                e.preventDefault();
-                return false;
-            });
-            
-            // ОТКЛЮЧЕНИЕ КОНСОЛИ
-            const noop = function() {};
-            if (window.console) {
-                window.console.log = noop;
-                window.console.info = noop;
-                window.console.warn = noop;
-                window.console.error = noop;
-                window.console.debug = noop;
-                window.console.table = noop;
-                window.console.trace = noop;
-            }
-            
-            // ОЧИСТКА КОНСОЛИ
-            setInterval(function() {
-                if (window.console && window.console.clear) {
-                    window.console.clear();
-                }
-            }, 100);
-            
-            console.log('Система защиты активирована');
-        })();
-    </script>
-    
-    <noscript>
-        <meta http-equiv="refresh" content="0; url=about:blank">
-    </noscript>
 </head>
 <body>
-    <div class="container">
-        <h1>Защита при доксинге</h1>
-        
-        <div class="warning">
-            <strong>⚠️ ВАЖНО</strong><br>
-            Если вы стали жертвой доксинга — действуйте немедленно по следующему алгоритму.
+<div class="wrapper">
+    <div class="header">
+        <h1><i class="fas fa-shield-virus" style="margin-right: 12px;"></i>ЦИФРОВАЯ КРЕПОСТЬ</h1>
+        <div class="status-badge"><i class="fas fa-circle"></i> автономный режим • всегда на GitHub</div>
+    </div>
+
+    <!-- Первый ряд: генераторы и проверки -->
+    <div class="grid">
+        <!-- КАРТОЧКА: Парольный комбайн -->
+        <div class="card">
+            <h2><i class="fas fa-key"></i> Генератор паролей</h2>
+            <div style="display:flex; gap:8px; margin-bottom:12px;">
+                <input type="text" id="passwordOutput" readonly value="Кликните «Создать»" style="background:#0e1727;">
+                <button style="width:auto; margin:0;" id="copyPassBtn"><i class="far fa-copy"></i></button>
+            </div>
+            <div class="flex-row">
+                <button id="generatePassBtn"><i class="fas fa-dice"></i> Создать (24 символа)</button>
+                <button id="generatePassLongBtn" class="btn-outline"><i class="fas fa-dice-d6"></i> 48 символов</button>
+            </div>
+            <div class="password-strength"><div class="strength-bar" id="strengthBar"></div></div>
+            <p style="font-size:0.85rem;"><i class="fas fa-flask"></i> Включает буквы, цифры, спецсимволы.</p>
         </div>
-        
-        <div class="step">
-            <span class="step-number">1</span>
-            <strong>Зафиксируйте доказательства</strong><br>
-            Сделайте скриншоты (через телефон) всех сообщений, постов, угроз. Сохраните ссылки и имена.
+
+        <!-- КАРТОЧКА: Псевдоним / Анонимная личность -->
+        <div class="card">
+            <h2><i class="fas fa-user-ninja"></i> Генератор личности</h2>
+            <label style="display:block; margin-bottom:6px;">Псевдоним:</label>
+            <div style="display:flex; gap:8px;">
+                <input type="text" id="aliasOutput" readonly value="Shadow_Fox_777" style="background:#0e1727;">
+                <button style="width:auto; margin:0;" id="copyAliasBtn2"><i class="far fa-copy"></i></button>
+            </div>
+            <label style="display:block; margin:16px 0 6px;">Одноразовый email:</label>
+            <div style="display:flex; gap:8px;">
+                <input type="text" id="fakeEmailOutput" readonly value="user_8f3x@tempmail.net" style="background:#0e1727;">
+                <button style="width:auto; margin:0;" id="copyEmailBtn"><i class="far fa-copy"></i></button>
+            </div>
+            <button id="generateIdentityBtn" style="margin-top:18px;"><i class="fas fa-sync-alt"></i> Сгенерировать новую личность</button>
         </div>
-        
-        <div class="step">
-            <span class="step-number">2</span>
-            <strong>Не вступайте в диалог</strong><br>
-            Не отвечайте доксеру. Любой ответ — новая информация для него.
-        </div>
-        
-        <div class="step">
-            <span class="step-number">3</span>
-            <strong>Смените пароли</strong><br>
-            Все аккаунты: Telegram, почта, соцсети, банки. Используйте сложные уникальные пароли.
-        </div>
-        
-        <div class="step">
-            <span class="step-number">4</span>
-            <strong>Включите двухфакторную аутентификацию</strong><br>
-            Везде, где это возможно. Это главная защита от взлома.
-        </div>
-        
-        <div class="step">
-            <span class="step-number">5</span>
-            <strong>Скройте личную информацию</strong><br>
-            Удалите номер телефона, адрес, место работы из всех открытых источников.
-        </div>
-        
-        <div class="step">
-            <span class="step-number">6</span>
-            <strong>Смените IP</strong><br>
-            Перезагрузите роутер или включите VPN (не бесплатный).
-        </div>
-        
-        <div class="step">
-            <span class="step-number">7</span>
-            <strong>Обратитесь в полицию</strong><br>
-            При угрозах жизни, вымогательстве или краже данных — пишите заявление.
-        </div>
-        
-        <div class="step">
-            <span class="step-number">8</span>
-            <strong>Напишите в поддержку платформы</strong><br>
-            Telegram, YouTube, соцсети — блокируют доксеров по запросу.
-        </div>
-        
-        <hr style="border-color: #333; margin: 30px 0;">
-        
-        <h2>Экстренная помощь</h2>
-        
-        <div class="step">
-            <strong>Если данные уже украдены и опубликованы:</strong><br><br>
-            - Требуйте удаления через поддержку сайта (Жалоба на нарушение)<br>
-            - Подавайте заявление в Роскомнадзор (для РФ)<br>
-            - Обратитесь к юристу для досудебной претензии<br>
-            - Меняйте номера телефонов и email-адреса
-        </div>
-        
-        <div class="step">
-            <strong>Полезные ссылки (вставьте свои):</strong><br><br>
-            <input type="text" placeholder="Ссылка на жалобу Telegram" id="telegramLink" style="width: 70%;">
-            <button onclick="copyToClipboard('telegramLink')">Копировать</button><br>
-            
-            <input type="text" placeholder="Ссылка на юриста/поддержку" id="lawyerLink" style="width: 70%;">
-            <button onclick="copyToClipboard('lawyerLink')">Копировать</button>
-        </div>
-        
-        <div class="warning">
-            <strong>📞 Телефоны экстренных служб (РФ):</strong><br>
-            112 — Единый номер вызова экстренных служб<br>
-            102 — Полиция<br>
-            8-800-250-51-51 — Горячая линия по кибербуллингу
+
+        <!-- КАРТОЧКА: Очистка метаданных -->
+        <div class="card">
+            <h2><i class="fas fa-eraser"></i> Анализатор текста</h2>
+            <p style="margin-bottom:12px;">Вставьте текст — найдём возможные утечки (email, телефон, IP).</p>
+            <textarea id="textScanner" rows="3" placeholder="Пример: Мой email ivan@mail.ru, тел. +7 999 123-45-67"></textarea>
+            <button id="scanTextBtn"><i class="fas fa-search"></i> Сканировать на личные данные</button>
+            <div id="scanResult" class="output-box" style="margin-top:16px;">
+                <i class="fas fa-info-circle"></i> Ожидание текста...
+            </div>
+            <button id="clearTextBtn" class="btn-outline"><i class="fas fa-trash-alt"></i> Очистить поле</button>
         </div>
     </div>
-    
-    <script>
-        function copyToClipboard(elementId) {
-            var input = document.getElementById(elementId);
-            input.select();
-            document.execCommand('copy');
-            alert('Ссылка скопирована');
+
+    <!-- Второй ряд: Инструкции и чеклист -->
+    <div class="grid">
+        <div class="card">
+            <h2><i class="fas fa-list-check"></i> Чеклист защиты (OSINT)</h2>
+            <ul class="checklist">
+                <li><i class="fas fa-check-circle"></i> <strong>Приватность соцсетей</strong> — всё закрыто, друзья проверены.</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Удалены старые аккаунты</strong> (MySpace, старые форумы).</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Whois Protection</strong> на доменах (если есть).</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Отвязаны номера</strong> от Telegram (настройки).</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Отключены геотеги</strong> в камере телефона.</li>
+            </ul>
+            <hr>
+            <p><i class="fas fa-gavel"></i> <strong>Юридическая справка РФ:</strong> ст. 137 УК РФ (нарушение неприкосновенности частной жизни), ст. 152.2 ГК РФ. Фиксируйте скриншоты.</p>
+        </div>
+        <div class="card">
+            <h2><i class="fas fa-link"></i> Прямые ссылки на удаление</h2>
+            <div style="display:flex; flex-direction: column; gap:14px;">
+                <a href="#" onclick="window.open('https://myaccount.google.com/delete-services-or-account');return false;"><i class="fab fa-google"></i> Удаление аккаунта Google / истории</a>
+                <a href="#" onclick="window.open('https://account.microsoft.com/privacy/export');return false;"><i class="fab fa-microsoft"></i> Microsoft: данные и приватность</a>
+                <a href="#" onclick="window.open('https://www.facebook.com/help/delete_account');return false;"><i class="fab fa-facebook"></i> Удаление Facebook</a>
+                <a href="#" onclick="window.open('https://justdeleteme.xyz/');return false;"><i class="fas fa-database"></i> JustDeleteMe — удаление с сотен сайтов</a>
+                <a href="#" onclick="window.open('https://haveibeenpwned.com/');return false;"><i class="fas fa-shield"></i> Have I Been Pwned (проверка email)</a>
+            </div>
+            <hr>
+            <p><i class="fas fa-clock"></i> <strong>Google Alerts:</strong> Настройте на своё имя: <span style="background:#0f1e33; padding:3px 10px; border-radius:20px;">"Иван Иванов"</span></p>
+        </div>
+        <div class="card">
+            <h2><i class="fas fa-triangle-exclamation"></i> Что делать, если уже слили?</h2>
+            <ol style="margin-left:20px;">
+                <li style="margin-bottom:12px;"><strong>Не паниковать</strong> и не вступать в переписку.</li>
+                <li style="margin-bottom:12px;">Сделать скриншоты (с датой/временем).</li>
+                <li style="margin-bottom:12px;">Отправить жалобу администрации сайта/соцсети (DMCA/жалоба на конфиденциальность).</li>
+                <li style="margin-bottom:12px;">Подать заявление в полицию (отдел «К»).</li>
+                <li style="margin-bottom:12px;">Сменить все пароли и включить 2FA.</li>
+            </ol>
+            <button id="emergencyBtn" style="background:#5e2e2e; border-color:#a14f4f;"><i class="fas fa-skull"></i> Экстренный чек-лист (скачать .txt)</button>
+        </div>
+    </div>
+    <div class="footer">
+        🛡️ Полностью автономный инструмент. Никакие данные не отправляются на сервер — всё в вашем браузере. Работает офлайн после загрузки.
+    </div>
+</div>
+
+<script>
+    (function(){
+        // ---------- ГЕНЕРАТОР ПАРОЛЕЙ ----------
+        function generatePassword(length = 24) {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+            let pwd = '';
+            const array = new Uint32Array(length);
+            crypto.getRandomValues(array);
+            for (let i = 0; i < length; i++) pwd += chars[array[i] % chars.length];
+            return pwd;
         }
-        
-        // Дополнительная защита от сохранения страницы
-        window.addEventListener('beforeunload', function(e) {
-            // Пустая функция для предотвращения некоторых методов сохранения
+        function updateStrength(password) {
+            const bar = document.getElementById('strengthBar');
+            let score = 0;
+            if (password.length >= 12) score += 25; else score += 10;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score += 20;
+            if (/[0-9]/.test(password)) score += 20;
+            if (/[^a-zA-Z0-9]/.test(password)) score += 25;
+            bar.style.width = Math.min(score, 100) + '%';
+            if (score < 40) bar.style.background = '#e24a4a';
+            else if (score < 70) bar.style.background = '#e2a84a';
+            else bar.style.background = '#3acf7a';
+        }
+        const passOut = document.getElementById('passwordOutput');
+        document.getElementById('generatePassBtn').addEventListener('click', ()=>{
+            const pwd = generatePassword(24);
+            passOut.value = pwd;
+            updateStrength(pwd);
         });
-    </script>
+        document.getElementById('generatePassLongBtn').addEventListener('click', ()=>{
+            const pwd = generatePassword(48);
+            passOut.value = pwd;
+            updateStrength(pwd);
+        });
+        document.getElementById('copyPassBtn').addEventListener('click', ()=>{
+            navigator.clipboard?.writeText(passOut.value);
+            alert('Пароль скопирован');
+        });
+
+        // ---------- ГЕНЕРАТОР ЛИЧНОСТИ ----------
+        const aliasOutput = document.getElementById('aliasOutput');
+        const fakeEmailOutput = document.getElementById('fakeEmailOutput');
+        function randomString(len) {
+            return Array.from(crypto.getRandomValues(new Uint8Array(len))).map(b => b.toString(36)).join('').slice(0,len);
+        }
+        function generateIdentity() {
+            const adjectives = ["Silent","Shadow","Frost","Cyber","Ghost","Neo","Dark","Void","Alpha","Steel"];
+            const nouns = ["Fox","Wolf","Hawk","Raven","Cobra","Phantom","Warden","Byte","Echo","Nova"];
+            const adj = adjectives[Math.floor(Math.random()*adjectives.length)];
+            const noun = nouns[Math.floor(Math.random()*nouns.length)];
+            const num = Math.floor(Math.random()*1000);
+            aliasOutput.value = `${adj}_${noun}_${num}`;
+            const domains = ["tempmail.net","anonbox.me","guerrillamail.com","10minute.cf","dispostable.com"];
+            fakeEmailOutput.value = `${randomString(8)}@${domains[Math.floor(Math.random()*domains.length)]}`;
+        }
+        document.getElementById('generateIdentityBtn').addEventListener('click', generateIdentity);
+        document.getElementById('copyAliasBtn2').addEventListener('click', ()=>navigator.clipboard?.writeText(aliasOutput.value));
+        document.getElementById('copyEmailBtn').addEventListener('click', ()=>navigator.clipboard?.writeText(fakeEmailOutput.value));
+        generateIdentity();
+
+        // ---------- СКАНЕР ТЕКСТА ----------
+        const scanner = document.getElementById('textScanner');
+        const scanResult = document.getElementById('scanResult');
+        function scanText() {
+            const text = scanner.value;
+            if (!text.trim()) { scanResult.innerHTML = '<i class="fas fa-info-circle"></i> Введите текст для анализа.'; return; }
+            const findings = [];
+            const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+            const phoneRegex = /(\+7|8)[\s-]?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}/g;
+            const ipRegex = /\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b/g;
+            const emails = text.match(emailRegex) || [];
+            const phones = text.match(phoneRegex) || [];
+            const ips = text.match(ipRegex) || [];
+            if (emails.length) findings.push(`📧 Email: ${emails.join(', ')}`);
+            if (phones.length) findings.push(`📞 Телефон: ${phones.join(', ')}`);
+            if (ips.length) findings.push(`🌐 IP: ${ips.join(', ')}`);
+            if (findings.length===0) scanResult.innerHTML = '<i class="fas fa-check-circle" style="color:#3acf7a;"></i> Явных личных данных не обнаружено.';
+            else scanResult.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#e2a84a;"></i> Найдено:<br>${findings.join('<br>')}`;
+        }
+        document.getElementById('scanTextBtn').addEventListener('click', scanText);
+        document.getElementById('clearTextBtn').addEventListener('click', ()=>{ scanner.value = ''; scanResult.innerHTML = '<i class="fas fa-info-circle"></i> Поле очищено.'; });
+
+        // ---------- ЭКСТРЕННЫЙ ЧЕК-ЛИСТ ----------
+        document.getElementById('emergencyBtn').addEventListener('click', function(){
+            const checklist = 
+`ЭКСТРЕННЫЙ ПЛАН ПРИ ДОКСИНГЕ:
+1. Зафиксировать доказательства (скриншоты, ссылки).
+2. Отправить жалобу в техподдержку соцсети/форума.
+3. Сменить пароли от ВСЕХ важных сервисов + включить 2FA.
+4. Проверить компьютер антивирусом (Malwarebytes).
+5. Подать заявление в полицию (отдел К).
+6. Обратиться к юристу по ст.137 УК РФ.
+7. Настроить мониторинг упоминаний (Google Alerts).`;
+            const blob = new Blob([checklist], {type: 'text/plain'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'emergency_dox_plan.txt';
+            a.click();
+        });
+
+        // Инициализация оценки пароля при загрузке
+        updateStrength(passOut.value || '');
+    })();
+</script>
 </body>
 </html>
