@@ -2,116 +2,284 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Защищённый ресурс</title>
+    <title>Защищённая система</title>
     
-    <!-- БЛОК ТОТАЛЬНОЙ ЗАЩИТЫ - НАЧАЛО -->
+    <!-- ========================================== -->
+    <!-- БЛОК МАКСИМАЛЬНОЙ ЗАЩИТЫ - ВЕРСИЯ 3.0      -->
+    <!-- ========================================== -->
     
-    <!-- Мета-теги безопасности -->
-    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-    <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'; default-src 'self'">
+    <!-- 1. ЗАЩИТНЫЕ МЕТА-ТЕГИ -->
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, notranslate, noimageindex">
+    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="yandex" content="noindex, nofollow">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; frame-ancestors 'none';">
     <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
+    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains; preload">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="no-referrer">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=()">
     
-    <!-- Стиль: запрет выделения текста -->
+    <!-- 2. ЗАЩИТНЫЕ СТИЛИ -->
     <style>
+        /* Полная блокировка выделения */
+        * {
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+        }
+        
+        /* Блокировка выделения текста */
+        ::selection { background: transparent !important; }
+        ::-moz-selection { background: transparent !important; }
+        
+        /* Анти-скриншот-эффект (защита от глаз) */
         body {
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
+            background: white;
+            font-family: Arial, sans-serif;
         }
-        ::selection {
-            background: transparent;
+        
+        /* Защита от перетаскивания изображений */
+        img {
+            -webkit-user-drag: none;
+            user-drag: none;
+            pointer-events: none;
         }
-        ::-moz-selection {
-            background: transparent;
+        
+        /* Скрываем реальный контент при попытке распечатать */
+        @media print {
+            body { display: none !important; }
         }
     </style>
     
+    <!-- 3. ОСНОВНОЙ ЗАЩИТНЫЙ СКРИПТ -->
     <script>
-        // ТОТАЛЬНАЯ ЗАЩИТА - СКРИПТ
+        // ТОТАЛЬНАЯ ЗАЩИТА - ЯДРО
         (function() {
-            // 1. Блокировка клавиш разработчика
+            "use strict";
+            
+            // ПЕРЕМЕННЫЕ СОСТОЯНИЯ
+            let devToolsOpen = false;
+            let debuggerCount = 0;
+            
+            // === 1. БЛОКИРОВКА ВСЕХ КЛАВИШ РАЗРАБОТЧИКА ===
+            const forbiddenKeys = [
+                'F12', 'F11', 'F10', 'F9', 'F8', 'F7', 'F6', 'F5', 'F4', 'F3', 'F2', 'F1',
+                'I', 'U', 'S', 'P', 'C', 'J', 'K', 'L'
+            ];
+            
             document.addEventListener('keydown', function(e) {
-                // F12, Ctrl+Shift+I, Ctrl+U, Ctrl+S, Ctrl+P
-                if (e.key === 'F12' ||
-                    (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-                    (e.ctrlKey && e.key === 'U') ||
-                    (e.ctrlKey && e.key === 'S') ||
-                    (e.ctrlKey && e.key === 'P')) {
+                // Проверка F-клавиш
+                if (e.key.startsWith('F') && e.key.length <= 3) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                
+                // Ctrl + комбинации
+                if (e.ctrlKey) {
+                    const combo = String.fromCharCode(e.keyCode).toUpperCase();
+                    const forbiddenCombos = ['U', 'S', 'P', 'C', 'I', 'J', 'F', 'R', 'H'];
+                    if (forbiddenCombos.includes(combo)) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+                
+                // Ctrl + Shift + комбинации
+                if (e.ctrlKey && e.shiftKey) {
+                    const combo = String.fromCharCode(e.keyCode).toUpperCase();
+                    const forbiddenShiftCombos = ['I', 'J', 'C', 'M'];
+                    if (forbiddenShiftCombos.includes(combo)) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+                
+                // Блокировка Print Screen
+                if (e.key === 'PrintScreen') {
+                    e.preventDefault();
+                    alert('Функция создания скриншотов отключена');
                     return false;
                 }
             });
             
-            // 2. Блокировка правой кнопки мыши
+            // === 2. БЛОКИРОВКА ПРАВОЙ КНОПКИ МЫШИ ===
             document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            });
+            
+            // === 3. БЛОКИРОВКА ВЫДЕЛЕНИЯ МЫШЬЮ ===
+            document.addEventListener('selectstart', function(e) {
                 e.preventDefault();
                 return false;
             });
             
-            // 3. Обнаружение открытых инструментов разработчика
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // === 4. ОБНАРУЖЕНИЕ ИНСТРУМЕНТОВ РАЗРАБОТЧИКА (МЕТОД 1) ===
             setInterval(function() {
-                var startTime = performance.now();
+                const before = performance.now();
                 debugger;
-                var endTime = performance.now();
-                if (endTime - startTime > 100) {
-                    // Инструменты разработчика открыты
-                    document.body.innerHTML = '<h1 style="color:red;text-align:center;margin-top:20%">Доступ запрещён</h1>';
+                const after = performance.now();
+                const diff = after - before;
+                
+                if (diff > 50) {
+                    devToolsOpen = true;
+                    document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:black;color:red;display:flex;align-items:center;justify-content:center;font-size:24px;z-index:99999;">Доступ запрещён. Инструменты разработчика обнаружены.</div>';
+                    setTimeout(function() {
+                        window.location.href = 'about:blank';
+                    }, 100);
+                }
+            }, 200);
+            
+            // === 5. ОБНАРУЖЕНИЕ ИНСТРУМЕНТОВ (МЕТОД 2 - РАЗМЕР ОКНА) ===
+            let checkDevTools = function() {
+                const threshold = 160;
+                const widthDiff = window.outerWidth - window.innerWidth;
+                const heightDiff = window.outerHeight - window.innerHeight;
+                
+                if (widthDiff > threshold || heightDiff > threshold) {
+                    document.body.innerHTML = '<h1 style="color:red">Доступ запрещён</h1>';
                     window.location.href = 'about:blank';
                 }
-            }, 500);
+            };
             
-            // 4. Проверка User-Agent (только реальные браузеры)
-            var allowedAgents = ['Chrome', 'Firefox', 'Safari', 'Edge', 'Opera'];
-            var isValid = false;
-            for (var i = 0; i < allowedAgents.length; i++) {
-                if (navigator.userAgent.indexOf(allowedAgents[i]) !== -1) {
-                    isValid = true;
-                    break;
-                }
-            }
-            if (!isValid) {
-                document.write('<h1 style="color:red;text-align:center;margin-top:20%">Ошибка 403</h1>');
-                throw new Error('Доступ запрещён');
+            setInterval(checkDevTools, 1000);
+            
+            // === 6. ПРОВЕРКА USER-AGENT ===
+            const userAgent = navigator.userAgent;
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+            const isDesktop = /Windows|Mac|Linux|X11/i.test(userAgent);
+            const validBrowsers = /Chrome|Firefox|Safari|Edge|Opera|CriOS|FxiOS/i;
+            
+            if (!validBrowsers.test(userAgent) && !isMobile && !isDesktop) {
+                document.write('<h1>403 Forbidden</h1>');
+                throw new Error('Invalid user agent');
             }
             
-            // 5. Защита от встраивания во фреймы
+            // === 7. ЗАЩИТА ОТ ВСТРАИВАНИЯ ВО ФРЕЙМЫ ===
             if (window.self !== window.top) {
                 window.top.location = window.self.location;
             }
             
-            // 6. Подмена истории для запутывания (каждые 10 секунд)
-            var counter = 0;
-            setInterval(function() {
-                counter++;
-                if (counter >= 10) {
-                    history.replaceState(null, '', '?session=' + Math.random().toString(36).substr(2, 8));
-                    counter = 0;
-                }
-            }, 10000);
-            
-            // 7. Защита от копирования текста
+            // === 8. ЗАЩИТА ОТ КОПИРОВАНИЯ ===
             document.addEventListener('copy', function(e) {
+                e.preventDefault();
+                e.clipboardData.setData('text/plain', 'Копирование запрещено');
+                return false;
+            });
+            
+            document.addEventListener('cut', function(e) {
                 e.preventDefault();
                 return false;
             });
             
-            // 8. Защита от снятия скриншота (только визуальное предупреждение)
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'PrintScreen') {
-                    alert('Создание скриншотов запрещено');
-                    return false;
+            // === 9. ЗАЩИТА ОТ ВСТАВКИ ===
+            document.addEventListener('paste', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // === 10. ЗАЩИТА ОТ СОХРАНЕНИЯ СТРАНИЦЫ ===
+            window.addEventListener('beforeunload', function(e) {
+                // Ничего не делаем, но ловим попытку закрыть
+            });
+            
+            // === 11. ЗАЩИТА ОТ ПЕЧАТИ ===
+            window.matchMedia('print').addListener(function(mql) {
+                if (mql.matches) {
+                    document.body.style.display = 'none';
                 }
             });
+            
+            // === 12. ПОДМЕНА КОНСОЛЬНЫХ ФУНКЦИЙ ===
+            const noop = function() {};
+            if (window.console) {
+                window.console.log = noop;
+                window.console.info = noop;
+                window.console.warn = noop;
+                window.console.error = noop;
+                window.console.debug = noop;
+                window.console.table = noop;
+                window.console.trace = noop;
+            }
+            
+            // === 13. ЗАЩИТА ОТ ПРОСМОТРА ИСХОДНОГО КОДА ===
+            // Заметаем следы: удаляем комментарии из DOM
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList') {
+                        const comments = [];
+                        const iterator = document.createNodeIterator(
+                            document.body,
+                            NodeFilter.SHOW_COMMENT,
+                            null
+                        );
+                        let currentNode;
+                        while (currentNode = iterator.nextNode()) {
+                            comments.push(currentNode);
+                        }
+                        comments.forEach(function(comment) {
+                            comment.remove();
+                        });
+                    }
+                });
+            });
+            
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+            
+            // === 14. ПЕРИОДИЧЕСКАЯ ОЧИСТКА КОНСОЛИ И ЛОГОВ ===
+            setInterval(function() {
+                if (window.console && window.console.clear) {
+                    window.console.clear();
+                }
+            }, 100);
+            
+            // === 15. ЗАЩИТА ОТ ВНЕШНИХ СКРИПТОВ ===
+            const originalCreateElement = document.createElement;
+            document.createElement = function(tagName) {
+                const element = originalCreateElement.call(document, tagName);
+                if (tagName.toLowerCase() === 'script') {
+                    Object.defineProperty(element, 'src', {
+                        set: function(value) {
+                            if (!value.startsWith(window.location.origin)) {
+                                throw new Error('Внешние скрипты запрещены');
+                            }
+                        }
+                    });
+                }
+                return element;
+            };
+            
+            console.log('Система защиты активирована');
         })();
     </script>
     
-    <!-- БЛОК ТОТАЛЬНОЙ ЗАЩИТЫ - КОНЕЦ -->
+    <!-- 4. ДОПОЛНИТЕЛЬНАЯ ЗАЩИТА (CSS + JS) -->
+    <noscript>
+        <meta http-equiv="refresh" content="0; url=about:blank">
+    </noscript>
+    
+    <!-- ========================================== -->
+    <!-- КОНЕЦ БЛОКА ЗАЩИТЫ                         -->
+    <!-- ========================================== -->
 </head>
 <body>
-    <!-- Здесь будет содержимое вашего сайта -->
-    <h1>Ваш контент</h1>
+    <!-- ВАШ КОНТЕНТ НАЧИНАЕТСЯ ЗДЕСЬ -->
+    <div style="padding: 20px;">
+        <h1>Защищённая система</h1>
+        <p>Доступ разрешён только авторизованным пользователям.</p>
+    </div>
+    <!-- ВАШ КОНТЕНТ ЗАКАНЧИВАЕТСЯ ЗДЕСЬ -->
 </body>
 </html>
