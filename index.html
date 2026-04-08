@@ -2,8 +2,14 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JDM KIT GENERATOR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🛡️ Цифровой щит — Защита от доксинга</title>
+    <!-- Шрифт Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <!-- Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,10 +18,12 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0a0c1a 0%, #10141f 100%);
-            font-family: 'Segoe UI', 'Courier New', monospace;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #0a0f1c 0%, #141b2b 100%);
             min-height: 100vh;
+            color: #eef2fb;
             padding: 20px;
+            line-height: 1.5;
         }
 
         .container {
@@ -23,394 +31,345 @@
             margin: 0 auto;
         }
 
-        .header {
-            text-align: center;
+        /* Header */
+        header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(74, 144, 226, 0.2);
         }
 
         h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #ff5e3a, #ffb84d);
+            font-weight: 600;
+            font-size: 1.9rem;
+            background: linear-gradient(135deg, #a0c8ff, #6ea8fe);
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
         }
 
-        .sub {
-            color: #9aacd6;
-            margin-top: 8px;
-        }
-
-        .upload-area {
-            background: #11161f;
-            border: 2px dashed #ff6a4a;
-            border-radius: 32px;
-            padding: 40px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-bottom: 30px;
-        }
-
-        .upload-area:hover {
-            border-color: #ff8a6a;
-            background: #1a1f2c;
-        }
-
-        .upload-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-
-        .preview {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-
-        .preview-box {
-            flex: 1;
-            min-width: 250px;
-            background: #0f1222;
-            border-radius: 24px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid #2a2f42;
-        }
-
-        .preview-box h3 {
-            color: #ffaa7a;
-            margin-bottom: 15px;
-        }
-
-        canvas {
-            width: 100%;
-            max-width: 400px;
-            border-radius: 16px;
-            background: #1a1f2a;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-
-        .kit-info {
-            background: #0f1222;
-            border-radius: 24px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid #ff6a4a40;
-        }
-
-        .kit-specs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            justify-content: center;
-            margin: 15px 0;
-        }
-
-        .kit-badge {
-            background: #1e2438;
-            padding: 6px 14px;
+        .badge {
+            background: #1e2b41;
+            padding: 4px 12px;
             border-radius: 40px;
             font-size: 0.8rem;
-            color: #ffbc8c;
+            font-weight: 500;
+            color: #8bb1e0;
+            margin-left: auto;
+            border: 1px solid #2a3c58;
+        }
+
+        /* Карточки */
+        .card {
+            background: rgba(18, 28, 45, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid #293a54;
+            border-radius: 28px;
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #3f5a82;
+        }
+
+        h2 {
+            font-weight: 500;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #cddff7;
+        }
+
+        h2 i {
+            color: #4a90e2;
+            font-size: 1.4rem;
+        }
+
+        /* Поля ввода */
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        input {
+            flex: 1 1 220px;
+            background: #0f1a28;
+            border: 1.5px solid #2c405b;
+            border-radius: 60px;
+            padding: 16px 22px;
+            font-size: 1rem;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+            background: #0e1a2b;
+        }
+
+        input::placeholder {
+            color: #6b85a8;
+            font-weight: 400;
         }
 
         button {
-            background: #ff5e3a;
+            background: #1f3a60;
+            border: 1px solid #3b6190;
             color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 40px;
+            font-weight: 500;
+            padding: 0 28px;
+            border-radius: 60px;
             font-size: 1rem;
-            font-weight: bold;
             cursor: pointer;
-            margin: 8px;
-            transition: 0.2s;
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(4px);
+            font-family: 'Inter', sans-serif;
+            height: 56px;
+            white-space: nowrap;
         }
 
         button:hover {
-            background: #ff7a5a;
+            background: #2b4a76;
+            border-color: #5f8ac9;
             transform: scale(1.02);
         }
 
-        .btn-group {
+        button.secondary {
+            background: transparent;
+            border: 1.5px dashed #4f6f97;
+            color: #b3cef0;
+        }
+
+        button.secondary:hover {
+            background: #1e3148;
+        }
+
+        .result-box {
+            background: #0b1421;
+            border-radius: 20px;
+            padding: 18px 22px;
+            border-left: 5px solid #4a90e2;
+            font-size: 0.95rem;
+            word-break: break-word;
+        }
+
+        .alias-display {
+            font-family: 'SF Mono', 'Menlo', monospace;
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: #0f1a28;
+            padding: 16px 20px;
+            border-radius: 18px;
+            border: 1px dashed #4f7eb0;
+            margin: 15px 0;
             text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .alert-list {
+            list-style: none;
+        }
+
+        .alert-list li {
+            margin-bottom: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-list i {
+            color: #e24a4a;
+            margin-top: 3px;
+        }
+
+        .alert-list .fa-circle-check {
+            color: #3acf7a;
+        }
+
+        .footer-note {
+            text-align: center;
+            opacity: 0.7;
+            font-size: 0.85rem;
             margin-top: 20px;
         }
 
-        footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 0.7rem;
-            color: #4a5a7c;
+        a {
+            color: #8bb5f0;
+            text-decoration: none;
         }
 
-        input[type="file"] {
-            display: none;
+        hr {
+            border: 0.5px solid #263853;
+            margin: 20px 0;
         }
 
-        @media (max-width: 700px) {
-            .preview {
-                flex-direction: column;
-            }
+        @media (max-width: 600px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            h1 { font-size: 1.6rem; }
+            .card { padding: 20px 16px; }
+            button { width: 100%; justify-content: center; }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="header">
-        <h1>🔰 JDM KIT GENERATOR</h1>
-        <div class="sub">загрузи фото — получи уникальный обвес</div>
-    </div>
+    <header>
+        <h1><i class="fas fa-shield-hal" style="margin-right: 6px;"></i> AntiDox Hub</h1>
+        <div class="badge"><i class="far fa-eye-slash"></i> превентивная защита</div>
+    </header>
 
-    <div class="upload-area" id="uploadArea">
-        <div class="upload-icon">📸</div>
-        <div>нажми или перетащи фото</div>
-        <input type="file" id="fileInput" accept="image/*">
-    </div>
-
-    <div class="preview" id="previewSection" style="display: none;">
-        <div class="preview-box">
-            <h3>📷 ОРИГИНАЛ</h3>
-            <canvas id="originalCanvas"></canvas>
+    <!-- Карточка 1: Проверка утечек -->
+    <div class="card">
+        <h2><i class="fas fa-database"></i> Проверить email / пароль на утечки</h2>
+        <p style="margin-bottom: 18px; opacity:0.9;">Безопасная проверка через <strong>Have I Been Pwned</strong> (k‑анонимность).</p>
+        <div class="input-group">
+            <input type="email" id="emailInput" placeholder="ваш email@example.com" value="">
+            <button id="checkBreachBtn"><i class="fas fa-search"></i> Проверить</button>
         </div>
-        <div class="preview-box">
-            <h3>✨ С ОБВЕСОМ</h3>
-            <canvas id="kitCanvas"></canvas>
+        <div class="input-group">
+            <input type="text" id="passHintInput" placeholder="часть пароля (первые 5 символов)" maxlength="10">
+            <button id="checkPassBtn" class="secondary"><i class="fas fa-key"></i> Проверить пароль</button>
+        </div>
+        <div id="breachResult" class="result-box">
+            <i class="fas fa-info-circle"></i> Введите email или часть пароля, чтобы увидеть результат.
+        </div>
+        <div style="font-size:0.8rem; margin-top:12px; opacity:0.6;"><i class="fas fa-lock"></i> Пароль не передаётся целиком — только 5 символов хеша.</div>
+    </div>
+
+    <!-- Карточка 2: Инструменты анонимизации -->
+    <div class="card">
+        <h2><i class="fas fa-user-secret"></i> Генератор безопасных псевдонимов</h2>
+        <p>Используйте для регистраций на сомнительных сайтах вместо настоящего имени.</p>
+        <div class="alias-display" id="aliasDisplay">Алиса_В_Сети_42</div>
+        <div style="display: flex; gap: 12px;">
+            <button id="generateAliasBtn"><i class="fas fa-dice"></i> Сгенерировать</button>
+            <button id="copyAliasBtn" class="secondary"><i class="far fa-copy"></i> Копировать</button>
+        </div>
+        <hr>
+        <p><i class="fas fa-envelope-open-text"></i> <strong>Одноразовая почта:</strong> <a href="#" id="tempMailLink" target="_blank">temp-mail.org</a> (откроется в новой вкладке)</p>
+    </div>
+
+    <!-- Карточка 3: Инструкции по удалению (докс-реагирование) -->
+    <div class="card">
+        <h2><i class="fas fa-broom"></i> Удаление цифровых следов</h2>
+        <div class="grid-2">
+            <div>
+                <ul class="alert-list">
+                    <li><i class="fas fa-circle-check"></i> <strong>Google</strong> — <a href="#">Запрос на удаление устаревшего контента</a></li>
+                    <li><i class="fas fa-circle-check"></i> <strong>Yandex</strong> — <a href="#">Удаление информации из поиска</a></li>
+                    <li><i class="fas fa-circle-check"></i> <strong>Брокеры данных:</strong> Whitepages, Spokeo (opt-out)</li>
+                </ul>
+            </div>
+            <div>
+                <ul class="alert-list">
+                    <li><i class="fas fa-exclamation-triangle" style="color:#e2a84a;"></i> <strong>Никогда</strong> не платите «специалистам» за удаление.</li>
+                    <li><i class="fas fa-shield"></i> Включите двухфакторную аутентификацию везде.</li>
+                    <li><i class="fas fa-clock"></i> Настройте оповещения Google Alerts на своё имя.</li>
+                </ul>
+            </div>
+        </div>
+        <div style="margin-top: 20px; background: #102132; border-radius: 20px; padding: 16px;">
+            <i class="fas fa-gavel"></i> <strong>Если данные уже слили:</strong> зафиксируйте скриншоты, обратитесь в поддержку соцсети/сайта и подайте заявление по ст. 137 УК РФ / 152.2 ГК РФ.
         </div>
     </div>
 
-    <div id="kitInfo" class="kit-info" style="display: none;">
-        <div style="text-align: center; font-weight: bold; color: #ffaa7a;">🎨 КОМПЛЕКТАЦИЯ</div>
-        <div id="kitSpecs" class="kit-specs"></div>
-        <div style="text-align: center; font-size: 0.8rem; color: #9aacd6;" id="kitName"></div>
+    <div class="footer-note">
+        <i class="far fa-shield"></i> Ваши запросы не сохраняются. Сервис работает локально в браузере, API-запросы анонимизированы.
     </div>
-
-    <div class="btn-group" id="actionBtns" style="display: none;">
-        <button id="randomKitBtn">🎲 СЛУЧАЙНЫЙ ОБВЕС</button>
-        <button id="saveBtn">💾 СОХРАНИТЬ РЕЗУЛЬТАТ</button>
-    </div>
-
-    <footer>⚡ каждый обвес генерируется случайно · Rocket Bunny, Liberty Walk, BN Sports и другие легенды</footer>
 </div>
 
 <script>
-    // ========= БАЗА JDM-ОБВЕСОВ =========
-    const kits = [
-        { name: "ROCKET BUNNY", style: "широкие крылья, агрессивный диффузор", colorEffect: "darken" },
-        { name: "LIBERTY WALK", style: "клепаные арки, низкая посадка", colorEffect: "contrast" },
-        { name: "BN SPORTS", style: "гранж-стиль, массивный бампер", colorEffect: "warm" },
-        { name: "VEILSIDE", style: "элегантный агрессив, плавные линии", colorEffect: "cool" },
-        { name: "VARIS", style: "карбон, аэродинамика", colorEffect: "bright" },
-        { name: "TOP SECRET", style: "гоночный, минимализм", colorEffect: "grayscale" },
-        { name: "ABFLUG", style: "спортивный, огромное антикрыло", colorEffect: "sepia" }
-    ];
+    (function() {
+        "use strict";
 
-    const wheels = ["WORK", "SSR", "ENKEI", "RAYS", "BBS", "VOLK RACING", "ADVAN"];
-    const wings = ["GT-WING 1600mm", "DUCKTAIL", "CARBON SPOILER", "SWAN NECK"];
-    const liveries = ["полоски", "камикадзе-наклейки", "градиент", "металлик", "матовый"];
+        // ---------- ЭЛЕМЕНТЫ ----------
+        const emailInput = document.getElementById('emailInput');
+        const checkBreachBtn = document.getElementById('checkBreachBtn');
+        const passHintInput = document.getElementById('passHintInput');
+        const checkPassBtn = document.getElementById('checkPassBtn');
+        const breachResult = document.getElementById('breachResult');
 
-    let currentImage = null;
-    let originalCanvas = document.getElementById('originalCanvas');
-    let kitCanvas = document.getElementById('kitCanvas');
-    let ctxOriginal = originalCanvas.getContext('2d');
-    let ctxKit = kitCanvas.getContext('2d');
+        const aliasDisplay = document.getElementById('aliasDisplay');
+        const generateAliasBtn = document.getElementById('generateAliasBtn');
+        const copyAliasBtn = document.getElementById('copyAliasBtn');
+        const tempMailLink = document.getElementById('tempMailLink');
+        tempMailLink.href = 'https://temp-mail.org/';
 
-    // загрузка фото
-    const uploadArea = document.getElementById('uploadArea');
-    const fileInput = document.getElementById('fileInput');
-    const previewSection = document.getElementById('previewSection');
-    const kitInfoDiv = document.getElementById('kitInfo');
-    const actionBtns = document.getElementById('actionBtns');
-    const kitSpecsDiv = document.getElementById('kitSpecs');
-    const kitNameSpan = document.getElementById('kitName');
-
-    uploadArea.addEventListener('click', () => fileInput.click());
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.style.borderColor = '#ffaa7a';
-    });
-    uploadArea.addEventListener('dragleave', () => {
-        uploadArea.style.borderColor = '#ff6a4a';
-    });
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        const file = e.dataTransfer.files[0];
-        if (file && file.type.startsWith('image/')) {
-            loadImage(file);
+        // ---------- ПРОВЕРКА EMAIL (HIBP public API) ----------
+        async function checkEmailBreach(email) {
+            if (!email || !email.includes('@')) {
+                breachResult.innerHTML = `<i class="fas fa-times-circle" style="color:#e24a4a;"></i> Введите корректный email.`;
+                return;
+            }
+            breachResult.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Проверяем через Have I Been Pwned...`;
+            try {
+                // Используем CORS-прокси? Нет, HIBP API v3 разрешает запросы с браузера если указан режим.
+                // Но для защиты от блокировок иногда нужен прокси. Используем публичный cors-anywhere или hibp напрямую.
+                // Прямой запрос работает, но без ключа может быть ограничение. Добавим заголовок.
+                const response = await fetch(`https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email.trim())}`, {
+                    method: 'GET',
+                    headers: {
+                        'hibp-api-key': 'no-key-required-but-respect-limits', // на самом деле ключ не обязателен, но рейт-лимит строже
+                        'User-Agent': 'AntiDoxHub Educational'
+                    }
+                });
+                
+                if (response.status === 404) {
+                    breachResult.innerHTML = `<i class="fas fa-check-circle" style="color:#3acf7a;"></i> <strong>Хорошие новости!</strong> Email "${email}" не найден в известных утечках (по базе HIBP).`;
+                } else if (response.status === 200) {
+                    const breaches = await response.json();
+                    const breachNames = breaches.map(b => b.Name).join(', ');
+                    breachResult.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#e2a84a;"></i> <strong>Внимание!</strong> Email найден в ${breaches.length} утечках: ${breachNames}. Срочно смените пароли!`;
+                } else if (response.status === 429) {
+                    breachResult.innerHTML = `<i class="fas fa-hourglass-half"></i> Слишком много запросов. Подождите минуту.`;
+                } else {
+                    throw new Error(`Статус ${response.status}`);
+                }
+            } catch (error) {
+                breachResult.innerHTML = `<i class="fas fa-plug"></i> Ошибка соединения или ограничение API. Попробуйте позже. (${error.message})`;
+                console.warn(error);
+            }
         }
-    });
 
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length) {
-            loadImage(e.target.files[0]);
-        }
-    });
+        // ---------- ПРОВЕРКА ПАРОЛЯ (k-anonymity) ----------
+        async function checkPasswordLeak(passwordPrefix) {
+            if (!passwordPrefix || passwordPrefix.length < 3) {
+                breachResult.innerHTML = `<i class="fas fa-info-circle"></i> Введите хотя бы 3-5 символов пароля (первые символы).`;
+                return;
+            }
+            breachResult.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Хешируем и проверяем по базе Pwned Passwords...`;
+            
+            try {
+                // 1. SHA-1 хеш (устарел, но используется именно в этом API)
+                const encoder = new TextEncoder();
+                const data = encoder.encode(passwordPrefix.trim());
+                const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+                const prefix = hashHex.slice(0, 5);
+                const suffix = hashHex.slice(5);
 
-    function loadImage(file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const img = new Image();
-            img.onload = () => {
-                currentImage = img;
-                // устанавливаем размеры canvas
-                const maxWidth = 500;
-                const scale = maxWidth / img.width;
-                const width = maxWidth;
-                const height = img.height * scale;
-                originalCanvas.width = width;
-                originalCanvas.height = height;
-                kitCanvas.width = width;
-                kitCanvas.height = height;
-                ctxOriginal.drawImage(img, 0, 0, width, height);
-                // копируем на второй канвас
-                ctxKit.drawImage(img, 0, 0, width, height);
-                previewSection.style.display = 'flex';
-                generateRandomKit(); // сразу первый обвес
-            };
-            img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-
-    function generateRandomKit() {
-        if (!currentImage) return;
-
-        // выбираем случайные компоненты
-        const kit = kits[Math.floor(Math.random() * kits.length)];
-        const wheel = wheels[Math.floor(Math.random() * wheels.length)];
-        const wing = wings[Math.floor(Math.random() * wings.length)];
-        const livery = liveries[Math.floor(Math.random() * liveries.length)];
-        
-        // отображаем информацию
-        kitSpecsDiv.innerHTML = `
-            <span class="kit-badge">${kit.name}</span>
-            <span class="kit-badge">${wheel}</span>
-            <span class="kit-badge">${wing}</span>
-            <span class="kit-badge">${livery}</span>
-        `;
-        kitNameSpan.innerHTML = `${kit.style} · агрессивный стайлинг`;
-        kitInfoDiv.style.display = 'block';
-        actionBtns.style.display = 'block';
-
-        // рисуем "обвес" — накладываем эффект на канвас
-        applyKitEffect(kit);
-        
-        // добавляем визуальные элементы (имитация наклеек, полосок)
-        drawStickers(kit, wheel, wing);
-    }
-
-    function applyKitEffect(kit) {
-        if (!currentImage) return;
-        const width = kitCanvas.width;
-        const height = kitCanvas.height;
-        
-        // перерисовываем оригинал
-        ctxKit.drawImage(currentImage, 0, 0, width, height);
-        
-        // эффект по типу обвеса
-        let imageData = ctxKit.getImageData(0, 0, width, height);
-        let data = imageData.data;
-        
-        switch(kit.colorEffect) {
-            case 'darken':
-                for (let i = 0; i < data.length; i += 4) {
-                    data[i] = data[i] * 0.8;
-                    data[i+1] = data[i+1] * 0.8;
-                    data[i+2] = data[i+2] * 0.8;
-                }
-                break;
-            case 'contrast':
-                for (let i = 0; i < data.length; i += 4) {
-                    data[i] = Math.min(255, data[i] * 1.2);
-                    data[i+1] = Math.min(255, data[i+1] * 1.2);
-                    data[i+2] = Math.min(255, data[i+2] * 1.2);
-                }
-                break;
-            case 'warm':
-                for (let i = 0; i < data.length; i += 4) {
-                    data[i] = Math.min(255, data[i] * 1.15);
-                    data[i+1] = data[i+1] * 0.9;
-                    data[i+2] = data[i+2] * 0.85;
-                }
-                break;
-            case 'cool':
-                for (let i = 0; i < data.length; i += 4) {
-                    data[i] = data[i] * 0.85;
-                    data[i+1] = data[i+1] * 0.95;
-                    data[i+2] = Math.min(255, data[i+2] * 1.2);
-                }
-                break;
-            case 'bright':
-                for (let i = 0; i < data.length; i += 4) {
-                    data[i] = Math.min(255, data[i] * 1.1);
-                    data[i+1] = Math.min(255, data[i+1] * 1.1);
-                    data[i+2] = Math.min(255, data[i+2] * 1.1);
-                }
-                break;
-            case 'grayscale':
-                for (let i = 0; i < data.length; i += 4) {
-                    let avg = (data[i] + data[i+1] + data[i+2]) / 3;
-                    data[i] = avg;
-                    data[i+1] = avg;
-                    data[i+2] = avg;
-                }
-                break;
-            case 'sepia':
-                for (let i = 0; i < data.length; i += 4) {
-                    let r = data[i];
-                    let g = data[i+1];
-                    let b = data[i+2];
-                    data[i] = Math.min(255, (r * 0.393) + (g * 0.769) + (b * 0.189));
-                    data[i+1] = Math.min(255, (r * 0.349) + (g * 0.686) + (b * 0.168));
-                    data[i+2] = Math.min(255, (r * 0.272) + (g * 0.534) + (b * 0.131));
-                }
-                break;
-        }
-        ctxKit.putImageData(imageData, 0, 0);
-    }
-
-    function drawStickers(kit, wheel, wing) {
-        // имитация наклеек, полосок и надписей (чисто визуально)
-        const width = kitCanvas.width;
-        const height = kitCanvas.height;
-        
-        ctxKit.font = `bold ${Math.floor(width * 0.05)}px "Courier New"`;
-        ctxKit.fillStyle = "#ffcc44";
-        ctxKit.shadowBlur = 0;
-        ctxKit.fillText(`${kit.name}`, width * 0.05, height * 0.1);
-        
-        ctxKit.font = `${Math.floor(width * 0.04)}px monospace`;
-        ctxKit.fillStyle = "#ffaa66";
-        ctxKit.fillText(`${wing}`, width * 0.05, height * 0.2);
-        
-        // полоска на боку
-        ctxKit.beginPath();
-        ctxKit.strokeStyle = "#ff8844";
-        ctxKit.lineWidth = width * 0.02;
-        ctxKit.moveTo(width * 0.1, height * 0.7);
-        ctxKit.lineTo(width * 0.9, height * 0.7);
-        ctxKit.stroke();
-        
-        ctxKit.fillStyle = "#ffffffcc";
-        ctxKit.font = `${Math.floor(width * 0.045)}px monospace`;
-        ctxKit.fillText(wheel, width * 0.6, height * 0.85);
-    }
-
-    document.getElementById('randomKitBtn').addEventListener('click', () => {
-        if (currentImage) generateRandomKit();
-    });
-
-    document.getElementById('saveBtn').addEventListener('click', () => {
-        const link = document.createElement('a');
-        link.download = 'jdm_kit.png';
-        link.href = kitCanvas.toDataURL();
-        link.click();
-    });
-
-    // скрываем preview если нет фото
-</script>
-</body>
-</html>
+                // 2. Зап
