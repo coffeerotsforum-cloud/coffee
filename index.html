@@ -246,18 +246,6 @@
             <p><i class="fas fa-clock"></i> <strong>Google Alerts:</strong> Настройте на своё имя: <span style="background:#0f1e33; padding:3px 10px; border-radius:20px;">"Иван Иванов"</span></p>
         </div>
         <div class="card">
-            <h2><i class="fas fa-triangle-exclamation"></i> Что делать, если уже слили?</h2>
-            <ol style="margin-left:20px;">
-                <li style="margin-bottom:12px;"><strong>Не паниковать</strong> и не вступать в переписку.</li>
-                <li style="margin-bottom:12px;">Сделать скриншоты (с датой/временем).</li>
-                <li style="margin-bottom:12px;">Отправить жалобу администрации сайта/соцсети (DMCA/жалоба на конфиденциальность).</li>
-                <li style="margin-bottom:12px;">Подать заявление в полицию (отдел «К»).</li>
-                <li style="margin-bottom:12px;">Сменить все пароли и включить 2FA.</li>
-            </ol>
-            <button id="emergencyBtn" style="background:#5e2e2e; border-color:#a14f4f;"><i class="fas fa-skull"></i> Экстренный чек-лист (скачать .txt)</button>
-        </div>
-    </div>
-    <div class="footer">
         🛡️ Полностью автономный инструмент. Никакие данные не отправляются на сервер — всё в вашем браузере. Работает офлайн после загрузки.
     </div>
 </div>
@@ -343,24 +331,6 @@
         }
         document.getElementById('scanTextBtn').addEventListener('click', scanText);
         document.getElementById('clearTextBtn').addEventListener('click', ()=>{ scanner.value = ''; scanResult.innerHTML = '<i class="fas fa-info-circle"></i> Поле очищено.'; });
-
-        // ---------- ЭКСТРЕННЫЙ ЧЕК-ЛИСТ ----------
-        document.getElementById('emergencyBtn').addEventListener('click', function(){
-            const checklist = 
-`ЭКСТРЕННЫЙ ПЛАН ПРИ ДОКСИНГЕ:
-1. Зафиксировать доказательства (скриншоты, ссылки).
-2. Отправить жалобу в техподдержку соцсети/форума.
-3. Сменить пароли от ВСЕХ важных сервисов + включить 2FA.
-4. Проверить компьютер антивирусом (Malwarebytes).
-5. Подать заявление в полицию (отдел К).
-6. Обратиться к юристу по ст.137 УК РФ.
-7. Настроить мониторинг упоминаний (Google Alerts).`;
-            const blob = new Blob([checklist], {type: 'text/plain'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'emergency_dox_plan.txt';
-            a.click();
-        });
 
         // Инициализация оценки пароля при загрузке
         updateStrength(passOut.value || '');
