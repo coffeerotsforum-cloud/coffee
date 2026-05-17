@@ -42,7 +42,6 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-attachment: fixed;
             z-index: -2;
         }
 
@@ -78,21 +77,23 @@
         .logo {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 8px;
             backdrop-filter: blur(10px);
             background: rgba(18, 23, 31, 0.6);
-            padding: 12px 24px;
+            padding: 10px 22px;
             border-radius: 20px;
             border: 1px solid rgba(255,255,255,0.1);
         }
         .logo-icon {
-            width: 48px; height: 48px;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            width: 50px;
+            height: 50px;
             border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px;
+            background-image: url('https://i.ibb.co/yFRSHmpR/IMG-20260517-153958.png');
+            background-size: cover;
+            background-position: center;
             box-shadow: 0 4px 20px rgba(77,159,255,0.4);
+            flex-shrink: 0;
         }
         .logo h1 {
             font-size: 1.9rem;
@@ -114,10 +115,12 @@
             margin-bottom: 24px;
             border: 1px solid var(--border);
             backdrop-filter: blur(15px);
+            flex-wrap: wrap;
         }
         .tab-btn {
             flex: 1;
-            padding: 10px 14px;
+            min-width: 80px;
+            padding: 10px 12px;
             background: transparent;
             border: none;
             border-radius: 11px;
@@ -127,22 +130,23 @@
             cursor: pointer;
             transition: all 0.2s;
             white-space: nowrap;
+            font-family: inherit;
         }
         .tab-btn.active {
             background: rgba(25, 31, 43, 0.95);
             color: #fff;
             box-shadow: var(--shadow);
         }
-        .tab-btn:hover:not(.active) { color: #bcc6d4; }
+        .tab-btn:hover:not(.active) { color: #bcc6d4; background: rgba(255,255,255,0.03); }
 
-        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content { display: none; animation: fadeIn 0.25s ease; }
         .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Карточки сервисов */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 10px;
             margin-bottom: 24px;
         }
@@ -150,7 +154,7 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 16px 14px;
+            padding: 14px 12px;
             cursor: pointer;
             transition: all 0.25s;
             text-decoration: none;
@@ -161,14 +165,7 @@
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(15px);
-        }
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(135deg, transparent 60%, rgba(77,159,255,0.06));
-            opacity: 0; transition: opacity 0.25s;
+            user-select: none;
         }
         .service-card:hover {
             border-color: var(--accent);
@@ -176,22 +173,22 @@
             box-shadow: 0 8px 30px rgba(0,0,0,0.6);
             background: rgba(25, 31, 43, 0.95);
         }
-        .service-card:hover::before { opacity: 1; }
+        .service-card:active { transform: scale(0.97); }
         .service-icon {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             flex-shrink: 0;
-            width: 40px; height: 40px;
+            width: 38px; height: 38px;
             display: flex; align-items: center; justify-content: center;
             background: rgba(25, 31, 43, 0.9);
             border-radius: 10px;
         }
         .service-name {
-            font-size: 0.85rem;
+            font-size: 0.83rem;
             font-weight: 600;
             line-height: 1.2;
         }
         .service-tag {
-            font-size: 0.68rem;
+            font-size: 0.66rem;
             color: var(--text2);
             display: block;
         }
@@ -229,21 +226,21 @@
         .drop-zone {
             border: 2px dashed var(--border);
             border-radius: var(--radius);
-            padding: 32px 20px;
+            padding: 28px 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.25s;
             background: rgba(25, 31, 43, 0.7);
             backdrop-filter: blur(10px);
+            user-select: none;
         }
         .drop-zone:hover, .drop-zone.active {
             border-color: var(--accent);
             background: rgba(77,159,255,0.06);
-            box-shadow: inset 0 0 30px rgba(77,159,255,0.05);
         }
-        .drop-zone .dz-icon { font-size: 2.4rem; margin-bottom: 8px; display: block; }
+        .drop-zone .dz-icon { font-size: 2.2rem; margin-bottom: 6px; display: block; }
         .drop-zone p { color: var(--text2); font-size: 0.9rem; }
-        .drop-zone span { color: var(--accent); font-weight: 600; cursor: pointer; }
+        .drop-zone span { color: var(--accent); font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
         .drop-zone input[type="file"] { display: none; }
 
         .exif-output {
@@ -281,8 +278,12 @@
             font-size: 0.85rem;
             text-decoration: none;
             transition: all 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
+            user-select: none;
         }
         .btn:hover { background: #3b8ae8; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(77,159,255,0.4); }
+        .btn:active { transform: scale(0.96); }
         .btn-outline {
             background: transparent;
             border: 1px solid var(--accent);
@@ -299,7 +300,7 @@
         }
         .input-row input {
             flex: 1;
-            min-width: 200px;
+            min-width: 180px;
             padding: 12px 14px;
             background: rgba(25, 31, 43, 0.8);
             border: 1px solid var(--border);
@@ -309,12 +310,13 @@
             outline: none;
             transition: border 0.2s;
             backdrop-filter: blur(10px);
+            font-family: inherit;
         }
         .input-row input:focus { border-color: var(--accent); }
         .input-row input::placeholder { color: #5a6575; }
 
         /* Чеклист */
-        .checklist { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 6px; }
+        .checklist { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 6px; }
         .checklist li {
             padding: 10px 12px;
             background: rgba(25, 31, 43, 0.7);
@@ -327,6 +329,7 @@
             transition: all 0.2s;
             border: 1px solid transparent;
             backdrop-filter: blur(5px);
+            user-select: none;
         }
         .checklist li:hover { border-color: rgba(255,255,255,0.1); }
         .checklist li.done { opacity: 0.5; text-decoration: line-through; background: rgba(15, 20, 25, 0.8); }
@@ -337,12 +340,12 @@
             display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px;
         }
         .coord-box {
-            flex: 1; min-width: 150px;
+            flex: 1; min-width: 130px;
             background: rgba(25, 31, 43, 0.8);
             padding: 12px;
             border-radius: 10px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-align: center;
             border: 1px solid var(--border);
             backdrop-filter: blur(10px);
@@ -365,13 +368,14 @@
         }
 
         @media (max-width: 600px) {
-            .tabs { overflow-x: auto; }
-            .tab-btn { font-size: 0.78rem; padding: 8px 10px; }
+            .tabs { gap: 2px; }
+            .tab-btn { font-size: 0.76rem; padding: 8px 8px; min-width: 60px; }
             .services-grid { grid-template-columns: repeat(2, 1fr); }
             .checklist { grid-template-columns: 1fr; }
             .coord-display { flex-direction: column; }
-            .logo { padding: 8px 16px; }
-            .logo h1 { font-size: 1.4rem; }
+            .logo { padding: 8px 14px; }
+            .logo h1 { font-size: 1.3rem; }
+            .logo-icon { width: 38px; height: 38px; }
         }
     </style>
 </head>
@@ -380,14 +384,14 @@
         <!-- Шапка -->
         <div class="header">
             <div class="logo">
-                <div class="logo-icon">🌍</div>
+                <div class="logo-icon"></div>
                 <h1>GeoSense Pro</h1>
             </div>
             <p>Продвинутый инструмент для геолокации по фото • Все сервисы работают без VPN</p>
         </div>
 
         <!-- Вкладки -->
-        <div class="tabs">
+        <div class="tabs" id="tabsContainer">
             <button class="tab-btn active" data-tab="tools">🛠 Инструменты</button>
             <button class="tab-btn" data-tab="exif">📸 EXIF</button>
             <button class="tab-btn" data-tab="search">🔍 Поиск</button>
@@ -399,19 +403,19 @@
             <div class="section">
                 <div class="section-title">🔗 Поисковые сервисы <span class="section-badge">без VPN</span></div>
                 <div class="services-grid">
-                    <a href="https://yandex.ru/images" target="_blank" class="service-card">
+                    <a href="https://yandex.ru/images" target="_blank" rel="noopener" class="service-card">
                         <div class="service-icon">🖼️</div>
                         <div><span class="service-name">Яндекс Картинки</span><span class="service-tag">РФ/СНГ отлично</span></div>
                     </a>
-                    <a href="https://www.google.com/imghp" target="_blank" class="service-card">
+                    <a href="https://www.google.com/imghp" target="_blank" rel="noopener" class="service-card">
                         <div class="service-icon">🔍</div>
                         <div><span class="service-name">Google Images</span><span class="service-tag">Мировой охват</span></div>
                     </a>
-                    <a href="https://tineye.com" target="_blank" class="service-card">
+                    <a href="https://tineye.com" target="_blank" rel="noopener" class="service-card">
                         <div class="service-icon">🎯</div>
                         <div><span class="service-name">TinEye</span><span class="service-tag">Точный поиск</span></div>
                     </a>
-                    <a href="https://www.bing.com/images" target="_blank" class="service-card">
+                    <a href="https://www.bing.com/images" target="_blank" rel="noopener" class="service-card">
                         <div class="service-icon">🪟</div>
                         <div><span class="service-name">Bing Images</span><span class="service-tag">Альтернатива</span></div>
                     </a>
@@ -421,27 +425,27 @@
             <div class="section">
                 <div class="section-title">🗺️ Карты и спутники</div>
                 <div class="services-grid">
-                    <a href="https://yandex.ru/maps" target="_blank" class="service-card">
+                    <a href="https://yandex.ru/maps" target="_blank" rel="noopener" class="service-card">
                         <div class="service-icon">📍</div>
                         <div><span class="service-name">Яндекс Карты</span><span class="service-tag">Панорамы РФ</span></div>
                     </a>
-                    <a href="https://www.google.com/maps" target="_blank" class="service-card">
+                    <a href="https://www.google.com/maps" target="_blank" rel="noopener" class="service-card">
                         <div class="service-icon">🌐</div>
                         <div><span class="service-name">Google Maps</span><span class="service-tag">Мировые панорамы</span></div>
                     </a>
-                    <a href="https://satellites.pro" target="_blank" class="service-card">
+                    <a href="https://satellites.pro" target="_blank" rel="noopener" class="service-card">
                         <div class="service-icon">🛰️</div>
                         <div><span class="service-name">Satellites.pro</span><span class="service-tag">Спутник онлайн</span></div>
                     </a>
-                    <a href="https://overpass-turbo.eu" target="_blank" class="service-card">
+                    <a href="https://overpass-turbo.eu" target="_blank" rel="noopener" class="service-card">
                         <div class="service-icon">📡</div>
                         <div><span class="service-name">Overpass Turbo</span><span class="service-tag">Объекты на карте</span></div>
                     </a>
-                    <a href="https://www.openstreetmap.org" target="_blank" class="service-card">
+                    <a href="https://www.openstreetmap.org" target="_blank" rel="noopener" class="service-card">
                         <div class="service-icon">🗿</div>
                         <div><span class="service-name">OpenStreetMap</span><span class="service-tag">Открытые данные</span></div>
                     </a>
-                    <a href="https://2gis.ru" target="_blank" class="service-card">
+                    <a href="https://2gis.ru" target="_blank" rel="noopener" class="service-card">
                         <div class="service-icon">🏢</div>
                         <div><span class="service-name">2ГИС</span><span class="service-tag">Детализация РФ</span></div>
                     </a>
@@ -451,19 +455,19 @@
             <div class="section">
                 <div class="section-title">🧠 Специализированные</div>
                 <div class="services-grid">
-                    <a href="https://geohints.com" target="_blank" class="service-card">
+                    <a href="https://geohints.com" target="_blank" rel="noopener" class="service-card">
                         <div class="service-icon">💡</div>
                         <div><span class="service-name">GeoHints</span><span class="service-tag">Подсказки по странам</span></div>
                     </a>
-                    <a href="https://infotomb.com" target="_blank" class="service-card">
+                    <a href="https://infotomb.com" target="_blank" rel="noopener" class="service-card">
                         <div class="service-icon">📋</div>
                         <div><span class="service-name">InfoTomb</span><span class="service-tag">EXIF онлайн</span></div>
                     </a>
-                    <a href="https://www.instantstreetview.com" target="_blank" class="service-card">
+                    <a href="https://www.instantstreetview.com" target="_blank" rel="noopener" class="service-card">
                         <div class="service-icon">🚶</div>
                         <div><span class="service-name">InstantStreetView</span><span class="service-tag">Быстрый просмотр</span></div>
                     </a>
-                    <a href="https://suncalc.org" target="_blank" class="service-card">
+                    <a href="https://suncalc.org" target="_blank" rel="noopener" class="service-card">
                         <div class="service-icon">☀️</div>
                         <div><span class="service-name">SunCalc</span><span class="service-tag">По теням</span></div>
                     </a>
@@ -481,8 +485,305 @@
                     <p style="font-size:0.75rem;color:#5a6575;margin-top:6px;">Поддерживает JPEG, PNG, HEIC, WebP</p>
                     <input type="file" id="fileInput" accept="image/*">
                 </div>
+                <div
                 <div class="exif-output" id="exifOutput"></div>
                 <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
                     <button class="btn" id="copyCoordsBtn" style="display:none;">📋 Скопировать координаты</button>
                     <button class="btn btn-outline" id="openMapsBtn" style="display:none;">🗺️ Открыть на карте</button>
- 
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка 3: Поиск -->
+        <div class="tab-content" id="tab-search">
+            <div class="section">
+                <div class="section-title">🔗 Обратный поиск по URL изображения</div>
+                <div class="input-row">
+                    <input type="text" id="imageUrl" placeholder="Вставьте прямую ссылку на фото...">
+                    <button class="btn" id="searchYandex">🖼️ Яндекс</button>
+                    <button class="btn btn-outline" id="searchGoogle">🔍 Google</button>
+                    <button class="btn btn-green" id="searchBing">🪟 Bing</button>
+                </div>
+                <p style="font-size:0.75rem;color:var(--text2);margin-top:8px;">Работает с прямыми ссылками (оканчиваются на .jpg .png .webp и т.д.)</p>
+            </div>
+
+            <div class="section">
+                <div class="section-title">📋 Поиск по описанию</div>
+                <div class="input-row">
+                    <input type="text" id="textSearch" placeholder="Опишите, что видите на фото...">
+                    <button class="btn" id="searchTextBtn">🔍 Искать в Google</button>
+                </div>
+                <p style="font-size:0.75rem;color:var(--text2);margin-top:8px;">Пример: «жёлтый автобус с синей полосой» или «статуя слона на перекрёстке»</p>
+            </div>
+        </div>
+
+        <!-- Вкладка 4: Координаты -->
+        <div class="tab-content" id="tab-coords">
+            <div class="section">
+                <div class="section-title">📍 Работа с координатами</div>
+                <div class="input-row" style="margin-bottom:12px;">
+                    <input type="text" id="latInput" placeholder="Широта, например 55.7558">
+                    <input type="text" id="lonInput" placeholder="Долгота, например 37.6173">
+                </div>
+                <div class="coord-display">
+                    <div class="coord-box"><small>Google Maps</small><span id="gmLink">—</span></div>
+                    <div class="coord-box"><small>Яндекс Карты</small><span id="yaLink">—</span></div>
+                    <div class="coord-box"><small>Satellites.pro</small><span id="satLink">—</span></div>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+                    <button class="btn" id="goCoordsBtn">🚀 Открыть все карты</button>
+                    <button class="btn btn-outline" id="goGoogleBtn">🗺️ Google</button>
+                    <button class="btn btn-outline" id="goYandexBtn">📍 Яндекс</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">✅ Чеклист визуального анализа</div>
+                <ul class="checklist" id="checklist">
+                    <li><input type="checkbox"> Вывески и названия магазинов</li>
+                    <li><input type="checkbox"> Номера машин (регион, страна)</li>
+                    <li><input type="checkbox"> Дорожные знаки и разметка</li>
+                    <li><input type="checkbox"> Архитектура и цвет зданий</li>
+                    <li><input type="checkbox"> Растительность и климат</li>
+                    <li><input type="checkbox"> Язык на указателях</li>
+                    <li><input type="checkbox"> Флаги, гербы, символика</li>
+                    <li><input type="checkbox"> Тип опор ЛЭП</li>
+                    <li><input type="checkbox"> Бренды и логотипы</li>
+                    <li><input type="checkbox"> Рельеф местности</li>
+                    <li><input type="checkbox"> Сторона движения (лево/право)</li>
+                    <li><input type="checkbox"> Формат номеров телефонов</li>
+                </ul>
+                <p style="margin-top:10px;font-size:0.8rem;color:var(--text2);">
+                    Отмечено: <strong id="checkCount">0</strong> из 12
+                </p>
+            </div>
+        </div>
+
+        <footer>GeoSense Pro v2.1 • Все сервисы работают без VPN • Только для этичного использования</footer>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        (function() {
+            // === Переключение вкладок ===
+            const tabsContainer = document.getElementById('tabsContainer');
+            const tabButtons = tabsContainer.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            function switchTab(tabId) {
+                tabContents.forEach(function(c) { c.classList.remove('active'); });
+                tabButtons.forEach(function(b) { b.classList.remove('active'); });
+                var target = document.getElementById('tab-' + tabId);
+                if (target) target.classList.add('active');
+                var btn = tabsContainer.querySelector('[data-tab="' + tabId + '"]');
+                if (btn) btn.classList.add('active');
+            }
+
+            tabButtons.forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var tabId = this.getAttribute('data-tab');
+                    if (tabId) switchTab(tabId);
+                });
+            });
+
+            // === Toast ===
+            function showToast(msg) {
+                var toast = document.getElementById('toast');
+                if (!toast) return;
+                toast.textContent = msg;
+                toast.classList.add('show');
+                clearTimeout(toast._timeout);
+                toast._timeout = setTimeout(function() { toast.classList.remove('show'); }, 2000);
+            }
+
+            // === EXIF анализ ===
+            var dropZone = document.getElementById('dropZone');
+            var fileInput = document.getElementById('fileInput');
+            var exifOutput = document.getElementById('exifOutput');
+            var copyCoordsBtn = document.getElementById('copyCoordsBtn');
+            var openMapsBtn = document.getElementById('openMapsBtn');
+            var browseLink = document.getElementById('browseLink');
+            var lastCoords = null;
+
+            if (browseLink) {
+                browseLink.addEventListener('click', function(e) {
+                    e.stopPropagation(); e.preventDefault();
+                    if (fileInput) fileInput.click();
+                });
+            }
+            if (dropZone) {
+                dropZone.addEventListener('click', function() { if (fileInput) fileInput.click(); });
+                dropZone.addEventListener('dragover', function(e) { e.preventDefault(); dropZone.classList.add('active'); });
+                dropZone.addEventListener('dragleave', function() { dropZone.classList.remove('active'); });
+                dropZone.addEventListener('drop', function(e) {
+                    e.preventDefault(); dropZone.classList.remove('active');
+                    var file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith('image/')) processFile(file);
+                });
+            }
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) { if (e.target.files[0]) processFile(e.target.files[0]); });
+            }
+
+            function processFile(file) {
+                if (!exifOutput) return;
+                exifOutput.style.display = 'block';
+                exifOutput.innerHTML = '⏳ Читаем метаданные...';
+                if (copyCoordsBtn) copyCoordsBtn.style.display = 'none';
+                if (openMapsBtn) openMapsBtn.style.display = 'none';
+                lastCoords = null;
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    try { var data = parseExif(e.target.result); displayExif(data, file); }
+                    catch (err) { exifOutput.innerHTML = '⚠️ Ошибка чтения EXIF. Метаданные могли быть удалены.'; }
+                };
+                reader.onerror = function() { exifOutput.innerHTML = '⚠️ Ошибка чтения файла.'; };
+                reader.readAsArrayBuffer(file);
+            }
+
+            function parseExif(buffer) {
+                var data = {};
+                var view = new DataView(buffer);
+                if (view.getUint16(0) !== 0xFFD8) return data;
+                var offset = 2;
+                while (offset < view.byteLength) {
+                    if (view.getUint16(offset) === 0xFFE1) {
+                        var exifStart = offset + 4;
+                        var header = String.fromCharCode(view.getUint8(exifStart), view.getUint8(exifStart+1), view.getUint8(exifStart+2), view.getUint8(exifStart+3));
+                        if (header === 'Exif') {
+                            var tiffStart = exifStart + 6;
+                            var le = view.getUint16(tiffStart) === 0x4949;
+                            var ifd0Off = view.getUint32(tiffStart + 4, le);
+                            parseIFD(view, tiffStart + ifd0Off, le, tiffStart, data);
+                        }
+                        break;
+                    }
+                    if (offset + 2 >= view.byteLength) break;
+                    var segLen = view.getUint16(offset + 2);
+                    if (segLen < 2) break;
+                    offset += 2 + segLen;
+                }
+                return data;
+            }
+
+            function parseIFD(view, base, le, tiffBase, data) {
+                var entries = view.getUint16(base, le);
+                for (var i = 0; i < entries; i++) {
+                    var off = base + 2 + i * 12;
+                    if (off + 12 > view.byteLength) break;
+                    var tag = view.getUint16(off, le);
+                    var count = view.getUint32(off + 4, le);
+                    function readStr() {
+                        if (count <= 4) { var s = ''; for (var j=0; j<count; j++) s += String.fromCharCode(view.getUint8(off+8+j)); return s.replace(/\0/g, ''); }
+                        var strOff = view.getUint32(off+8, le);
+                        var s = ''; for (var j=0; j<count; j++) s += String.fromCharCode(view.getUint8(tiffBase+strOff+j));
+                        return s.replace(/\0/g, '');
+                    }
+                    if (tag === 0x010F) data.Make = readStr();
+                    if (tag === 0x0110) data.Model = readStr();
+                    if (tag === 0x0132) data.DateTime = readStr();
+                    if (tag === 0x0112) data.Orientation = view.getUint16(off+8, le);
+                    if (tag === 0x8827) data.ISO = view.getUint16(off+8, le);
+                    if (tag === 0x8825) {
+                        var gpsOff = view.getUint32(off+8, le);
+                        parseGPS(view, tiffBase + gpsOff, le, tiffBase, data);
+                    }
+                }
+            }
+
+            function parseGPS(view, base, le, tiffBase, data) {
+                if (base + 2 > view.byteLength) return;
+                var entries = view.getUint16(base, le);
+                for (var i = 0; i < entries; i++) {
+                    var off = base + 2 + i * 12;
+                    if (off + 12 > view.byteLength) break;
+                    var tag = view.getUint16(off, le);
+                    var valOff = view.getUint32(off+8, le);
+                    function getRat(idx) { var pos = tiffBase + valOff + idx*8; if (pos+8>view.byteLength) return 0; return view.getUint32(pos, le) / view.getUint32(pos+4, le); }
+                    var d = [getRat(0), getRat(1), getRat(2)];
+                    if (tag === 0x0001) data.GPSLatRef = String.fromCharCode(view.getUint8(off+8), view.getUint8(off+9)).replace(/\0/g,'');
+                    if (tag === 0x0002) data.GPSLat = d;
+                    if (tag === 0x0003) data.GPSLonRef = String.fromCharCode(view.getUint8(off+8), view.getUint8(off+9)).replace(/\0/g,'');
+                    if (tag === 0x0004) data.GPSLon = d;
+                }
+            }
+
+            function displayExif(data, file) {
+                if (!exifOutput) return;
+                var html = '<strong>📁 ' + file.name + '</strong> (' + (file.size/1024).toFixed(1) + ' KB)<br><br>';
+                var info = [];
+                if (data.Make || data.Model) info.push('📷 Камера: <strong>' + (data.Make||'?') + ' ' + (data.Model||'') + '</strong>');
+                if (data.DateTime) info.push('📅 Снято: <strong>' + data.DateTime + '</strong>');
+                if (data.ISO) info.push('🔆 ISO: <strong>' + data.ISO + '</strong>');
+                html += info.join('<br>') + '<br>';
+                if (data.GPSLat && data.GPSLon) {
+                    var lat = data.GPSLat[0] + data.GPSLat[1]/60 + data.GPSLat[2]/3600;
+                    var lon = data.GPSLon[0] + data.GPSLon[1]/60 + data.GPSLon[2]/3600;
+                    if (data.GPSLatRef === 'S') lat = -lat;
+                    if (data.GPSLonRef === 'W') lon = -lon;
+                    lastCoords = { lat: lat.toFixed(6), lon: lon.toFixed(6) };
+                    html += '<br>📍 GPS: <span class="coord-highlight">' + lat.toFixed(6) + ', ' + lon.toFixed(6) + '</span>';
+                    html += '<br><a href="https://www.google.com/maps?q=' + lat + ',' + lon + '" target="_blank" style="color:#4d9fff;">🗺️ Google Карты</a>';
+                    html += ' | <a href="https://yandex.ru/maps?ll=' + lon + ',' + lat + '&z=16" target="_blank" style="color:#4d9fff;">Яндекс Карты</a>';
+                    if (copyCoordsBtn) copyCoordsBtn.style.display = 'inline-flex';
+                    if (openMapsBtn) openMapsBtn.style.display = 'inline-flex';
+                } else { html += '<br>⚠️ GPS-координаты не найдены.'; }
+                exifOutput.innerHTML = html;
+            }
+
+            if (copyCoordsBtn) copyCoordsBtn.addEventListener('click', function() {
+                if (lastCoords) navigator.clipboard.writeText(lastCoords.lat + ', ' + lastCoords.lon).then(function(){ showToast('✅ Скопировано!'); }).catch(function(){ showToast('⚠️ Ошибка'); });
+            });
+            if (openMapsBtn) openMapsBtn.addEventListener('click', function() {
+                if (lastCoords) window.open('https://www.google.com/maps?q=' + lastCoords.lat + ',' + lastCoords.lon, '_blank');
+            });
+
+            // === Поиск по URL ===
+            function getUrl() { var inp = document.getElementById('imageUrl'); return inp ? inp.value.trim() : ''; }
+            document.getElementById('searchYandex').addEventListener('click', function() { var u=getUrl(); if(u) window.open('https://yandex.ru/images/search?rpt=imageview&url='+encodeURIComponent(u),'_blank'); else showToast('⚠️ Вставьте ссылку'); });
+            document.getElementById('searchGoogle').addEventListener('click', function() { var u=getUrl(); if(u) window.open('https://lens.google.com/uploadbyurl?url='+encodeURIComponent(u),'_blank'); else showToast('⚠️ Вставьте ссылку'); });
+            document.getElementById('searchBing').addEventListener('click', function() { var u=getUrl(); if(u) window.open('https://www.bing.com/images/search?q=imgurl:'+encodeURIComponent(u)+'&view=detailv2&iss=sbi','_blank'); else showToast('⚠️ Вставьте ссылку'); });
+
+            // === Поиск по тексту ===
+            document.getElementById('searchTextBtn').addEventListener('click', function() {
+                var t = document.getElementById('textSearch'); var txt = t ? t.value.trim() : '';
+                if (txt) window.open('https://www.google.com/search?q='+encodeURIComponent(txt)+'&tbm=isch','_blank');
+                else showToast('⚠️ Введите описание');
+            });
+
+            // === Координаты ===
+            function getCoords() {
+                var la = document.getElementById('latInput'); var lo = document.getElementById('lonInput');
+                return { lat: la?la.value.trim():'', lon: lo?lo.value.trim():'' };
+            }
+            document.getElementById('goCoordsBtn').addEventListener('click', function() {
+                var c = getCoords();
+                if (c.lat && c.lon) {
+                    window.open('https://www.google.com/maps?q='+c.lat+','+c.lon,'_blank');
+                    setTimeout(function(){ window.open('https://yandex.ru/maps?ll='+c.lon+','+c.lat+'&z=16','_blank'); }, 300);
+                    setTimeout(function(){ window.open('https://satellites.pro/#'+c.lat+','+c.lon,'_blank'); }, 600);
+                } else showToast('⚠️ Введите координаты');
+            });
+            document.getElementById('goGoogleBtn').addEventListener('click', function() {
+                var c = getCoords(); if (c.lat&&c.lon) window.open('https://www.google.com/maps?q='+c.lat+','+c.lon,'_blank'); else showToast('⚠️ Введите координаты');
+            });
+            document.getElementById('goYandexBtn').addEventListener('click', function() {
+                var c = getCoords(); if (c.lat&&c.lon) window.open('https://yandex.ru/maps?ll='+c.lon+','+c.lat+'&z=16','_blank'); else showToast('⚠️ Введите координаты');
+            });
+
+            // === Чеклист ===
+            document.querySelectorAll('#checklist input').forEach(function(cb) {
+                cb.addEventListener('change', function() {
+                    this.parentElement.classList.toggle('done', this.checked);
+                    var checked = document.querySelectorAll('#checklist input:checked').length;
+                    var cc = document.getElementById('checkCount'); if (cc) cc.textContent = checked;
+                });
+            });
+
+            console.log('✅ GeoSense Pro загружен! Вкладки работают, поиск активен.');
+        })();
+    </script>
+</body>
+</html>
