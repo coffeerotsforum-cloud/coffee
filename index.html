@@ -1,329 +1,529 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>🛡️ ЦИФРОВАЯ КРЕПОСТЬ🇺🇲 | Полная защита от доксинга</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<style>
-*{ margin: 0; padding: 0; box-sizing: border-box; }
-body {
-font-family: 'Inter', sans-serif;
-background: #0b0f17;
-color: #e3e9f5;
-line-height: 1.6;
-padding: 20px 16px;
-}
-.wrapper { max-width: 1300px; margin: 0 auto; }
-/* Header */
-.header {
-display: flex;
-align-items: center;
-flex-wrap: wrap;
-gap: 15px;
-margin-bottom: 35px;
-padding-bottom: 20px
-border-bottom: 2px solid #1e2a3d;
-}
-h1 {
-font-size: clamp(1.8rem, 5vw, 2.4rem);
-font-weight: 700;
-background: linear-gradient(135deg, #bdd3ff, #7aa9ff);
--webkit-background-clip: text;           background-clip: text;
-color: transparent;
-letter-spacing: -0.02em;
-}
-.status-badge {
-margin-left: auto;
-background: #0f1a2b;
-padding: 8px 18px;
-border-radius: 40px;
-font-size: 0.9rem;
-border: 1px solid #2e456e;
-color: #a0c0f0;
-}
-.status-badge i { color: #3acf7a; margin-right: 6px; }
-/* Сетка карточек */
-.grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-gap: 24px;
-margin-bottom: 30px;
-}
-.card {
-            background: #121a28;
-            border: 1px solid #263750;
-            border-radius: 28px;
-            padding: 26px 22px;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 12px 30px -8px rgba(0,0,0,0.6);
-            transition: border 0.2s;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гео-ОСИНТ🇺🇲 | Помощник по поиску мест</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --card: #161b22;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --accent: #58a6ff;
+            --green: #3fb950;
+            --orange: #d2991d;
+            --red: #f85149;
         }
-        .card:hover { border-color: #406494; }
-        .card h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 22px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #cbd9f0;
-        }
-        .card h2 i { color: #4a90e2; font-size: 1.6rem; width: 32px; }
 
-        /* Элементы форм */
-        input, textarea {
-            width: 100%;
-            background: #0c1422;
-            border: 1.5px solid #283b58;
-            border-radius: 20px;
-            padding: 16px 18px;
-            font-size: 1rem;
-            color: white;
-            font-family: 'Inter', sans-serif;
-            resize: vertical;
-            margin-bottom: 16px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        input:focus, textarea:focus {
-            border-color: #4f8be0;
-            outline: none;
-            background: #0e192b;
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.5;
+            position: relative;
+            /* ===== ВОТ ТУТ ФОН ===== */
+            background: 
+                linear-gradient(180deg, rgba(13, 17, 23, 0.85) 0%, rgba(13, 17, 23, 0.92) 100%),
+                url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Whole_world_-_land_and_oceans_12000.jpg/1280px-Whole_world_-_land_and_oceans_12000.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
         }
-        button {
-            background: #1e3a62;
-            border: 1px solid #3865a0;
-            color: white;
-            font-weight: 600;
-            padding: 14px 24px;
-            border-radius: 50px;
-            font-size: 1rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.15s;
-            width: 100%;
-            margin-top: 6px;
+
+        /* ===== ЕСЛИ ХОЧЕШЬ ПОМЕНЯТЬ ФОН — ЗАМЕНИ ССЫЛКУ ВЫШЕ ===== */
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
-        button:hover {
-            background: #26518a;
-            border-color: #5c8fd6;
-            transform: translateY(-1px);
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            background: rgba(22, 27, 34, 0.6);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .btn-outline {
-            background: transparent;
-            border: 1.5px dashed #3f6190;
-            color: #b3cef5;
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #58a6ff, #bc8cff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
         }
-        .output-box {
-            background: #0a101c;
-            border-radius: 20px;
-            padding: 18px;
-            border-left: 6px solid #4a90e2;
-            font-family: 'SF Mono', 'Menlo', monospace;
-            word-break: break-all;
-            margin: 18px 0 8px;
+
+        .subtitle {
+            color: #b0b8c4;
             font-size: 0.95rem;
         }
-        .badge-sm {
-            display: inline-block;
-            background: #1d3450;
-            padding: 5px 14px;
-            border-radius: 30px;
+
+        /* === КАРТОЧКИ ИНСТРУМЕНТОВ === */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .tool-card {
+            background: rgba(22, 27, 34, 0.75);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-decoration: none;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tool-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            background: rgba(22, 27, 34, 0.9);
+        }
+
+        .tool-icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .tool-info h3 {
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .tool-info p {
             font-size: 0.8rem;
-            margin-right: 8px;
-            margin-bottom: 8px;
+            color: #8b949e;
         }
-        hr { border: 0.5px solid #213250; margin: 24px 0; }
-        .flex-row {
+
+        .badge {
+            display: inline-block;
+            background: #1f6feb22;
+            color: #58a6ff;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 6px;
+        }
+
+        /* === СЕКЦИИ === */
+        .section {
+            background: rgba(22, 27, 34, 0.75);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
         }
-        .checklist li {
-            list-style: none;
-            margin-bottom: 16px;
-            display: flex;
-            gap: 12px;
-        }
-        .checklist i.fa-check-circle { color: #2ecc71; }
-        .footer {
+
+        .drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 30px;
             text-align: center;
-            margin-top: 40px;
-            opacity: 0.7;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .drop-zone:hover,
+        .drop-zone.dragover {
+            border-color: var(--accent);
+            background: rgba(88, 166, 255, 0.08);
+        }
+
+        .drop-zone p {
+            color: #8b949e;
             font-size: 0.9rem;
         }
-        a { color: #8db1f0; text-decoration: none; }
-        .password-strength { height: 6px; background: #1f3147; border-radius: 10px; margin: 8px 0 16px; }
-        .strength-bar { height: 6px; border-radius: 10px; width: 0%; background: #e24a4a; transition: 0.2s; }
+
+        .drop-zone span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        #exif-output {
+            background: #0d1117;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 0.85rem;
+            max-height: 250px;
+            overflow-y: auto;
+            display: none;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .coord-highlight {
+            color: var(--green);
+            font-weight: bold;
+        }
+
+        .map-link-btn {
+            display: inline-block;
+            margin-top: 10px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .map-link-btn:hover {
+            background: #4090e0;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+        }
+
+        .search-box button {
+            padding: 12px 20px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .search-box button:hover {
+            background: #4090e0;
+        }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .checklist li input[type="checkbox"] {
+            accent-color: var(--green);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .checklist li.checked {
+            text-decoration: line-through;
+            color: #484f58;
+        }
+
+        .result-hint {
+            background: rgba(31, 42, 31, 0.7);
+            border: 1px solid #2ea04344;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: #7ee787;
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            color: #6e7681;
+            font-size: 0.75rem;
+            margin-top: 30px;
+            backdrop-filter: blur(5px);
+        }
+
+        @media (max-width: 500px) {
+            body {
+                padding: 10px;
+            }
+            .search-box {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="wrapper">
-    <div class="header">
-        <h1><i class="fas fa-shield-virus" style="margin-right: 12px;"></i>Data protection</h1>
-        <div class="status-badge"><i class="fas fa-circle"></i> автономный режим </div>
-    </div>
+    <div class="container">
+        <header>
+            <h1>🌍 Гео-ОСИНТ</h1>
+            <p class="subtitle">Помощник для поиска мест по фотографиям</p>
+        </header>
 
-    <!-- Первый ряд: генераторы и проверки -->
-    <div class="grid">
-        <!-- КАРТОЧКА: Парольный комбайн -->
-        <div class="card">
-            <h2><i class="fas fa-key"></i> Генератор паролей</h2>
-            <div style="display:flex; gap:8px; margin-bottom:12px;">
-                <input type="text" id="passwordOutput" readonly value="Кликните «Создать»" style="background:#0e1727;">
-                <button style="width:auto; margin:0;" id="copyPassBtn"><i class="far fa-copy"></i></button>
-            </div>
-            <div class="flex-row">
-                <button id="generatePassBtn"><i class="fas fa-dice"></i> Создать (24 символа)</button>
-                <button id="generatePassLongBtn" class="btn-outline"><i class="fas fa-dice-d6"></i> 48 символов</button>
-            </div>
-            <div class="password-strength"><div class="strength-bar" id="strengthBar"></div></div>
-            <p style="font-size:0.85rem;"><i class="fas fa-flask"></i> Включает буквы, цифры, спецсимволы.</p>
+        <!-- Карточки инструментов -->
+        <div class="tools-grid">
+            <a href="https://images.google.com" target="_blank" class="tool-card">
+                <span class="tool-icon">🔍</span>
+                <div class="tool-info">
+                    <h3>Google Картинки <span class="badge">поиск</span></h3>
+                    <p>Обратный поиск изображений</p>
+                </div>
+            </a>
+            <a href="https://yandex.ru/images" target="_blank" class="tool-card">
+                <span class="tool-icon">🖼️</span>
+                <div class="tool-info">
+                    <h3>Яндекс Картинки</h3>
+                    <p>Лучше для РФ и СНГ</p>
+                </div>
+            </a>
+            <a href="https://tineye.com" target="_blank" class="tool-card">
+                <span class="tool-icon">🎯</span>
+                <div class="tool-info">
+                    <h3>TinEye</h3>
+                    <p>Старейший поиск по фото</p>
+                </div>
+            </a>
+            <a href="https://www.google.com/maps" target="_blank" class="tool-card">
+                <span class="tool-icon">🗺️</span>
+                <div class="tool-info">
+                    <h3>Google Карты</h3>
+                    <p>Проверить координаты</p>
+                </div>
+            </a>
+            <a href="https://overpass-turbo.eu" target="_blank" class="tool-card">
+                <span class="tool-icon">📡</span>
+                <div class="tool-info">
+                    <h3>Overpass Turbo</h3>
+                    <p>Поиск объектов на карте</p>
+                </div>
+            </a>
+            <a href="https://satellites.pro" target="_blank" class="tool-card">
+                <span class="tool-icon">🛰️</span>
+                <div class="tool-info">
+                    <h3>Satellites.pro</h3>
+                    <p>Спутниковые снимки</p>
+                </div>
+            </a>
         </div>
 
-        <!-- КАРТОЧКА: Псевдоним / Анонимная личность -->
-        <div class="card">
-            <h2><i class="fas fa-user-ninja"></i> Генератор личности</h2>
-            <label style="display:block; margin-bottom:6px;">Псевдоним:</label>
-            <div style="display:flex; gap:8px;">
-                <input type="text" id="aliasOutput" readonly value="Shadow_Fox_777" style="background:#0e1727;">
-                <button style="width:auto; margin:0;" id="copyAliasBtn2"><i class="far fa-copy"></i></button>
+        <!-- 1. Анализ метаданных -->
+        <div class="section">
+            <h2>📸 Анализ метаданных (EXIF)</h2>
+            <div class="drop-zone" id="drop-zone">
+                <p>📂 <span>Выберите фото</span> или перетащите сюда</p>
+                <p style="font-size:0.75rem; margin-top:6px;">Ищем GPS-координаты в EXIF</p>
+                <input type="file" id="file-input" accept="image/*" style="display:none;">
             </div>
-            <label style="display:block; margin:16px 0 6px;">Одноразовый email:</label>
-            <div style="display:flex; gap:8px;">
-                <input type="text" id="fakeEmailOutput" readonly value="user_8f3x@tempmail.net" style="background:#0e1727;">
-                <button style="width:auto; margin:0;" id="copyEmailBtn"><i class="far fa-copy"></i></button>
-            </div>
-            <button id="generateIdentityBtn" style="margin-top:18px;"><i class="fas fa-sync-alt"></i> Сгенерировать новую личность</button>
+            <div id="exif-output"></div>
         </div>
 
-        <!-- КАРТОЧКА: Очистка метаданных -->
-        <div class="card">
-            <h2><i class="fas fa-eraser"></i> Анализатор текста</h2>
-            <p style="margin-bottom:12px;">Вставьте текст — найдём возможные утечки (email, телефон, IP).</p>
-            <textarea id="textScanner" rows="3" placeholder="Пример: Мой email ivan@mail.ru, тел. +7 999 123-45-67"></textarea>
-            <button id="scanTextBtn"><i class="fas fa-search"></i> Сканировать на личные данные</button>
-            <div id="scanResult" class="output-box" style="margin-top:16px;">
-                <i class="fas fa-info-circle"></i> Ожидание текста...
+        <!-- 2. Поиск по URL -->
+        <div class="section">
+            <h2>🔗 Обратный поиск по ссылке</h2>
+            <div class="search-box">
+                <input type="text" id="image-url" placeholder="Вставьте URL картинки...">
+                <button id="search-google-btn">🔍 Google</button>
+                <button id="search-yandex-btn">🖼️ Яндекс</button>
             </div>
-            <button id="clearTextBtn" class="btn-outline"><i class="fas fa-trash-alt"></i> Очистить поле</button>
+            <p style="font-size:0.75rem; color:#8b949e; margin-top:8px;">
+                Или просто вставьте ссылку и нажмите поиск
+            </p>
         </div>
-    </div>
 
-    <!-- Второй ряд: Инструкции и чеклист -->
-    <div class="grid">
-        <div class="card">
-            <h2><i class="fas fa-list-check"></i> Чеклист защиты (OSINT)</h2>
-            <ul class="checklist">
-                <li><i class="fas fa-check-circle"></i> <strong>Приватность соцсетей</strong> — всё закрыто, друзья проверены.</li>
-                <li><i class="fas fa-check-circle"></i> <strong>Удалены старые аккаунты</strong> (MySpace, старые форумы).</li>
-                <li><i class="fas fa-check-circle"></i> <strong>Whois Protection</strong> на доменах (если есть).</li>
-                <li><i class="fas fa-check-circle"></i> <strong>Отвязаны номера</strong> от Telegram (настройки).</li>
-                <li><i class="fas fa-check-circle"></i> <strong>Отключены геотеги</strong> в камере телефона.</li>
+        <!-- 3. Чеклист -->
+        <div class="section">
+            <h2>✅ Чеклист: что искать на фото</h2>
+            <ul class="checklist" id="checklist">
+                <li><input type="checkbox"> Вывески / названия магазинов</li>
+                <li><input type="checkbox"> Номера машин (регион, страна)</li>
+                <li><input type="checkbox"> Дорожные знаки</li>
+                <li><input type="checkbox"> Архитектура зданий</li>
+                <li><input type="checkbox"> Растительность / климат</li>
+                <li><input type="checkbox"> Язык на указателях</li>
+                <li><input type="checkbox"> Форма номеров телефонов</li>
+                <li><input type="checkbox"> Флаги или символика</li>
+                <li><input type="checkbox"> Рельеф (горы, равнина)</li>
+                <li><input type="checkbox"> Линии электропередач (тип опор)</li>
+                <li><input type="checkbox"> Дорожная разметка</li>
+                <li><input type="checkbox"> Бренды / логотипы</li>
             </ul>
-            <hr>
-            <p><i class="fas fa-gavel"></i> <strong>Юридическая справка РФ:</strong> ст. 137 УК РФ (нарушение неприкосновенности частной жизни), ст. 152.2 ГК РФ. Фиксируйте скриншоты.</p>
         </div>
-        <div class="card">
-            <h2><i class="fas fa-link"></i> Прямые ссылки на удаление</h2>
-            <div style="display:flex; flex-direction: column; gap:14px;">
-                <a href="#" onclick="window.open('https://myaccount.google.com/delete-services-or-account');return false;"><i class="fab fa-google"></i> Удаление аккаунта Google / истории</a>
-                <a href="#" onclick="window.open('https://account.microsoft.com/privacy/export');return false;"><i class="fab fa-microsoft"></i> Microsoft: данные и приватность</a>
-                <a href="#" onclick="window.open('https://www.facebook.com/help/delete_account');return false;"><i class="fab fa-facebook"></i> Удаление Facebook</a>
-                <a href="#" onclick="window.open('https://justdeleteme.xyz/');return false;"><i class="fas fa-database"></i> JustDeleteMe — удаление с сотен сайтов</a>
-                <a href="#" onclick="window.open('https://haveibeenpwned.com/');return false;"><i class="fas fa-shield"></i> Have I Been Pwned (проверка email)</a>
-            </div>
-            <hr>
-            <p><i class="fas fa-clock"></i> <strong>Google Alerts:</strong> Настройте на своё имя: <span style="background:#0f1e33; padding:3px 10px; border-radius:20px;">"Иван Иванов"</span></p>
+
+        <div class="result-hint" id="result-hint">
         </div>
-        <div class="card">
-        🛡️ Полностью автономный инструмент. Никакие данные не отправляются на сервер — всё в вашем браузере. Работает офлайн после загрузки.
+
+        <footer>
+            ♦Гео-ОСИНТ помощник♦
+        </footer>
     </div>
-</div>
 
-<script>
-    (function(){
-        // ---------- ГЕНЕРАТОР ПАРОЛЕЙ ----------
-        function generatePassword(length = 24) {
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
-            let pwd = '';
-            const array = new Uint32Array(length);
-            crypto.getRandomValues(array);
-            for (let i = 0; i < length; i++) pwd += chars[array[i] % chars.length];
-            return pwd;
-        }
-        function updateStrength(password) {
-            const bar = document.getElementById('strengthBar');
-            let score = 0;
-            if (password.length >= 12) score += 25; else score += 10;
-            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score += 20;
-            if (/[0-9]/.test(password)) score += 20;
-            if (/[^a-zA-Z0-9]/.test(password)) score += 25;
-            bar.style.width = Math.min(score, 100) + '%';
-            if (score < 40) bar.style.background = '#e24a4a';
-            else if (score < 70) bar.style.background = '#e2a84a';
-            else bar.style.background = '#3acf7a';
-        }
-        const passOut = document.getElementById('passwordOutput');
-        document.getElementById('generatePassBtn').addEventListener('click', ()=>{
-            const pwd = generatePassword(24);
-            passOut.value = pwd;
-            updateStrength(pwd);
-        });
-        document.getElementById('generatePassLongBtn').addEventListener('click', ()=>{
-            const pwd = generatePassword(48);
-            passOut.value = pwd;
-            updateStrength(pwd);
-        });
-        document.getElementById('copyPassBtn').addEventListener('click', ()=>{
-            navigator.clipboard?.writeText(passOut.value);
-            alert('Пароль скопирован');
-        });
+    <script>
+        // === Drag & Drop + EXIF ===
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const exifOutput = document.getElementById('exif-output');
 
-        // ---------- ГЕНЕРАТОР ЛИЧНОСТИ ----------
-        const aliasOutput = document.getElementById('aliasOutput');
-        const fakeEmailOutput = document.getElementById('fakeEmailOutput');
-        function randomString(len) {
-            return Array.from(crypto.getRandomValues(new Uint8Array(len))).map(b => b.toString(36)).join('').slice(0,len);
-        }
-        function generateIdentity() {
-            const adjectives = ["Silent","Shadow","Frost","Cyber","Ghost","Neo","Dark","Void","Alpha","Steel"];
-            const nouns = ["Fox","Wolf","Hawk","Raven","Cobra","Phantom","Warden","Byte","Echo","Nova"];
-            const adj = adjectives[Math.floor(Math.random()*adjectives.length)];
-const noun = nouns[Math.floor(Math.random()*nouns.length)];
-const num = Math.floor(Math.random()*1000);
-aliasOutput.value = `${adj}_${noun}_${num}`;
-const domains = ["tempmail.net","anonbox.me","guerrillamail.com","10minute.cf","dispostable.com"];
-fakeEmailOutput.value = `${randomString(8)}@${domains[Math.floor(Math.random()*domains.length)]}`;        document.getElementById('generateIdentityBtn').addEventListener('click', generateIdentity);       document.getElementById('copyAliasBtn2').addEventListener('click', ()=>navigator.clipboard?.writeText(aliasOutput.value));    document.getElementById('copyEmailBtn').addEventListener('click', ()=>navigator.clipboard?.writeText(fakeEmailOutput.value));
-generateIdentity();
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) processImage(file);
+        });
+        fileInput.addEventListener('change', (e) => { if (e.target.files[0]) processImage(e.target.files[0]); });
 
-        // ---------- СКАНЕР ТЕКСТА ----------
-const scanner = document.getElementById('textScanner');
-const scanResult = document.getElementById('scanResult');
-function scanText() {
-const text = scanner.value;
-if (!text.trim()) { scanResult.innerHTML = '<i class="fas fa-info-circle"></i> Введите текст для анализа.'; return; }
-const findings = [];
-const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-const phoneRegex = /(\+7|8)[\s-]?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}/g;
-const ipRegex = /\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b/g;
-const emails = text.match(emailRegex) || [];
-const phones = text.match(phoneRegex) || [];
-const ips = text.match(ipRegex) || [];
-if (emails.length) findings.push(`📧 Email: ${emails.join(', ')}`);         
-if (phones.length) findings.push(`📞 Телефон: ${phones.join(', ')}`);
-if (ips.length) findings.push(`🌐 IP: ${ips.join(', ')}`);
-if (findings.length===0) scanResult.innerHTML = '<i class="fas fa-check-circle" style="color:#3acf7a;"></i> Явных личных данных не обнаружено.';
-else scanResult.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#e2a84a;"></i> Найдено:<br>${findings.join('<br>')}`;        }        document.getElementById('scanTextBtn').addEventListener('click', scanText);       document.getElementById('clearTextBtn').addEventListener('click', ()=>{ scanner.value = ''; scanResult.innerHTML = '<i class="fas fa-info-circle"></i> Поле очищено.'; });
-// Инициализация оценки пароля при загрузке
-updateStrength(passOut.value || '');
-})();
-</script>
+        function processImage(file) {
+            exifOutput.style.display = 'block';
+            exifOutput.innerHTML = '⏳ Анализируем EXIF...';
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const view = new DataView(e.target.result);
+                let exifData = {};
+                let offset = 2;
+                if (view.getUint16(0) === 0xFFD8) {
+                    while (offset < view.byteLength) {
+                        if (view.getUint16(offset) === 0xFFE1) {
+                            const exifStart = offset + 4;
+                            const header = String.fromCharCode(view.getUint8(exifStart), view.getUint8(exifStart+1), view.getUint8(exifStart+2), view.getUint8(exifStart+3));
+                            if (header === 'Exif') parseExifProper(view, exifStart + 6, exifData);
+                            break;
+                        }
+                        offset += 2 + view.getUint16(offset + 2);
+                    }
+                }
+                displayExifData(exifData, file.name);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function parseExifProper(view, start, data) {
+            const le = view.getUint16(start) === 0x4949;
+            const tiff = start + 2;
+            const ifdOff = view.getUint32(tiff + 4, le);
+            const mainIFD = tiff + ifdOff;
+            const num = view.getUint16(mainIFD, le);
+            for (let i = 0; i < num; i++) {
+                const off = mainIFD + 2 + i * 12;
+                const tag = view.getUint16(off, le);
+                const type = view.getUint16(off + 2, le);
+                const count = view.getUint32(off + 4, le);
+                if (tag === 0x010F) data.Make = readASCII(view, off, type, count, le, tiff);
+                if (tag === 0x0110) data.Model = readASCII(view, off, type, count, le, tiff);
+                if (tag === 0x0132) data.DateTime = readASCII(view, off, type, count, le, tiff);
+                if (tag === 0x8825) {
+                    const gpsOff = view.getUint32(off + 8, le);
+                    parseGPS(view, tiff + gpsOff, le, data);
+                }
+            }
+        }
+
+        function readASCII(view, off, type, count, le, tiff) {
+            if (count <= 4) return String.fromCharCode(view.getUint8(off+8), view.getUint8(off+9), view.getUint8(off+10), view.getUint8(off+11)).replace(/\0/g, '');
+            const strOff = view.getUint32(off+8, le);
+            let s = '';
+            for (let j=0; j<count-1; j++) s += String.fromCharCode(view.getUint8(tiff+strOff+j));
+            return s;
+        }
+
+        function parseGPS(view, base, le, data) {
+            const num = view.getUint16(base, le);
+            for (let i=0; i<num; i++) {
+                const off = base+2+i*12;
+                const tag = view.getUint16(off, le);
+                const valOff = view.getUint32(off+8, le);
+                const num1 = view.getUint32(tiff+valOff, le), den1 = view.getUint32(tiff+valOff+4, le);
+                const num2 = view.getUint32(tiff+valOff+8, le), den2 = view.getUint32(tiff+valOff+12, le);
+                const num3 = view.getUint32(tiff+valOff+16, le), den3 = view.getUint32(tiff+valOff+20, le);
+                if (tag === 0x0001) data.GPSLatRef = String.fromCharCode(view.getUint8(off+8), view.getUint8(off+9)).replace(/\0/g,'');
+                if (tag === 0x0002) data.GPSLat = {d:num1/den1, m:num2/den2, s:num3/den3};
+                if (tag === 0x0003) data.GPSLonRef = String.fromCharCode(view.getUint8(off+8), view.getUint8(off+9)).replace(/\0/g,'');
+                if (tag === 0x0004) data.GPSLon = {d:num1/den1, m:num2/den2, s:num3/den3};
+            }
+        }
+        const tiff = 0;
+
+        function displayExifData(data, fileName) {
+            let html = `📁 <strong>${fileName}</strong><br><br>`;
+            if (data.Make || data.Model) html += `📷 Камера: ${data.Make||'?'} ${data.Model||''}<br>`;
+            if (data.DateTime) html += `📅 Дата: ${data.DateTime}<br>`;
+            if (data.GPSLat && data.GPSLon) {
+                let lat = data.GPSLat.d + data.GPSLat.m/60 + data.GPSLat.s/3600;
+                let lon = data.GPSLon.d + data.GPSLon.m/60 + data.GPSLon.s/3600;
+                if (data.GPSLatRef === 'S') lat = -lat;
+                if (data.GPSLonRef === 'W') lon = -lon;
+                html += `<br>📍 <span class="coord-highlight">GPS: ${lat.toFixed(6)}, ${lon.toFixed(6)}</span><br>`;
+                html += `<a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank" class="map-link-btn">🗺️ Открыть в Google Картах</a>`;
+            } else html += '<br>⚠️ GPS-координаты не найдены.';
+            exifOutput.innerHTML = html;
+        }
+
+        document.getElementById('search-google-btn').addEventListener('click', () => {
+            const url = document.getElementById('image-url').value.trim();
+            if (url) window.open(`https://lens.google.com/uploadbyurl?url=${encodeURIComponent(url)}`, '_blank');
+            else alert('Вставьте URL');
+        });
+        document.getElementById('search-yandex-btn').addEventListener('click', () => {
+            const url = document.getElementById('image-url').value.trim();
+            if (url) window.open(`https://yandex.ru/images/search?rpt=imageview&url=${encodeURIComponent(url)}`, '_blank');
+            else alert('Вставьте URL');
+        });
+        document.querySelectorAll('#checklist input').forEach(cb => cb.addEventListener('change', function(){ this.parentElement.classList.toggle('checked', this.checked); }));
+    </script>
 </body>
 </html>
