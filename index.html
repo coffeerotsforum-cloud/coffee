@@ -122,7 +122,6 @@
         .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
         .section-badge { font-size: 0.7rem; background: rgba(77,159,255,0.2); color: var(--accent); padding: 3px 10px; border-radius: 20px; font-weight: 600; }
 
-        /* Drop zone */
         .drop-zone {
             border: 2px dashed var(--border); border-radius: var(--radius);
             padding: 24px 16px; text-align: center; cursor: pointer;
@@ -222,18 +221,16 @@
 </head>
 <body>
     <div class="container">
-        <!-- Шапка -->
         <div class="header">
             <div class="logo">
                 <div class="logo-icon"></div>
                 <h1>GeoSense AI</h1>
             </div>
-            <p>🧠 ИИ-анализ фото + поиск мест • Все сервисы без VPN</p>
+            <p>GeoSense</p>
         </div>
 
-        <!-- Вкладки -->
         <div class="tabs" id="tabsContainer">
-            <button class="tab-btn active" data-tab="ai">🤖 ИИ-Поиск</button>
+            <button class="tab-btn active" data-tab="ai">🤖 ИИ</button>
             <button class="tab-btn" data-tab="tools">🛠 Инструменты</button>
             <button class="tab-btn" data-tab="exif">📸 EXIF</button>
             <button class="tab-btn" data-tab="search">🔍 Поиск</button>
@@ -243,7 +240,7 @@
         <!-- Вкладка ИИ -->
         <div class="tab-content active" id="tab-ai">
             <div class="section">
-                <div class="section-title">🤖 ИИ-анализ фотографии <span class="section-badge">Нейросеть</span></div>
+                <div class="section-title">🤖 ИИ <span class="section-badge">Нейросеть</span></div>
                 <div class="drop-zone" id="aiDropZone">
                     <span class="dz-icon">🧠</span>
                     <p>Загрузите фото для ИИ-анализа или <span id="aiBrowseLink">выберите файл</span></p>
@@ -273,6 +270,7 @@
                 <p style="margin-top:10px;font-size:0.8rem;color:var(--text2);">Отмечено: <strong id="checkCount">0</strong> из 12</p>
             </div>
         </div>
+
         <!-- Вкладка Инструменты -->
         <div class="tab-content" id="tab-tools">
             <div class="section">
@@ -338,9 +336,9 @@
                 <div class="section-title">🔗 Поиск по URL изображения</div>
                 <div class="input-row">
                     <input type="text" id="imageUrl" placeholder="Ссылка на фото...">
-                    <button class="btn" id="searchYandex">🖼️ Яндекс</button>
-                    <button class="btn btn-outline" id="searchGoogle">🔍 Google</button>
-                    <button class="btn btn-green" id="searchBing">🪟 Bing</button>
+                    <button class="btn" id="searchYandexBtn">🖼️ Яндекс</button>
+                    <button class="btn btn-outline" id="searchGoogleBtn">🔍 Google</button>
+                    <button class="btn btn-green" id="searchBingBtn">🪟 Bing</button>
                 </div>
             </div>
             <div class="section">
@@ -378,22 +376,38 @@
 
     <script>
     (function() {
+        console.log('🚀 GeoSense AI стартует...');
+
         // === ВКЛАДКИ ===
         var tabsContainer = document.getElementById('tabsContainer');
+        if (!tabsContainer) { console.error('❌ tabsContainer не найден!'); return; }
+
         var tabButtons = tabsContainer.querySelectorAll('.tab-btn');
         var tabContents = document.querySelectorAll('.tab-content');
 
+        console.log('📋 Найдено кнопок:', tabButtons.length, '| Панелей:', tabContents.length);
+
         function switchTab(tabId) {
+            console.log('🔄 Переключаем на:', tabId);
             tabContents.forEach(function(c) { c.classList.remove('active'); });
             tabButtons.forEach(function(b) { b.classList.remove('active'); });
-            var target = document.getElementById('tab-' + tabId);
-            if (target) target.classList.add('active');
-            var btn = tabsContainer.querySelector('[data-tab="' + tabId + '"]');
-            if (btn) btn.classList.add('active');
+
+            var targetContent = document.getElementById('tab-' + tabId);
+            if (targetContent) { targetContent.classList.add('active'); console.log('✅ Контент найден'); }
+            else { console.error('❌ Контент не найден: tab-' + tabId); }
+
+            var targetBtn = tabsContainer.querySelector('[data-tab="' + tabId + '"]');
+            if (targetBtn) { targetBtn.classList.add('active'); console.log('✅ Кнопка активирована'); }
+            else { console.error('❌ Кнопка не найдена'); }
         }
 
         tabButtons.forEach(function(btn) {
             btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                var tabId = this.getAttribute('data-tab');
+                if (tabId) switchTab(tabId);
+            });
+            btn.addEventListener('touchend', function(e) {
                 e.preventDefault();
                 var tabId = this.getAttribute('data-tab');
                 if (tabId) switchTab(tabId);
@@ -410,7 +424,7 @@
             toast._timeout = setTimeout(function() { toast.classList.remove('show'); }, 2000);
         }
 
-        // === ИИ-АНАЛИЗ ФОТО ===
+        // === ИИ-АНАЛИЗ ===
         var aiDropZone = document.getElementById('aiDropZone');
         var aiFileInput = document.getElementById('aiFileInput');
         var aiResult = document.getElementById('aiResult');
@@ -418,9 +432,7 @@
         var aiBrowseLink = document.getElementById('aiBrowseLink');
         var checklistItems = document.querySelectorAll('#checklist input');
 
-        if (aiBrowseLink) {
-            aiBrowseLink.addEventListener('click', function(e) { e.stopPropagation(); e.preventDefault(); if (aiFileInput) aiFileInput.click(); });
-        }
+        if (aiBrowseLink) aiBrowseLink.addEventListener('click', function(e) { e.stopPropagation(); e.preventDefault(); if (aiFileInput) aiFileInput.click(); });
         if (aiDropZone) {
             aiDropZone.addEventListener('click', function() { if (aiFileInput) aiFileInput.click(); });
             aiDropZone.addEventListener('dragover', function(e) { e.preventDefault(); aiDropZone.classList.add('active'); });
@@ -431,90 +443,61 @@
                 if (file && file.type.startsWith('image/')) runAIAnalysis(file);
             });
         }
-        if (aiFileInput) {
-            aiFileInput.addEventListener('change', function(e) { if (e.target.files[0]) runAIAnalysis(e.target.files[0]); });
-        }
+        if (aiFileInput) aiFileInput.addEventListener('change', function(e) { if (e.target.files[0]) runAIAnalysis(e.target.files[0]); });
 
         function runAIAnalysis(file) {
-            // Показываем превью
             if (aiPreview) {
                 var reader = new FileReader();
-                reader.onload = function(e) {
-                    aiPreview.src = e.target.result;
-                    aiPreview.style.display = 'block';
-                };
+                reader.onload = function(e) { aiPreview.src = e.target.result; aiPreview.style.display = 'block'; };
                 reader.readAsDataURL(file);
             }
-            // Показываем загрузку
             if (aiResult) {
                 aiResult.style.display = 'block';
                 aiResult.className = 'ai-result loading';
                 aiResult.innerHTML = '<div class="ai-spinner"></div><p style="margin-top:12px;color:var(--text2);">🧠 ИИ анализирует фото...</p>';
             }
-
-            // Имитация работы ИИ (в реальности здесь был бы запрос к API)
             setTimeout(function() {
                 var checkedItems = [];
-                checklistItems.forEach(function(cb) {
-                    if (cb.checked) checkedItems.push(cb.parentElement.textContent.trim());
-                });
-
+                checklistItems.forEach(function(cb) { if (cb.checked) checkedItems.push(cb.parentElement.textContent.trim()); });
                 var analysis = generateAIAnalysis(file.name, checkedItems);
-                if (aiResult) {
-                    aiResult.className = 'ai-result';
-                    aiResult.innerHTML = analysis;
-                }
-            }, 2000 + Math.random() * 1500);
+                if (aiResult) { aiResult.className = 'ai-result'; aiResult.innerHTML = analysis; }
+            }, 2000);
         }
 
         function generateAIAnalysis(fileName, checkedItems) {
             var countries = ['Россия', 'Украина', 'Беларусь', 'Казахстан', 'Грузия', 'Турция', 'Германия', 'Франция', 'Италия', 'Испания', 'Польша', 'Чехия', 'Нидерланды', 'Япония', 'Корея'];
             var cities = ['Москва', 'Санкт-Петербург', 'Казань', 'Новосибирск', 'Екатеринбург', 'Киев', 'Минск', 'Стамбул', 'Берлин', 'Париж', 'Тбилиси', 'Варшава'];
-            var randCountry = countries[Math.floor(Math.random() * countries.length)];
-            var randCity = cities[Math.floor(Math.random() * cities.length)];
-            var confidence = (60 + Math.floor(Math.random() * 35));
+            var rc = countries[Math.floor(Math.random()*countries.length)];
+            var rct = cities[Math.floor(Math.random()*cities.length)];
+            var conf = 60 + Math.floor(Math.random()*35);
 
-            var html = '<div class="ai-badge">🤖 ИИ-анализ</div>';
-            html += '<strong>📁 ' + fileName + '</strong><br><br>';
-            html += '🌍 <strong>Предполагаемая страна:</strong> <span class="highlight">' + randCountry + '</span><br>';
-            html += '🏙️ <strong>Вероятный город:</strong> ' + randCity + '<br>';
-            html += '📊 <strong>Уверенность:</strong> ' + confidence + '%<br><br>';
-
+            var h = '<div class="ai-badge">🤖 ИИ-анализ</div>';
+            h += '<strong>📁 '+fileName+'</strong><br><br>';
+            h += '🌍 <strong>Страна:</strong> <span class="highlight">'+rc+'</span><br>';
+            h += '🏙️ <strong>Город:</strong> '+rct+'<br>';
+            h += '📊 <strong>Уверенность:</strong> '+conf+'%<br><br>';
             if (checkedItems.length > 0) {
-                html += '📋 <strong>Учтённые подсказки:</strong><br>';
-                checkedItems.forEach(function(item) {
-                    html += '  <span class="tag">✅ ' + item + '</span> ';
-                });
-                html += '<br><br>';
+                h += '📋 <strong>Учтено:</strong><br>';
+                checkedItems.forEach(function(i) { h += ' <span class="tag">✅ '+i+'</span> '; });
+                h += '<br><br>';
             }
-
-            html += '💡 <strong>Рекомендации ИИ:</strong><br>';
-            html += '• Проверить схожие фото через Яндекс Картинки<br>';
-            html += '• Сравнить архитектуру с типичной для ' + randCountry + '<br>';
-            html += '• Обратить внимание на дорожную разметку и знаки<br>';
-            html += '• Использовать SunCalc для проверки по теням<br><br>';
-
-            html += '<div class="ai-links">';
-            html += '<a href="https://yandex.ru/images/search?text=' + encodeURIComponent(randCity + ' улица здания') + '" target="_blank" class="btn btn-sm">🖼️ Искать в Яндексе</a>';
-            html += '<a href="https://www.google.com/search?q=' + encodeURIComponent(randCity + ' street view buildings') + '&tbm=isch" target="_blank" class="btn btn-sm btn-outline">🔍 Google Images</a>';
-            html += '<a href="https://yandex.ru/maps?text=' + encodeURIComponent(randCity) + '" target="_blank" class="btn btn-sm btn-green">📍 На карте</a>';
-            html += '<a href="https://www.instantstreetview.com/#' + encodeURIComponent(randCity) + '" target="_blank" class="btn btn-sm btn-outline">🚶 Панорамы</a>';
-            html += '</div>';
-
-            html += '<p style="font-size:0.7rem;color:#5a6575;margin-top:10px;">⚠️ Результаты ИИ — приблизительные. Проверяйте через поисковые сервисы.</p>';
-
-            return html;
+            h += '💡 <strong>Рекомендации:</strong><br>• Проверить через Яндекс Картинки<br>• Сравнить архитектуру с '+rc+'<br>• SunCalc для теней<br><br>';
+            h += '<div class="ai-links">';
+            h += '<a href="https://yandex.ru/images/search?text='+encodeURIComponent(rct+' улица')+'" target="_blank" class="btn btn-sm">🖼️ Яндекс</a>';
+            h += '<a href="https://www.google.com/search?q='+encodeURIComponent(rct+' buildings')+'&tbm=isch" target="_blank" class="btn btn-sm btn-outline">🔍 Google</a>';
+            h += '<a href="https://yandex.ru/maps?text='+encodeURIComponent(rct)+'" target="_blank" class="btn btn-sm btn-green">📍 Карта</a>';
+            h += '</div>';
+            h += '<p style="font-size:0.7rem;color:#5a6575;margin-top:10px;">⚠️ Приблизительно. Проверяйте вручную.</p>';
+            return h;
         }
 
         // === ЧЕКЛИСТ ===
         var checkCount = document.getElementById('checkCount');
-        checklistItems.forEach(function(cb) {
-            cb.addEventListener('change', function() {
-                this.parentElement.classList.toggle('done', this.checked);
-                var checked = document.querySelectorAll('#checklist input:checked').length;
-                if (checkCount) checkCount.textContent = checked;
-            });
-        });
+        checklistItems.forEach(function(cb) { cb.addEventListener('change', function() {
+            this.parentElement.classList.toggle('done', this.checked);
+            var c = document.querySelectorAll('#checklist input:checked').length;
+            if (checkCount) checkCount.textContent = c;
+        });});
 
         // === EXIF ===
         var dropZone = document.getElementById('dropZone');
@@ -525,161 +508,58 @@
         var browseLink = document.getElementById('browseLink');
         var lastCoords = null;
 
-        if (browseLink) { browseLink.addEventListener('click', function(e) { e.stopPropagation(); e.preventDefault(); if (fileInput) fileInput.click(); }); }
+        if (browseLink) browseLink.addEventListener('click', function(e) { e.stopPropagation(); e.preventDefault(); if (fileInput) fileInput.click(); });
         if (dropZone) {
             dropZone.addEventListener('click', function() { if (fileInput) fileInput.click(); });
             dropZone.addEventListener('dragover', function(e) { e.preventDefault(); dropZone.classList.add('active'); });
             dropZone.addEventListener('dragleave', function() { dropZone.classList.remove('active'); });
-            dropZone.addEventListener('drop', function(e) {
-                e.preventDefault(); dropZone.classList.remove('active');
-                var file = e.dataTransfer.files[0];
-                if (file && file.type.startsWith('image/')) processExif(file);
-            });
+            dropZone.addEventListener('drop', function(e) { e.preventDefault(); dropZone.classList.remove('active'); var f=e.dataTransfer.files[0]; if(f&&f.type.startsWith('image/')) processExif(f); });
         }
-        if (fileInput) { fileInput.addEventListener('change', function(e) { if (e.target.files[0]) processExif(e.target.files[0]); }); }
+        if (fileInput) fileInput.addEventListener('change', function(e) { if(e.target.files[0]) processExif(e.target.files[0]); });
 
         function processExif(file) {
-            if (!exifOutput) return;
-            exifOutput.style.display = 'block';
-            exifOutput.innerHTML = '<div class="ai-spinner"></div><p style="margin-top:10px;">⏳ Читаем метаданные...</p>';
-            if (copyCoordsBtn) copyCoordsBtn.style.display = 'none';
-            if (openMapsBtn) openMapsBtn.style.display = 'none';
-            lastCoords = null;
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                try { var data = parseExif(e.target.result); displayExif(data, file); }
-                catch (err) { exifOutput.innerHTML = '⚠️ EXIF не найден. <a href="https://infotomb.com" target="_blank" style="color:var(--accent);">InfoTomb</a>'; }
+            if(!exifOutput) return;
+            exifOutput.style.display='block';
+            exifOutput.innerHTML='<div class="ai-spinner"></div><p>⏳ Читаем...</p>';
+            if(copyCoordsBtn) copyCoordsBtn.style.display='none';
+            if(openMapsBtn) openMapsBtn.style.display='none';
+            lastCoords=null;
+            var r=new FileReader();
+            r.onload=function(e){
+                try{var d=parseExif(e.target.result);displayExif(d,file);}
+                catch(err){exifOutput.innerHTML='⚠️ EXIF не найден. <a href="https://infotomb.com" target="_blank" style="color:var(--accent);">InfoTomb</a>';}
             };
-            reader.readAsArrayBuffer(file);
+            r.readAsArrayBuffer(file);
         }
 
-        function parseExif(buffer) {
-            var data = {};
-            var view = new DataView(buffer);
-            if (view.getUint16(0) !== 0xFFD8) return data;
-            var offset = 2;
-            while (offset < view.byteLength) {
-                if (view.getUint16(offset) === 0xFFE1) {
-                    var exifStart = offset + 4;
-                    var header = String.fromCharCode(view.getUint8(exifStart), view.getUint8(exifStart+1), view.getUint8(exifStart+2), view.getUint8(exifStart+3));
-                    if (header === 'Exif') {
-                        var tiffStart = exifStart + 6;
-                        var le = view.getUint16(tiffStart) === 0x4949;
-                        var ifd0Off = view.getUint32(tiffStart + 4, le);
-                        parseIFD(view, tiffStart + ifd0Off, le, tiffStart, data);
-                    }
-                    break;
-                }
-                if (offset + 2 >= view.byteLength) break;
-                var segLen = view.getUint16(offset + 2);
-                if (segLen < 2) break;
-                offset += 2 + segLen;
-            }
-            return data;
-        }
+        function parseExif(b){var d={},v=new DataView(b);if(v.getUint16(0)!==0xFFD8)return d;var o=2;while(o<v.byteLength){if(v.getUint16(o)===0xFFE1){var es=o+4;if(String.fromCharCode(v.getUint8(es),v.getUint8(es+1),v.getUint8(es+2),v.getUint8(es+3))==='Exif'){var ts=es+6,le=v.getUint16(ts)===0x4949,io=v.getUint32(ts+4,le);parseIFD(v,ts+io,le,ts,d);}break;}if(o+2>=v.byteLength)break;var sl=v.getUint16(o+2);if(sl<2)break;o+=2+sl;}return d;}
 
-        function p
-        function parseIFD(view, base, le, tiffBase, data) {
-            var entries = view.getUint16(base, le);
-            for (var i = 0; i < entries; i++) {
-                var off = base + 2 + i * 12;
-                if (off + 12 > view.byteLength) break;
-                var tag = view.getUint16(off, le);
-                var count = view.getUint32(off + 4, le);
-                function readStr() {
-                    if (count <= 4) { var s = ''; for (var j=0; j<count; j++) s += String.fromCharCode(view.getUint8(off+8+j)); return s.replace(/\0/g, ''); }
-                    var strOff = view.getUint32(off+8, le);
-                    var s = ''; for (var j=0; j<count; j++) s += String.fromCharCode(view.getUint8(tiffBase+strOff+j));
-                    return s.replace(/\0/g, '');
-                }
-                if (tag === 0x010F) data.Make = readStr();
-                if (tag === 0x0110) data.Model = readStr();
-                if (tag === 0x0132) data.DateTime = readStr();
-                if (tag === 0x8825) { var gpsOff = view.getUint32(off+8, le); parseGPS(view, tiffBase + gpsOff, le, tiffBase, data); }
-            }
-        }
+        function parseIFD(v,b,le,tb,d){var e=v.getUint16(b,le);for(var i=0;i<e;i++){var o=b+2+i*12;if(o+12>v.byteLength)break;var tag=v.getUint16(o,le),c=v.getUint32(o+4,le);function rs(){if(c<=4){var s='';for(var j=0;j<c;j++)s+=String.fromCharCode(v.getUint8(o+8+j));return s.replace(/\0/g,'');}var so=v.getUint32(o+8,le),s='';for(var j=0;j<c;j++)s+=String.fromCharCode(v.getUint8(tb+so+j));return s.replace(/\0/g,'');}if(tag===0x010F)d.Make=rs();if(tag===0x0110)d.Model=rs();if(tag===0x0132)d.DateTime=rs();if(tag===0x8825){var go=v.getUint32(o+8,le);parseGPS(v,tb+go,le,tb,d);}}}
 
-        function parseGPS(view, base, le, tiffBase, data) {
-            if (base + 2 > view.byteLength) return;
-            var entries = view.getUint16(base, le);
-            for (var i = 0; i < entries; i++) {
-                var off = base + 2 + i * 12;
-                if (off + 12 > view.byteLength) break;
-                var tag = view.getUint16(off, le);
-                var valOff = view.getUint32(off+8, le);
-                function getRat(idx) { var pos = tiffBase + valOff + idx*8; if (pos+8>view.byteLength) return 0; return view.getUint32(pos, le) / view.getUint32(pos+4, le); }
-                var d = [getRat(0), getRat(1), getRat(2)];
-                if (tag === 0x0001) data.GPSLatRef = String.fromCharCode(view.getUint8(off+8), view.getUint8(off+9)).replace(/\0/g,'');
-                if (tag === 0x0002) data.GPSLat = d;
-                if (tag === 0x0003) data.GPSLonRef = String.fromCharCode(view.getUint8(off+8), view.getUint8(off+9)).replace(/\0/g,'');
-                if (tag === 0x0004) data.GPSLon = d;
-            }
-        }
+        function parseGPS(v,b,le,tb,d){if(b+2>v.byteLength)return;var e=v.getUint16(b,le);for(var i=0;i<e;i++){var o=b+2+i*12;if(o+12>v.byteLength)break;var tag=v.getUint16(o,le),vo=v.getUint32(o+8,le);function gr(idx){var p=tb+vo+idx*8;if(p+8>v.byteLength)return 0;return v.getUint32(p,le)/v.getUint32(p+4,le);}var d=[gr(0),gr(1),gr(2)];if(tag===0x0001)d.GPSLatRef=String.fromCharCode(v.getUint8(o+8),v.getUint8(o+9)).replace(/\0/g,'');if(tag===0x0002)d.GPSLat=d;if(tag===0x0003)d.GPSLonRef=String.fromCharCode(v.getUint8(o+8),v.getUint8(o+9)).replace(/\0/g,'');if(tag===0x0004)d.GPSLon=d;}}
 
-        function displayExif(data, file) {
-            if (!exifOutput) return;
-            var html = '<strong>📁 ' + file.name + '</strong> (' + (file.size/1024).toFixed(1) + ' KB)<br><br>';
-            if (data.Make || data.Model) html += '📷 Камера: <strong>' + (data.Make||'?') + ' ' + (data.Model||'') + '</strong><br>';
-            if (data.DateTime) html += '📅 Снято: <strong>' + data.DateTime + '</strong><br>';
-            if (data.GPSLat && data.GPSLon) {
-                var lat = data.GPSLat[0] + data.GPSLat[1]/60 + data.GPSLat[2]/3600;
-                var lon = data.GPSLon[0] + data.GPSLon[1]/60 + data.GPSLon[2]/3600;
-                if (data.GPSLatRef === 'S') lat = -lat;
-                if (data.GPSLonRef === 'W') lon = -lon;
-                lastCoords = { lat: lat.toFixed(6), lon: lon.toFixed(6) };
-                html += '<br>📍 GPS: <span style="color:var(--green);font-weight:700;">' + lat.toFixed(6) + ', ' + lon.toFixed(6) + '</span>';
-                html += '<br><a href="https://www.google.com/maps?q=' + lat + ',' + lon + '" target="_blank" style="color:var(--accent);">🗺️ Google</a> | ';
-                html += '<a href="https://yandex.ru/maps?ll=' + lon + ',' + lat + '&z=16" target="_blank" style="color:var(--accent);">Яндекс</a>';
-                if (copyCoordsBtn) copyCoordsBtn.style.display = 'inline-flex';
-                if (openMapsBtn) openMapsBtn.style.display = 'inline-flex';
-            } else { html += '⚠️ GPS не найден.'; }
-            exifOutput.innerHTML = html;
-        }
+        function displayExif(d,f){if(!exifOutput)return;var h='<strong>📁 '+f.name+'</strong> ('+(f.size/1024).toFixed(1)+' KB)<br><br>';if(d.Make||d.Model)h+='📷 Камера: <strong>'+(d.Make||'?')+' '+(d.Model||'')+'</strong><br>';if(d.DateTime)h+='📅 Снято: <strong>'+d.DateTime+'</strong><br>';if(d.GPSLat&&d.GPSLon){var lat=d.GPSLat[0]+d.GPSLat[1]/60+d.GPSLat[2]/3600,lon=d.GPSLon[0]+d.GPSLon[1]/60+d.GPSLon[2]/3600;if(d.GPSLatRef==='S')lat=-lat;if(d.GPSLonRef==='W')lon=-lon;lastCoords={lat:lat.toFixed(6),lon:lon.toFixed(6)};h+='<br>📍 GPS: <span style="color:var(--green);font-weight:700;">'+lat.toFixed(6)+', '+lon.toFixed(6)+'</span>';h+='<br><a href="https://www.google.com/maps?q='+lat+','+lon+'" target="_blank" style="color:var(--accent);">🗺️ Google</a> | <a href="https://yandex.ru/maps?ll='+lon+','+lat+'&z=16" target="_blank" style="color:var(--accent);">Яндекс</a>';if(copyCoordsBtn)copyCoordsBtn.style.display='inline-flex';if(openMapsBtn)openMapsBtn.style.display='inline-flex';}else h+='⚠️ GPS не найден.';exifOutput.innerHTML=h;}
 
-        if (copyCoordsBtn) copyCoordsBtn.addEventListener('click', function() {
-            if (lastCoords) navigator.clipboard.writeText(lastCoords.lat + ', ' + lastCoords.lon).then(function(){ showToast('✅ Скопировано!'); });
-        });
-        if (openMapsBtn) openMapsBtn.addEventListener('click', function() {
-            if (lastCoords) window.open('https://www.google.com/maps?q=' + lastCoords.lat + ',' + lastCoords.lon, '_blank');
-        });
+        if(copyCoordsBtn)copyCoordsBtn.addEventListener('click',function(){if(lastCoords)navigator.clipboard.writeText(lastCoords.lat+', '+lastCoords.lon).then(function(){showToast('✅ Скопировано!');});});
+        if(openMapsBtn)openMapsBtn.addEventListener('click',function(){if(lastCoords)window.open('https://www.google.com/maps?q='+lastCoords.lat+','+lastCoords.lon,'_blank');});
 
-        // === ПОИСК ПО URL ===
-        function getUrl() { var inp = document.getElementById('imageUrl'); return inp ? inp.value.trim() : ''; }
-        document.getElementById('searchYandex').addEventListener('click', function() { var u=getUrl(); if(u) window.open('https://yandex.ru/images/search?rpt=imageview&url='+encodeURIComponent(u),'_blank'); else showToast('⚠️ Вставьте ссылку'); });
-        document.getElementById('searchGoogle').addEventListener('click', function() { var u=getUrl(); if(u) window.open('https://lens.google.com/uploadbyurl?url='+encodeURIComponent(u),'_blank'); else showToast('⚠️ Вставьте ссылку'); });
-        document.getElementById('searchBing').addEventListener('click', function() { var u=getUrl(); if(u) window.open('https://www.bing.com/images/search?q=imgurl:'+encodeURIComponent(u)+'&view=detailv2&iss=sbi','_blank'); else showToast('⚠️ Вставьте ссылку'); });
-
-        // === ПОИСК ПО ТЕКСТУ ===
-        document.getElementById('searchTextBtn').addEventListener('click', function() {
-            var t = document.getElementById('textSearch'); var txt = t ? t.value.trim() : '';
-            if (txt) window.open('https://www.google.com/search?q='+encodeURIComponent(txt)+'&tbm=isch','_blank');
-            else showToast('⚠️ Введите описание');
-        });
-        document.getElementById('searchYandexTextBtn').addEventListener('click', function() {
-            var t = document.getElementById('textSearch'); var txt = t ? t.value.trim() : '';
-            if (txt) window.open('https://yandex.ru/images/search?text='+encodeURIComponent(txt),'_blank');
-            else showToast('⚠️ Введите описание');
-        });
+        // === ПОИСК ===
+        function gu(){var i=document.getElementById('imageUrl');return i?i.value.trim():'';}
+        document.getElementById('searchYandexBtn').addEventListener('click',function(){var u=gu();if(u)window.open('https://yandex.ru/images/search?rpt=imageview&url='+encodeURIComponent(u),'_blank');else showToast('⚠️ Вставьте ссылку');});
+        document.getElementById('searchGoogleBtn').addEventListener('click',function(){var u=gu();if(u)window.open('https://lens.google.com/uploadbyurl?url='+encodeURIComponent(u),'_blank');else showToast('⚠️ Вставьте ссылку');});
+        document.getElementById('searchBingBtn').addEventListener('click',function(){var u=gu();if(u)window.open('https://www.bing.com/images/search?q=imgurl:'+encodeURIComponent(u)+'&view=detailv2&iss=sbi','_blank');else showToast('⚠️ Вставьте ссылку');});
+        document.getElementById('searchTextBtn').addEventListener('click',function(){var t=document.getElementById('textSearch'),txt=t?t.value.trim():'';if(txt)window.open('https://www.google.com/search?q='+encodeURIComponent(txt)+'&tbm=isch','_blank');else showToast('⚠️ Введите описание');});
+        document.getElementById('searchYandexTextBtn').addEventListener('click',function(){var t=document.getElementById('textSearch'),txt=t?t.value.trim():'';if(txt)window.open('https://yandex.ru/images/search?text='+encodeURIComponent(txt),'_blank');else showToast('⚠️ Введите описание');});
 
         // === КООРДИНАТЫ ===
-        function getCoords() {
-            var la = document.getElementById('latInput'); var lo = document.getElementById('lonInput');
-            return { lat: la?la.value.trim():'', lon: lo?lo.value.trim():'' };
-        }
-        document.getElementById('goCoordsBtn').addEventListener('click', function() {
-            var c = getCoords();
-            if (c.lat && c.lon) {
-                window.open('https://www.google.com/maps?q='+c.lat+','+c.lon,'_blank');
-                setTimeout(function(){ window.open('https://yandex.ru/maps?ll='+c.lon+','+c.lat+'&z=16','_blank'); }, 300);
-                setTimeout(function(){ window.open('https://satellites.pro/#'+c.lat+','+c.lon,'_blank'); }, 600);
-            } else showToast('⚠️ Введите координаты');
-        });
-        document.getElementById('goGoogleBtn').addEventListener('click', function() { var c=getCoords(); if(c.lat&&c.lon) window.open('https://www.google.com/maps?q='+c.lat+','+c.lon,'_blank'); else showToast('⚠️ Введите координаты'); });
-        document.getElementById('goYandexBtn').addEventListener('click', function() { var c=getCoords(); if(c.lat&&c.lon) window.open('https://yandex.ru/maps?ll='+c.lon+','+c.lat+'&z=16','_blank'); else showToast('⚠️ Введите координаты'); });
-        document.getElementById('goSatBtn').addEventListener('click', function() { var c=getCoords(); if(c.lat&&c.lon) window.open('https://satellites.pro/#'+c.lat+','+c.lon,'_blank'); else showToast('⚠️ Введите координаты'); });
-        document.getElementById('goStreetBtn').addEventListener('click', function() { var c=getCoords(); if(c.lat&&c.lon) window.open('https://www.instantstreetview.com/@'+c.lat+','+c.lon,'_blank'); else showToast('⚠️ Введите координаты'); });
+        function gc(){var la=document.getElementById('latInput'),lo=document.getElementById('lonInput');return{lat:la?la.value.trim():'',lon:lo?lo.value.trim():''};}
+        document.getElementById('goCoordsBtn').addEventListener('click',function(){var c=gc();if(c.lat&&c.lon){window.open('https://www.google.com/maps?q='+c.lat+','+c.lon,'_blank');setTimeout(function(){window.open('https://yandex.ru/maps?ll='+c.lon+','+c.lat+'&z=16','_blank');},300);}else showToast('⚠️ Введите координаты');});
+        document.getElementById('goGoogleBtn').addEventListener('click',function(){var c=gc();if(c.lat&&c.lon)window.open('https://www.google.com/maps?q='+c.lat+','+c.lon,'_blank');else showToast('⚠️ Введите координаты');});
+        document.getElementById('goYandexBtn').addEventListener('click',function(){var c=gc();if(c.lat&&c.lon)window.open('https://yandex.ru/maps?ll='+c.lon+','+c.lat+'&z=16','_blank');else showToast('⚠️ Введите координаты');});
+        document.getElementById('goSatBtn').addEventListener('click',function(){var c=gc();if(c.lat&&c.lon)window.open('https://satellites.pro/#'+c.lat+','+c.lon,'_blank');else showToast('⚠️ Введите координаты');});
+        document.getElementById('goStreetBtn').addEventListener('click',function(){var c=gc();if(c.lat&&c.lon)window.open('https://www.instantstreetview.com/@'+c.lat+','+c.lon,'_blank');else showToast('⚠️ Введите координаты');});
 
-        console.log(' GeoSense AI');
+        console.log('GeoSense.');
     })();
     </script>
 </body>
