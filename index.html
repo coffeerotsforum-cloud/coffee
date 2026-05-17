@@ -1,529 +1,488 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Гео-ОСИНТ🇺🇲 | Помощник по поиску мест</title>
+    <title>GeoSense Pro • Гео-ОСИНТ помощник</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
     <style>
         :root {
-            --bg: #0d1117;
-            --card: #161b22;
-            --border: #30363d;
-            --text: #c9d1d9;
-            --accent: #58a6ff;
-            --green: #3fb950;
-            --orange: #d2991d;
-            --red: #f85149;
+            --bg: #0a0e14;
+            --surface: rgba(18, 23, 31, 0.85);
+            --surface2: rgba(25, 31, 43, 0.9);
+            --border: rgba(30, 39, 51, 0.8);
+            --text: #d4dbe6;
+            --text2: #8896a7;
+            --accent: #4d9fff;
+            --accent2: #7c5cfc;
+            --green: #2dd47c;
+            --orange: #f0a040;
+            --red: #f04770;
+            --radius: 14px;
+            --shadow: 0 2px 12px rgba(0,0,0,0.5);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             color: var(--text);
             min-height: 100vh;
-            padding: 20px;
-            line-height: 1.5;
+            line-height: 1.6;
             position: relative;
-            /* ===== ВОТ ТУТ ФОН ===== */
-            background: 
-                linear-gradient(180deg, rgba(13, 17, 23, 0.85) 0%, rgba(13, 17, 23, 0.92) 100%),
-                url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Whole_world_-_land_and_oceans_12000.jpg/1280px-Whole_world_-_land_and_oceans_12000.jpg');
+        }
+
+        /* === ФОНОВОЕ ИЗОБРАЖЕНИЕ === */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url('https://i.ibb.co/mF1Zwc27/1776789603620.jpg');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
             background-repeat: no-repeat;
+            background-attachment: fixed;
+            z-index: -2;
         }
 
-        /* ===== ЕСЛИ ХОЧЕШЬ ПОМЕНЯТЬ ФОН — ЗАМЕНИ ССЫЛКУ ВЫШЕ ===== */
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
+        /* Затемняющий слой */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(
+                180deg,
+                rgba(10, 14, 20, 0.75) 0%,
+                rgba(10, 14, 20, 0.82) 50%,
+                rgba(10, 14, 20, 0.9) 100%
+            );
+            z-index: -1;
         }
 
-        header {
+        /* Скроллбар */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 20px 16px 40px; position: relative; z-index: 1; }
+
+        /* Шапка */
+        .header {
             text-align: center;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-            background: rgba(22, 27, 34, 0.6);
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 32px 20px 24px;
+            position: relative;
         }
-
-        h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #58a6ff, #bc8cff);
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            backdrop-filter: blur(10px);
+            background: rgba(18, 23, 31, 0.6);
+            padding: 12px 24px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo-icon {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(77,159,255,0.4);
+        }
+        .logo h1 {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #a0c4ff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 6px;
         }
+        .header p { color: var(--text2); font-size: 0.95rem; }
 
-        .subtitle {
-            color: #b0b8c4;
-            font-size: 0.95rem;
-        }
-
-        /* === КАРТОЧКИ ИНСТРУМЕНТОВ === */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 12px;
-            margin-bottom: 30px;
-        }
-
-        .tool-card {
-            background: rgba(22, 27, 34, 0.75);
+        /* Вкладки */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 4px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 12px;
-            padding: 18px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px 14px;
+            background: transparent;
+            border: none;
+            border-radius: 11px;
+            color: var(--text2);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            background: rgba(25, 31, 43, 0.95);
+            color: #fff;
+            box-shadow: var(--shadow);
+        }
+        .tab-btn:hover:not(.active) { color: #bcc6d4; }
+
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Карточки сервисов */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .service-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 14px;
             cursor: pointer;
             transition: all 0.25s;
             text-decoration: none;
             color: var(--text);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(15px);
         }
-
-        .tool-card:hover {
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, transparent 60%, rgba(77,159,255,0.06));
+            opacity: 0; transition: opacity 0.25s;
+        }
+        .service-card:hover {
             border-color: var(--accent);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-            background: rgba(22, 27, 34, 0.9);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+            background: rgba(25, 31, 43, 0.95);
         }
-
-        .tool-icon {
-            font-size: 1.8rem;
+        .service-card:hover::before { opacity: 1; }
+        .service-icon {
+            font-size: 1.6rem;
             flex-shrink: 0;
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(25, 31, 43, 0.9);
+            border-radius: 10px;
+        }
+        .service-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        .service-tag {
+            font-size: 0.68rem;
+            color: var(--text2);
+            display: block;
         }
 
-        .tool-info h3 {
-            font-size: 1rem;
-            margin-bottom: 2px;
-        }
-
-        .tool-info p {
-            font-size: 0.8rem;
-            color: #8b949e;
-        }
-
-        .badge {
-            display: inline-block;
-            background: #1f6feb22;
-            color: #58a6ff;
-            font-size: 0.7rem;
-            padding: 2px 8px;
-            border-radius: 20px;
-            margin-left: 6px;
-        }
-
-        /* === СЕКЦИИ === */
+        /* Секции */
         .section {
-            background: rgba(22, 27, 34, 0.75);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
+            transition: border-color 0.2s;
+            backdrop-filter: blur(15px);
         }
-
-        .section h2 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
+        .section:hover { border-color: rgba(255,255,255,0.2); }
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
             gap: 8px;
+            letter-spacing: -0.01em;
         }
-
-        .drop-zone {
-            border: 2px dashed var(--border);
-            border-radius: 12px;
-            padding: 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 15px;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .drop-zone:hover,
-        .drop-zone.dragover {
-            border-color: var(--accent);
-            background: rgba(88, 166, 255, 0.08);
-        }
-
-        .drop-zone p {
-            color: #8b949e;
-            font-size: 0.9rem;
-        }
-
-        .drop-zone span {
+        .section-badge {
+            font-size: 0.7rem;
+            background: rgba(77,159,255,0.2);
             color: var(--accent);
+            padding: 3px 10px;
+            border-radius: 20px;
             font-weight: 600;
         }
 
-        #exif-output {
-            background: #0d1117;
-            border-radius: 8px;
-            padding: 15px;
-            font-family: 'SF Mono', 'Consolas', monospace;
-            font-size: 0.85rem;
-            max-height: 250px;
+        /* Drop zone */
+        .drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 32px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: rgba(25, 31, 43, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        .drop-zone:hover, .drop-zone.active {
+            border-color: var(--accent);
+            background: rgba(77,159,255,0.06);
+            box-shadow: inset 0 0 30px rgba(77,159,255,0.05);
+        }
+        .drop-zone .dz-icon { font-size: 2.4rem; margin-bottom: 8px; display: block; }
+        .drop-zone p { color: var(--text2); font-size: 0.9rem; }
+        .drop-zone span { color: var(--accent); font-weight: 600; cursor: pointer; }
+        .drop-zone input[type="file"] { display: none; }
+
+        .exif-output {
+            background: rgba(13, 17, 23, 0.9);
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.82rem;
+            max-height: 280px;
             overflow-y: auto;
             display: none;
-            white-space: pre-wrap;
-            word-break: break-all;
+            margin-top: 14px;
+            border: 1px solid var(--border);
+            line-height: 1.7;
+            backdrop-filter: blur(10px);
         }
-
         .coord-highlight {
             color: var(--green);
-            font-weight: bold;
+            font-weight: 700;
+            background: rgba(45,212,124,0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
         }
-
-        .map-link-btn {
-            display: inline-block;
-            margin-top: 10px;
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
             background: var(--accent);
             color: #fff;
             border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            text-decoration: none;
-            font-size: 0.85rem;
             font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.2s;
         }
-
-        .map-link-btn:hover {
-            background: #4090e0;
+        .btn:hover { background: #3b8ae8; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(77,159,255,0.4); }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
         }
+        .btn-outline:hover { background: rgba(77,159,255,0.15); }
+        .btn-green { background: var(--green); }
+        .btn-green:hover { background: #25b868; box-shadow: 0 4px 14px rgba(45,212,124,0.4); }
 
-        .search-box {
+        .input-row {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
-
-        .search-box input {
+        .input-row input {
             flex: 1;
             min-width: 200px;
-            padding: 12px 16px;
-            background: rgba(0, 0, 0, 0.4);
+            padding: 12px 14px;
+            background: rgba(25, 31, 43, 0.8);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             color: var(--text);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             outline: none;
             transition: border 0.2s;
+            backdrop-filter: blur(10px);
         }
+        .input-row input:focus { border-color: var(--accent); }
+        .input-row input::placeholder { color: #5a6575; }
 
-        .search-box input:focus {
-            border-color: var(--accent);
-        }
-
-        .search-box button {
-            padding: 12px 20px;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: background 0.2s;
-        }
-
-        .search-box button:hover {
-            background: #4090e0;
-        }
-
-        .checklist {
-            list-style: none;
-        }
-
+        /* Чеклист */
+        .checklist { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 6px; }
         .checklist li {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 10px 12px;
+            background: rgba(25, 31, 43, 0.7);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
             cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .checklist li:last-child {
-            border-bottom: none;
-        }
-
-        .checklist li input[type="checkbox"] {
-            accent-color: var(--green);
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
-
-        .checklist li.checked {
-            text-decoration: line-through;
-            color: #484f58;
-        }
-
-        .result-hint {
-            background: rgba(31, 42, 31, 0.7);
-            border: 1px solid #2ea04344;
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 12px;
             font-size: 0.85rem;
-            color: #7ee787;
-            display: none;
-        }
-
-        footer {
-            text-align: center;
-            color: #6e7681;
-            font-size: 0.75rem;
-            margin-top: 30px;
+            transition: all 0.2s;
+            border: 1px solid transparent;
             backdrop-filter: blur(5px);
         }
+        .checklist li:hover { border-color: rgba(255,255,255,0.1); }
+        .checklist li.done { opacity: 0.5; text-decoration: line-through; background: rgba(15, 20, 25, 0.8); }
+        .checklist li input[type="checkbox"] { accent-color: var(--green); width: 17px; height: 17px; cursor: pointer; flex-shrink: 0; }
 
-        @media (max-width: 500px) {
-            body {
-                padding: 10px;
-            }
-            .search-box {
-                flex-direction: column;
-            }
+        /* Координаты */
+        .coord-display {
+            display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px;
+        }
+        .coord-box {
+            flex: 1; min-width: 150px;
+            background: rgba(25, 31, 43, 0.8);
+            padding: 12px;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+        .coord-box small { display: block; color: var(--text2); font-size: 0.7rem; margin-bottom: 4px; }
+
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: rgba(25, 31, 43, 0.95); color: #fff; padding: 12px 24px;
+            border-radius: 30px; font-size: 0.85rem; font-weight: 600;
+            border: 1px solid var(--border); box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+            z-index: 999; opacity: 0; transition: opacity 0.3s;
+            pointer-events: none; backdrop-filter: blur(20px);
+        }
+        .toast.show { opacity: 1; }
+
+        footer {
+            text-align: center; padding: 20px; color: #4a5568; font-size: 0.75rem;
+            border-top: 1px solid rgba(255,255,255,0.06); margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .tabs { overflow-x: auto; }
+            .tab-btn { font-size: 0.78rem; padding: 8px 10px; }
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+            .checklist { grid-template-columns: 1fr; }
+            .coord-display { flex-direction: column; }
+            .logo { padding: 8px 16px; }
+            .logo h1 { font-size: 1.4rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>🌍 Гео-ОСИНТ</h1>
-            <p class="subtitle">Помощник для поиска мест по фотографиям</p>
-        </header>
-
-        <!-- Карточки инструментов -->
-        <div class="tools-grid">
-            <a href="https://images.google.com" target="_blank" class="tool-card">
-                <span class="tool-icon">🔍</span>
-                <div class="tool-info">
-                    <h3>Google Картинки <span class="badge">поиск</span></h3>
-                    <p>Обратный поиск изображений</p>
-                </div>
-            </a>
-            <a href="https://yandex.ru/images" target="_blank" class="tool-card">
-                <span class="tool-icon">🖼️</span>
-                <div class="tool-info">
-                    <h3>Яндекс Картинки</h3>
-                    <p>Лучше для РФ и СНГ</p>
-                </div>
-            </a>
-            <a href="https://tineye.com" target="_blank" class="tool-card">
-                <span class="tool-icon">🎯</span>
-                <div class="tool-info">
-                    <h3>TinEye</h3>
-                    <p>Старейший поиск по фото</p>
-                </div>
-            </a>
-            <a href="https://www.google.com/maps" target="_blank" class="tool-card">
-                <span class="tool-icon">🗺️</span>
-                <div class="tool-info">
-                    <h3>Google Карты</h3>
-                    <p>Проверить координаты</p>
-                </div>
-            </a>
-            <a href="https://overpass-turbo.eu" target="_blank" class="tool-card">
-                <span class="tool-icon">📡</span>
-                <div class="tool-info">
-                    <h3>Overpass Turbo</h3>
-                    <p>Поиск объектов на карте</p>
-                </div>
-            </a>
-            <a href="https://satellites.pro" target="_blank" class="tool-card">
-                <span class="tool-icon">🛰️</span>
-                <div class="tool-info">
-                    <h3>Satellites.pro</h3>
-                    <p>Спутниковые снимки</p>
-                </div>
-            </a>
-        </div>
-
-        <!-- 1. Анализ метаданных -->
-        <div class="section">
-            <h2>📸 Анализ метаданных (EXIF)</h2>
-            <div class="drop-zone" id="drop-zone">
-                <p>📂 <span>Выберите фото</span> или перетащите сюда</p>
-                <p style="font-size:0.75rem; margin-top:6px;">Ищем GPS-координаты в EXIF</p>
-                <input type="file" id="file-input" accept="image/*" style="display:none;">
+        <!-- Шапка -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">🌍</div>
+                <h1>GeoSense Pro</h1>
             </div>
-            <div id="exif-output"></div>
+            <p>Продвинутый инструмент для геолокации по фото • Все сервисы работают без VPN</p>
         </div>
 
-        <!-- 2. Поиск по URL -->
-        <div class="section">
-            <h2>🔗 Обратный поиск по ссылке</h2>
-            <div class="search-box">
-                <input type="text" id="image-url" placeholder="Вставьте URL картинки...">
-                <button id="search-google-btn">🔍 Google</button>
-                <button id="search-yandex-btn">🖼️ Яндекс</button>
+        <!-- Вкладки -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="tools">🛠 Инструменты</button>
+            <button class="tab-btn" data-tab="exif">📸 EXIF</button>
+            <button class="tab-btn" data-tab="search">🔍 Поиск</button>
+            <button class="tab-btn" data-tab="coords">📍 Координаты</button>
+        </div>
+
+        <!-- Вкладка 1: Инструменты -->
+        <div class="tab-content active" id="tab-tools">
+            <div class="section">
+                <div class="section-title">🔗 Поисковые сервисы <span class="section-badge">без VPN</span></div>
+                <div class="services-grid">
+                    <a href="https://yandex.ru/images" target="_blank" class="service-card">
+                        <div class="service-icon">🖼️</div>
+                        <div><span class="service-name">Яндекс Картинки</span><span class="service-tag">РФ/СНГ отлично</span></div>
+                    </a>
+                    <a href="https://www.google.com/imghp" target="_blank" class="service-card">
+                        <div class="service-icon">🔍</div>
+                        <div><span class="service-name">Google Images</span><span class="service-tag">Мировой охват</span></div>
+                    </a>
+                    <a href="https://tineye.com" target="_blank" class="service-card">
+                        <div class="service-icon">🎯</div>
+                        <div><span class="service-name">TinEye</span><span class="service-tag">Точный поиск</span></div>
+                    </a>
+                    <a href="https://www.bing.com/images" target="_blank" class="service-card">
+                        <div class="service-icon">🪟</div>
+                        <div><span class="service-name">Bing Images</span><span class="service-tag">Альтернатива</span></div>
+                    </a>
+                </div>
             </div>
-            <p style="font-size:0.75rem; color:#8b949e; margin-top:8px;">
-                Или просто вставьте ссылку и нажмите поиск
-            </p>
+
+            <div class="section">
+                <div class="section-title">🗺️ Карты и спутники</div>
+                <div class="services-grid">
+                    <a href="https://yandex.ru/maps" target="_blank" class="service-card">
+                        <div class="service-icon">📍</div>
+                        <div><span class="service-name">Яндекс Карты</span><span class="service-tag">Панорамы РФ</span></div>
+                    </a>
+                    <a href="https://www.google.com/maps" target="_blank" class="service-card">
+                        <div class="service-icon">🌐</div>
+                        <div><span class="service-name">Google Maps</span><span class="service-tag">Мировые панорамы</span></div>
+                    </a>
+                    <a href="https://satellites.pro" target="_blank" class="service-card">
+                        <div class="service-icon">🛰️</div>
+                        <div><span class="service-name">Satellites.pro</span><span class="service-tag">Спутник онлайн</span></div>
+                    </a>
+                    <a href="https://overpass-turbo.eu" target="_blank" class="service-card">
+                        <div class="service-icon">📡</div>
+                        <div><span class="service-name">Overpass Turbo</span><span class="service-tag">Объекты на карте</span></div>
+                    </a>
+                    <a href="https://www.openstreetmap.org" target="_blank" class="service-card">
+                        <div class="service-icon">🗿</div>
+                        <div><span class="service-name">OpenStreetMap</span><span class="service-tag">Открытые данные</span></div>
+                    </a>
+                    <a href="https://2gis.ru" target="_blank" class="service-card">
+                        <div class="service-icon">🏢</div>
+                        <div><span class="service-name">2ГИС</span><span class="service-tag">Детализация РФ</span></div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🧠 Специализированные</div>
+                <div class="services-grid">
+                    <a href="https://geohints.com" target="_blank" class="service-card">
+                        <div class="service-icon">💡</div>
+                        <div><span class="service-name">GeoHints</span><span class="service-tag">Подсказки по странам</span></div>
+                    </a>
+                    <a href="https://infotomb.com" target="_blank" class="service-card">
+                        <div class="service-icon">📋</div>
+                        <div><span class="service-name">InfoTomb</span><span class="service-tag">EXIF онлайн</span></div>
+                    </a>
+                    <a href="https://www.instantstreetview.com" target="_blank" class="service-card">
+                        <div class="service-icon">🚶</div>
+                        <div><span class="service-name">InstantStreetView</span><span class="service-tag">Быстрый просмотр</span></div>
+                    </a>
+                    <a href="https://suncalc.org" target="_blank" class="service-card">
+                        <div class="service-icon">☀️</div>
+                        <div><span class="service-name">SunCalc</span><span class="service-tag">По теням</span></div>
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <!-- 3. Чеклист -->
-        <div class="section">
-            <h2>✅ Чеклист: что искать на фото</h2>
-            <ul class="checklist" id="checklist">
-                <li><input type="checkbox"> Вывески / названия магазинов</li>
-                <li><input type="checkbox"> Номера машин (регион, страна)</li>
-                <li><input type="checkbox"> Дорожные знаки</li>
-                <li><input type="checkbox"> Архитектура зданий</li>
-                <li><input type="checkbox"> Растительность / климат</li>
-                <li><input type="checkbox"> Язык на указателях</li>
-                <li><input type="checkbox"> Форма номеров телефонов</li>
-                <li><input type="checkbox"> Флаги или символика</li>
-                <li><input type="checkbox"> Рельеф (горы, равнина)</li>
-                <li><input type="checkbox"> Линии электропередач (тип опор)</li>
-                <li><input type="checkbox"> Дорожная разметка</li>
-                <li><input type="checkbox"> Бренды / логотипы</li>
-            </ul>
-        </div>
-
-        <div class="result-hint" id="result-hint">
-        </div>
-
-        <footer>
-            ♦Гео-ОСИНТ помощник♦
-        </footer>
-    </div>
-
-    <script>
-        // === Drag & Drop + EXIF ===
-        const dropZone = document.getElementById('drop-zone');
-        const fileInput = document.getElementById('file-input');
-        const exifOutput = document.getElementById('exif-output');
-
-        dropZone.addEventListener('click', () => fileInput.click());
-        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
-        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            const file = e.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) processImage(file);
-        });
-        fileInput.addEventListener('change', (e) => { if (e.target.files[0]) processImage(e.target.files[0]); });
-
-        function processImage(file) {
-            exifOutput.style.display = 'block';
-            exifOutput.innerHTML = '⏳ Анализируем EXIF...';
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const view = new DataView(e.target.result);
-                let exifData = {};
-                let offset = 2;
-                if (view.getUint16(0) === 0xFFD8) {
-                    while (offset < view.byteLength) {
-                        if (view.getUint16(offset) === 0xFFE1) {
-                            const exifStart = offset + 4;
-                            const header = String.fromCharCode(view.getUint8(exifStart), view.getUint8(exifStart+1), view.getUint8(exifStart+2), view.getUint8(exifStart+3));
-                            if (header === 'Exif') parseExifProper(view, exifStart + 6, exifData);
-                            break;
-                        }
-                        offset += 2 + view.getUint16(offset + 2);
-                    }
-                }
-                displayExifData(exifData, file.name);
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
-        function parseExifProper(view, start, data) {
-            const le = view.getUint16(start) === 0x4949;
-            const tiff = start + 2;
-            const ifdOff = view.getUint32(tiff + 4, le);
-            const mainIFD = tiff + ifdOff;
-            const num = view.getUint16(mainIFD, le);
-            for (let i = 0; i < num; i++) {
-                const off = mainIFD + 2 + i * 12;
-                const tag = view.getUint16(off, le);
-                const type = view.getUint16(off + 2, le);
-                const count = view.getUint32(off + 4, le);
-                if (tag === 0x010F) data.Make = readASCII(view, off, type, count, le, tiff);
-                if (tag === 0x0110) data.Model = readASCII(view, off, type, count, le, tiff);
-                if (tag === 0x0132) data.DateTime = readASCII(view, off, type, count, le, tiff);
-                if (tag === 0x8825) {
-                    const gpsOff = view.getUint32(off + 8, le);
-                    parseGPS(view, tiff + gpsOff, le, data);
-                }
-            }
-        }
-
-        function readASCII(view, off, type, count, le, tiff) {
-            if (count <= 4) return String.fromCharCode(view.getUint8(off+8), view.getUint8(off+9), view.getUint8(off+10), view.getUint8(off+11)).replace(/\0/g, '');
-            const strOff = view.getUint32(off+8, le);
-            let s = '';
-            for (let j=0; j<count-1; j++) s += String.fromCharCode(view.getUint8(tiff+strOff+j));
-            return s;
-        }
-
-        function parseGPS(view, base, le, data) {
-            const num = view.getUint16(base, le);
-            for (let i=0; i<num; i++) {
-                const off = base+2+i*12;
-                const tag = view.getUint16(off, le);
-                const valOff = view.getUint32(off+8, le);
-                const num1 = view.getUint32(tiff+valOff, le), den1 = view.getUint32(tiff+valOff+4, le);
-                const num2 = view.getUint32(tiff+valOff+8, le), den2 = view.getUint32(tiff+valOff+12, le);
-                const num3 = view.getUint32(tiff+valOff+16, le), den3 = view.getUint32(tiff+valOff+20, le);
-                if (tag === 0x0001) data.GPSLatRef = String.fromCharCode(view.getUint8(off+8), view.getUint8(off+9)).replace(/\0/g,'');
-                if (tag === 0x0002) data.GPSLat = {d:num1/den1, m:num2/den2, s:num3/den3};
-                if (tag === 0x0003) data.GPSLonRef = String.fromCharCode(view.getUint8(off+8), view.getUint8(off+9)).replace(/\0/g,'');
-                if (tag === 0x0004) data.GPSLon = {d:num1/den1, m:num2/den2, s:num3/den3};
-            }
-        }
-        const tiff = 0;
-
-        function displayExifData(data, fileName) {
-            let html = `📁 <strong>${fileName}</strong><br><br>`;
-            if (data.Make || data.Model) html += `📷 Камера: ${data.Make||'?'} ${data.Model||''}<br>`;
-            if (data.DateTime) html += `📅 Дата: ${data.DateTime}<br>`;
-            if (data.GPSLat && data.GPSLon) {
-                let lat = data.GPSLat.d + data.GPSLat.m/60 + data.GPSLat.s/3600;
-                let lon = data.GPSLon.d + data.GPSLon.m/60 + data.GPSLon.s/3600;
-                if (data.GPSLatRef === 'S') lat = -lat;
-                if (data.GPSLonRef === 'W') lon = -lon;
-                html += `<br>📍 <span class="coord-highlight">GPS: ${lat.toFixed(6)}, ${lon.toFixed(6)}</span><br>`;
-                html += `<a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank" class="map-link-btn">🗺️ Открыть в Google Картах</a>`;
-            } else html += '<br>⚠️ GPS-координаты не найдены.';
-            exifOutput.innerHTML = html;
-        }
-
-        document.getElementById('search-google-btn').addEventListener('click', () => {
-            const url = document.getElementById('image-url').value.trim();
-            if (url) window.open(`https://lens.google.com/uploadbyurl?url=${encodeURIComponent(url)}`, '_blank');
-            else alert('Вставьте URL');
-        });
-        document.getElementById('search-yandex-btn').addEventListener('click', () => {
-            const url = document.getElementById('image-url').value.trim();
-            if (url) window.open(`https://yandex.ru/images/search?rpt=imageview&url=${encodeURIComponent(url)}`, '_blank');
-            else alert('Вставьте URL');
-        });
-        document.querySelectorAll('#checklist input').forEach(cb => cb.addEventListener('change', function(){ this.parentElement.classList.toggle('checked', this.checked); }));
-    </script>
-</body>
-</html>
+        <!-- Вкладка 2: EXIF -->
+        <div class="tab-content" id="tab-exif">
+            <div class="section">
+                <div class="section-title">📸 Анализ метаданных фото <span class="section-badge">EXIF/GPS</span></div>
+                <div class="drop-zone" id="dropZone">
+                    <span class="dz-icon">📂</span>
+                    <p>Перетащите фото сюда или <span id="browseLink">выберите файл</span></p>
+                    <p style="font-size:0.75rem;color:#5a6575;margin-top:6px;">Поддерживает JPEG, PNG, HEIC, WebP</p>
+                    <input type="file" id="fileInput" accept="image/*">
+                </div>
+                <div class="exif-output" id="exifOutput"></div>
+                <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="btn" id="copyCoordsBtn" style="display:none;">📋 Скопировать координаты</button>
+                    <button class="btn btn-outline" id="openMapsBtn" style="display:none;">🗺️ Открыть на карте</button>
+ 
